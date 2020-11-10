@@ -1,0 +1,18 @@
+{
+  "description": "create a user for a scratch org",
+  "examples": [
+    "sfdx force:user:create",
+    "sfdx force:user:create -a testuser1 -f config/project-user-def.json",
+    "sfdx force:user:create username=testuser1@my.org email=me@my.org permsets=DreamHouse",
+    "sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true"
+  ],
+  "flags": {
+    "alias": "set an alias for the created username to reference within the CLI",
+    "definitionfile": "file path to a user definition"
+  },
+  "userNotCreated": "User must be created before %s",
+  "licenseLimitExceeded": "There are no available user licenses for the user profile \"%s\".",
+  "duplicateUsername": "The username \"%s\" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.",
+  "profileNameNotFound": "Profile name \"%s\" not found in target org.  Do you need to push source?",
+  "success": "Successfully created user \"%s\" with ID %s for org %s.%sYou can see more details about this user by running \"sfdx force:user:display -u %s\"."
+}

@@ -1,0 +1,8 @@
+{
+  "description": "lists all users of a scratch org",
+  "examples": [
+    "sfdx force:user:list",
+    "sfdx force:user:list -u me@my.org --json",
+    "sfdx force:user:list --json > tmp/MyUserList.json"
+  ]
+}
