@@ -17,8 +17,8 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
+import { get } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import get = Reflect.get;
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'create');
@@ -55,10 +55,11 @@ export class UserCreateCommand extends SfdxCommand {
   private successes: SuccessMsg[];
   private failures: FailureMsg[];
 
-  // todo: typing
-  public async run(): Promise<unknown> {
+  public async run(): Promise<UserFields> {
     this.logger = await Logger.child(this.constructor.name);
-    const defaultUserFields = await DefaultUserFields.create({ templateUser: this.org.getUsername() });
+    const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
+      templateUser: this.org.getUsername(),
+    });
     const user: User = await User.create({ org: this.org });
 
     // merge defaults with provided values from cli -> file -> defaults
@@ -70,8 +71,8 @@ export class UserCreateCommand extends SfdxCommand {
       await this.catchCreateUser(e, fields);
     }
 
-    const permsets = this.varargs.permsets as string;
-    const generatepassword = this.varargs.generatepassword;
+    const permsets: string = fields['permsets'];
+    const generatepassword: string = fields['varargs'];
 
     // Assign permission sets to the created user
     if (permsets) {
@@ -90,7 +91,7 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Generate and set a password if specified
-    if (generatepassword) {
+    if (generatepassword === 'true') {
       try {
         const password = User.generatePasswordUtf8();
         // await this.user.assignPassword(await AuthInfo.create({ username: fields.username }), password);
@@ -116,13 +117,13 @@ export class UserCreateCommand extends SfdxCommand {
 
     this.print(fields);
 
-    return Promise.resolve(Object.assign({ orgId: this.org.getOrgId() }, this.user));
+    return Promise.resolve(Object.assign({ orgId: this.org.getOrgId() }, fields));
   }
 
   private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
     // For Gacks, the error message is on response.body[0].message but for handled errors
     // the error message is on response.body.Errors[0].description.
-    const errMessage = get(respBody, 'message') || 'Unknown Error';
+    const errMessage = (get(respBody, 'message') as string) || 'Unknown Error';
     const conn: Connection = this.org.getConnection();
 
     // Provide a more user friendly error message for certain server errors.
@@ -138,10 +139,11 @@ export class UserCreateCommand extends SfdxCommand {
   }
 
   private async aggregateFields(defaultFields: UserFields): Promise<UserFields> {
-    // take from cli params, then file, then default
+    // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
       const content = await fs.readJson(this.flags.definitionfile);
       Object.keys(content).forEach((key) => {
+        // we overload the UserField type by doing this
         defaultFields[key] = content[key];
       });
     }

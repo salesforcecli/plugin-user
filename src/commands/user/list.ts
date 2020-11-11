@@ -68,7 +68,6 @@ export class UserListCommand extends SfdxCommand {
     });
 
     const columns = ['Default', 'Alias', 'Username', 'Profile Name', 'User ID'];
-    // TODO: this used to print in blue, are we still doing that?
     this.ux.styledHeader(`Users in org ${this.org.getOrgId()}`);
     this.ux.table(trimmedList, columns);
 

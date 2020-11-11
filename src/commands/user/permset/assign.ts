@@ -43,15 +43,15 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
   public async run(): Promise<{ successes: SuccessMsg[]; failures: FailureMsg[] }> {
     try {
-      if (this.flags && this.flags.onbehalfof && this.flags.onbehalfof.length > 0) {
-        this.usernames = this.flags.onbehalfof.trim().split(',');
+      if (this.flags.onbehalfof) {
+        this.usernames = this.flags.onbehalfof.join(',').trim().split(',');
       } else {
         this.usernames = [this.org.getUsername()];
       }
 
-      for (let username of this.usernames) {
+      for (const username of this.usernames) {
         // Convert any aliases to usernames
-        username = (await Aliases.fetch(username)) || username;
+        const aliasOrUsername = (await Aliases.fetch(username)) || username;
         const connection: Connection = await Connection.create({
           authInfo: await AuthInfo.create({ username }),
         });
@@ -59,16 +59,15 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         const user: User = await User.create({ org });
         const fields: UserFields = await user.retrieve(username);
 
-        await user.assignPermissionSets(fields.id, this.flags.permsetname.trim().split(','));
-
         try {
+          await user.assignPermissionSets(fields.id, this.flags.permsetname.split(','));
           this.successes.push({
-            name: fields.username,
+            name: aliasOrUsername,
             value: this.flags.permsetname,
           });
         } catch (e) {
           this.failures.push({
-            name: fields.username,
+            name: aliasOrUsername,
             message: e.message,
           });
         }

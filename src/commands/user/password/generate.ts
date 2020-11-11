@@ -33,7 +33,13 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[]> {
-    this.usernames = (this.flags.onbehalfof || this.org.getUsername()).trim().split(',');
+    // split the usernames, trim them down, and then join them back
+    if (this.flags.onbehalfof) {
+      this.usernames = this.flags.onbehalfof.join(',').trim().split(',');
+    } else {
+      this.usernames = [this.org.getUsername()];
+    }
+
     for (let username of this.usernames) {
       try {
         // Convert any aliases to usernames
@@ -54,7 +60,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         });
       } catch (e) {
         if (e.message.includes('Cannot set password for self')) {
-          e.action = messages.getMessage('noSelfSetAction');
+          throw SfdxError.create('@salesforce/plugin-user', 'password.generate', 'noSelfSetError');
         }
         throw SfdxError.wrap(e);
       }
