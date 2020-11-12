@@ -18,7 +18,7 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { get, Dictionary } from '@salesforce/ts-types';
+import { get, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
 Messages.importMessagesDirectory(__dirname);
@@ -54,36 +54,48 @@ export class UserCreateCommand extends SfdxCommand {
   public org: Org;
 
   private user: User;
-  private successes: SuccessMsg[];
-  private failures: FailureMsg[];
+  private successes: SuccessMsg[] = [];
+  private failures: FailureMsg[] = [];
 
   public async run(): Promise<UserFields> {
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
       templateUser: this.org.getUsername(),
     });
-    const user: User = await User.create({ org: this.org });
+    this.user = await User.create({ org: this.org });
 
     // merge defaults with provided values with cli > file > defaults
     const fields: UserFields & Dictionary<string> = await this.aggregateFields(defaultUserFields.getFields());
+    // because fields is type UserFields & Dictionary<string> we can access these
+    const permsets = fields['permsets'];
+    const generatepassword: string = fields['generatepassword'];
+
+    // extract the fields and then delete, createUser doesn't expect a permsets or generatepassword
+    delete fields['permsets'];
+    delete fields['generatepassword'];
+    delete fields['generatePassword'];
 
     try {
-      await user.createUser(fields);
+      await this.user.createUser(fields);
     } catch (e) {
       await this.catchCreateUser(e, fields);
     }
 
-    // because fields is type UserFields & Dictionary<string> we can access these
-    const permsets: string = fields['permsets'];
-    const generatepassword: string = fields['generatepassword'];
-
     // Assign permission sets to the created user
     if (permsets) {
       try {
-        await this.user.assignPermissionSets(fields.id, permsets.trim().split(','));
+        // permsets can be passed from cli args or file we need to create an array of permset names either way it's passed
+        let permsetArray: string[];
+        if (!isArray(permsets)) {
+          permsetArray = [permsets];
+        } else {
+          permsetArray = permsets as string[];
+        }
+
+        await this.user.assignPermissionSets(fields.id, permsetArray);
         this.successes.push({
           name: 'Permission Set Assignment',
-          value: permsets.trim(),
+          value: permsetArray.join(','),
         });
       } catch (err) {
         this.failures.push({
@@ -94,7 +106,7 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Generate and set a password if specified
-    if (generatepassword === 'true') {
+    if (generatepassword === 'true' || generatepassword) {
       try {
         const password = User.generatePasswordUtf8();
         await this.user.assignPassword(await AuthInfo.create({ username: fields.username }), password);
@@ -158,6 +170,22 @@ export class UserCreateCommand extends SfdxCommand {
       });
     }
 
+    // check if "profileName" was passed, this needs to become a profileId before calling User.create
+    if (defaultFields['profileName']) {
+      const name: string = defaultFields['profileName'] || 'Standard User';
+      this.logger.debug(`Querying org for profile name [${name}]`);
+      const profileQuery = `SELECT id FROM profile WHERE name='${name}'`;
+      const response = await this.org.getConnection().query(profileQuery);
+      defaultFields.profileId = get(response, 'records[0].Id') as string;
+      delete defaultFields['profileName'];
+    }
+
+    // the file schema is camelCase while the cli arg is no capitialization
+    if (defaultFields['generatePassword'] || defaultFields['generatepassword']) {
+      // standardize on 'generatepassword'
+      defaultFields['generatepassword'] = 'true';
+    }
+
     return defaultFields;
   }
 
@@ -170,7 +198,9 @@ export class UserCreateCommand extends SfdxCommand {
       fields.username,
     ]);
 
-    if (this.failures) {
+    // we initialize to be an empty array to be able to push onto it
+    // so we need to check that the size is greater than 0 to know we had a failure
+    if (this.failures.length > 0) {
       this.ux.styledHeader('Partial Success');
       this.ux.log(userCreatedSuccessMsg);
       this.ux.log('');

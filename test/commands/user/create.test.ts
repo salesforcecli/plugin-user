@@ -103,7 +103,6 @@ describe('force:user:create', () => {
         alias: 'testAlias',
         email: 'me@my.org',
         emailEncodingKey: 'UTF-8',
-        generatepassword: 'false',
         id: '0052D0000043PawWWR',
         languageLocaleKey: 'en_US',
         lastName: 'User',

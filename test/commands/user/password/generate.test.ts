@@ -84,7 +84,7 @@ describe('force:user:password:generate', () => {
 
     .stdout()
     .command(['force:user:password:generate', '--json'])
-    .it('should throw the correct errror with warning message', (ctx) => {
+    .it('should throw the correct error with warning message', (ctx) => {
       const result = JSON.parse(ctx.stdout);
       expect(result.message).to.equal(messages.getMessage('noSelfSetError'));
       expect(result.status).to.equal(1);

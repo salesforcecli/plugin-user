@@ -527,7 +527,7 @@
     chalk "^2.4.2"
     cli-ux "^4.9.3"
 
-"@salesforce/core@^2.14.2", "@salesforce/core@^2.6.0":
+"@salesforce/core@^2.15.2", "@salesforce/core@^2.6.0":
   version "2.15.2"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.15.2.tgz#7e2b0ac6c1d67f850a461e007298d1381b37c07a"
   integrity sha512-PCP9HdGEl4us8X66tOfwlTOGFRju8m7ezqfBlH7nRzmKw57i2l0LhXBEZ+DPwEBtAwa9wlvd9FhMmlhUYhm/EQ==
