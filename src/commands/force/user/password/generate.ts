@@ -27,24 +27,24 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       description: messages.getMessage('flags.onBehalfOf'),
     }),
   };
-
   public org: Org;
+
   private usernames: string[];
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[]> {
-    // split the usernames, trim them down, and then join them back
     if (this.flags.onbehalfof) {
-      this.usernames = this.flags.onbehalfof.join(',').trim().split(',');
+      // trim the usernames to avoid whitespace
+      this.usernames = this.flags.onbehalfof.map((user) => user.trim());
     } else {
       this.usernames = [this.org.getUsername()];
     }
 
-    for (let username of this.usernames) {
+    for (const username of this.usernames) {
       try {
         // Convert any aliases to usernames
-        // fetch will return undefined if no Alias for that name
-        username = (await Aliases.fetch(username)) || username;
+        // fetch will return undefined if there's no Alias for that name
+        const aliasOrUsername = (await Aliases.fetch(username)) || username;
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });
@@ -56,7 +56,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         authInfo.getFields().userId = fields.id;
         await user.assignPassword(authInfo, password);
         password.value((pass) => {
-          this.passwordData.push({ username, password: pass.toString('utf-8') });
+          this.passwordData.push({ username: aliasOrUsername, password: pass.toString('utf-8') });
         });
       } catch (e) {
         if (e.message.includes('Cannot set password for self')) {
@@ -73,8 +73,8 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
   private print(): void {
     if (this.passwordData) {
-      const successMsg = messages.getMessage('success', [this.passwordData[0].password, this.usernames[0]]);
-      const viewMsg = messages.getMessage('viewWithCommand', [this.usernames[0]]);
+      const successMsg = messages.getMessage('success', [this.passwordData[0].password, this.passwordData[0].username]);
+      const viewMsg = messages.getMessage('viewWithCommand', [this.passwordData[0].username]);
       this.ux.log(`${successMsg}${os.EOL}${viewMsg}`);
     } else {
       this.ux.log(messages.getMessage('successMultiple', [os.EOL]));

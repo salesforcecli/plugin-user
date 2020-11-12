@@ -1,6 +1,6 @@
 {
   "name": "@salesforce/plugin-user",
-  "description": "A template repository for sfdx plugins",
+  "description": "Commands to interact with Users and Permission Sets",
   "version": "1.0.0",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",

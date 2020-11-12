@@ -14,7 +14,7 @@ import { get } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
-type row = {
+type Row = {
   Key: string;
   Value: string;
 };
@@ -26,7 +26,7 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly requiresDevhubUsername = true;
   public logger: Logger;
 
-  public async run(): Promise<row[]> {
+  public async run(): Promise<Row[]> {
     this.logger = await Logger.child(this.constructor.name);
 
     const username: string = this.org.getUsername();
@@ -35,15 +35,13 @@ export class UserDisplayCommand extends SfdxCommand {
     const userAuthData: AuthFields = userAuthDataArray.find((uat) => uat.getFields().username === username).getFields();
     const conn: Connection = this.org.getConnection();
 
-    const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT profileid FROM User WHERE username='${username}')`;
-    const USER_QUERY = `SELECT id FROM User WHERE username='${username}'`;
-
     let profileName: string = userAuthData.userProfileName;
     let userId: string = userAuthData.userId;
 
     try {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
+        const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT profileid FROM User WHERE username='${username}')`;
         profileName = get(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
       }
     } catch (err) {
@@ -55,6 +53,7 @@ export class UserDisplayCommand extends SfdxCommand {
 
     try {
       if (!userId) {
+        const USER_QUERY = `SELECT id FROM User WHERE username='${username}'`;
         userId = get(await conn.query(USER_QUERY), 'records[0].Id') as string;
       }
     } catch (err) {
@@ -64,7 +63,7 @@ export class UserDisplayCommand extends SfdxCommand {
       );
     }
 
-    const rows: row[] = [
+    const rows: Row[] = [
       { Key: 'Access Token', Value: conn.accessToken },
       { Key: 'Id', Value: userId },
       { Key: 'Instance Url', Value: userAuthData.instanceUrl },

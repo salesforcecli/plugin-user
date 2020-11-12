@@ -7,6 +7,7 @@
 import * as os from 'os';
 import {
   Aliases,
+  AuthInfo,
   Connection,
   DefaultUserFields,
   fs,
@@ -51,6 +52,7 @@ export class UserCreateCommand extends SfdxCommand {
   };
   public logger: Logger;
   public org: Org;
+
   private user: User;
   private successes: SuccessMsg[];
   private failures: FailureMsg[];
@@ -62,7 +64,7 @@ export class UserCreateCommand extends SfdxCommand {
     });
     const user: User = await User.create({ org: this.org });
 
-    // merge defaults with provided values from cli -> file -> defaults
+    // merge defaults with provided values with cli > file > defaults
     const fields: UserFields = await this.aggregateFields(defaultUserFields.getFields());
 
     try {
@@ -71,6 +73,7 @@ export class UserCreateCommand extends SfdxCommand {
       await this.catchCreateUser(e, fields);
     }
 
+    // because we overload the UserField in the aggregateFields method these entries could possibly be there
     const permsets: string = fields['permsets'];
     const generatepassword: string = fields['varargs'];
 
@@ -94,7 +97,7 @@ export class UserCreateCommand extends SfdxCommand {
     if (generatepassword === 'true') {
       try {
         const password = User.generatePasswordUtf8();
-        // await this.user.assignPassword(await AuthInfo.create({ username: fields.username }), password);
+        await this.user.assignPassword(await AuthInfo.create({ username: fields.username }), password);
         password.value((pass: Buffer) => {
           this.successes.push({
             name: 'Password Assignment',

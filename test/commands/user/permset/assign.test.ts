@@ -43,7 +43,7 @@ describe('force:user:permset:assign', () => {
     })
     .stdout()
     .command([
-      'user:permset:assign',
+      'force:user:permset:assign',
       '--json',
       '--onbehalfof',
       'testUser1@test.com, testUser2@test.com',
@@ -58,26 +58,8 @@ describe('force:user:permset:assign', () => {
           value: 'DreamHouse',
         },
         {
-          name: ' testUser2@test.com',
+          name: 'testUser2@test.com',
           value: 'DreamHouse',
-        },
-      ];
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result.successes).to.deep.equal(expected);
-    });
-
-  test
-    .do(async () => {
-      await prepareStubs();
-    })
-    .stdout()
-    .command(['user:permset:assign', '--json', '--permsetname', 'DreamHouse, PERM2'])
-    .it('should assign both permsets to the default user', (ctx) => {
-      // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          name: 'defaultusername@test.com',
-          value: 'DreamHouse, PERM2',
         },
       ];
       const result = JSON.parse(ctx.stdout).result;
@@ -89,7 +71,7 @@ describe('force:user:permset:assign', () => {
       await prepareStubs(true);
     })
     .stdout()
-    .command(['user:permset:assign', '--json', '--permsetname', 'PERM2'])
+    .command(['force:user:permset:assign', '--json', '--permsetname', 'PERM2'])
     .it('should fail with the correct error message', (ctx) => {
       // testUser1@test.com is aliased to testUser
       const expected = [

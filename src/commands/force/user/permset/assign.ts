@@ -22,6 +22,11 @@ type FailureMsg = {
   message: string;
 };
 
+type Result = {
+  successes: SuccessMsg[];
+  failures: FailureMsg[];
+};
+
 export class UserPermsetAssignCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
@@ -29,7 +34,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   public static readonly flagsConfig: FlagsConfig = {
     permsetname: flags.string({
       char: 'n',
-      description: messages.getMessage('flags.name'),
+      description: messages.getMessage('flags.permsetName'),
       required: true,
     }),
     onbehalfof: flags.array({
@@ -41,10 +46,11 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
 
-  public async run(): Promise<{ successes: SuccessMsg[]; failures: FailureMsg[] }> {
+  public async run(): Promise<Result> {
     try {
       if (this.flags.onbehalfof) {
-        this.usernames = this.flags.onbehalfof.join(',').trim().split(',');
+        // trim the usernames to avoid whitespace
+        this.usernames = this.flags.onbehalfof.map((user) => user.trim());
       } else {
         this.usernames = [this.org.getUsername()];
       }
@@ -60,7 +66,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         const fields: UserFields = await user.retrieve(username);
 
         try {
-          await user.assignPermissionSets(fields.id, this.flags.permsetname.split(','));
+          await user.assignPermissionSets(fields.id, this.flags.permsetname);
           this.successes.push({
             name: aliasOrUsername,
             value: this.flags.permsetname,
@@ -78,7 +84,12 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
     this.print();
 
-    return Promise.resolve({ successes: this.successes, failures: this.failures });
+    const result: Result = {
+      successes: this.successes,
+      failures: this.failures,
+    };
+
+    return Promise.resolve(result);
   }
 
   private print(): void {

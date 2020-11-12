@@ -57,19 +57,18 @@ export class UserListCommand extends SfdxCommand {
       };
     });
 
-    const trimmedList = authList.map((auth) => {
-      return {
-        Default: auth.defaultMarker,
-        Alias: auth.alias,
-        Username: auth.username,
-        'Profile Name': auth.profileName,
-        'User ID': auth.userId,
-      };
-    });
+    const columns = {
+      columns: [
+        { key: 'defaultMarker', label: 'Default' },
+        { key: 'alias', label: 'Alias' },
+        { key: 'username', label: 'Username' },
+        { key: 'profileName', label: 'Profile Name' },
+        { key: 'userId', label: 'User Id' },
+      ],
+    };
 
-    const columns = ['Default', 'Alias', 'Username', 'Profile Name', 'User ID'];
     this.ux.styledHeader(`Users in org ${this.org.getOrgId()}`);
-    this.ux.table(trimmedList, columns);
+    this.ux.table(authList, columns);
 
     return Promise.resolve(authList);
   }

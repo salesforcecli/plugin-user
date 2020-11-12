@@ -52,7 +52,7 @@ describe('force:user:password:generate', () => {
       await prepareStubs();
     })
     .stdout()
-    .command(['user:password:generate', '--json', '--onbehalfof', 'testUser1@test.com, testUser2@test.com'])
+    .command(['force:user:password:generate', '--json', '--onbehalfof', 'testUser1@test.com, testUser2@test.com'])
     .it('should generate a new password for the user', (ctx) => {
       // testUser1@test.com is aliased to testUser
       const expected = [
@@ -61,7 +61,7 @@ describe('force:user:password:generate', () => {
           password: 'abc',
         },
         {
-          username: ' testUser2@test.com',
+          username: 'testUser2@test.com',
           password: 'abc',
         },
       ];
@@ -72,7 +72,7 @@ describe('force:user:password:generate', () => {
   test
     .do(() => prepareStubs())
     .stdout()
-    .command(['user:password:generate', '--json'])
+    .command(['force:user:password:generate', '--json'])
     .it('should generate a new password for the default user', (ctx) => {
       const expected = [{ username: 'defaultusername@test.com', password: 'abc' }];
       const result = JSON.parse(ctx.stdout).result;
@@ -83,7 +83,7 @@ describe('force:user:password:generate', () => {
     .do(async () => await prepareStubs(true))
 
     .stdout()
-    .command(['user:password:generate', '--json'])
+    .command(['force:user:password:generate', '--json'])
     .it('should throw the correct errror with warning message', (ctx) => {
       const result = JSON.parse(ctx.stdout);
       expect(result.message).to.equal(messages.getMessage('noSelfSetError'));

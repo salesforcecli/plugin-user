@@ -55,7 +55,7 @@ describe('force:user:create', () => {
     })
     .stdout()
     .command([
-      'user:create',
+      'force:user:create',
       '--json',
       '--targetusername',
       'testUser1@test.com',
@@ -86,7 +86,7 @@ describe('force:user:create', () => {
     })
     .stdout()
     .command([
-      'user:create',
+      'force:user:create',
       '--json',
       '--definitionfile',
       'parent/child/file.json',
@@ -123,7 +123,7 @@ describe('force:user:create', () => {
     })
     .stdout()
     .command([
-      'user:create',
+      'force:user:create',
       '--json',
       '--targetusername',
       'testUser1@test.com',
@@ -143,7 +143,7 @@ describe('force:user:create', () => {
     })
     .stdout()
     .command([
-      'user:create',
+      'force:user:create',
       '--json',
       '--targetusername',
       'testUser1@test.com',

@@ -7,6 +7,6 @@
   ],
   "flags": {
     "onBehalfOf": "comma-separated list of usernames or aliases to assign the permission set to",
-    "name": "TEST DESC"
+    "permsetName": "the name of the permission set to assign"
   }
 }

@@ -66,7 +66,7 @@ describe('force:user:list', () => {
     })
     .stdout()
     .command([
-      'user:list',
+      'force:user:list',
       '--json',
       '--targetusername',
       'testUser1@test.com',

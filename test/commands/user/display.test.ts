@@ -63,7 +63,7 @@ describe('force:user:display', () => {
     })
     .stdout()
     .command([
-      'user:display',
+      'force:user:display',
       '--json',
       '--targetusername',
       'testUser1@test.com',
@@ -116,7 +116,7 @@ describe('force:user:display', () => {
     })
     .stdout()
     .command([
-      'user:display',
+      'force:user:display',
       '--json',
       '--targetusername',
       'testUser1@test.com',
