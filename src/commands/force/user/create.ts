@@ -18,7 +18,7 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { get } from '@salesforce/ts-types';
+import { get, Dictionary } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
 Messages.importMessagesDirectory(__dirname);
@@ -65,7 +65,7 @@ export class UserCreateCommand extends SfdxCommand {
     const user: User = await User.create({ org: this.org });
 
     // merge defaults with provided values with cli > file > defaults
-    const fields: UserFields = await this.aggregateFields(defaultUserFields.getFields());
+    const fields: UserFields & Dictionary<string> = await this.aggregateFields(defaultUserFields.getFields());
 
     try {
       await user.createUser(fields);
@@ -73,9 +73,9 @@ export class UserCreateCommand extends SfdxCommand {
       await this.catchCreateUser(e, fields);
     }
 
-    // because we overload the UserField in the aggregateFields method these entries could possibly be there
+    // because fields is type UserFields & Dictionary<string> we can access these
     const permsets: string = fields['permsets'];
-    const generatepassword: string = fields['varargs'];
+    const generatepassword: string = fields['generatepassword'];
 
     // Assign permission sets to the created user
     if (permsets) {
@@ -141,12 +141,11 @@ export class UserCreateCommand extends SfdxCommand {
     }
   }
 
-  private async aggregateFields(defaultFields: UserFields): Promise<UserFields> {
+  private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
       const content = await fs.readJson(this.flags.definitionfile);
       Object.keys(content).forEach((key) => {
-        // we overload the UserField type by doing this
         defaultFields[key] = content[key];
       });
     }

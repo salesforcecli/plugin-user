@@ -70,7 +70,7 @@
     ],
     "topics": {
       "user": {
-        "description": "Commands to interact with the User of an org",
+        "description": "commands that perform user-related admin tasks",
         "subtopics": {
           "permset": {
             "description": "Use to interact with permission sets assigned to a user"
