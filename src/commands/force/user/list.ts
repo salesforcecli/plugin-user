@@ -70,7 +70,7 @@ export class UserListCommand extends SfdxCommand {
     this.ux.styledHeader(`Users in org ${this.org.getOrgId()}`);
     this.ux.table(authList, columns);
 
-    return Promise.resolve(authList);
+    return authList;
   }
 
   /**

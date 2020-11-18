@@ -89,7 +89,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       failures: this.failures,
     };
 
-    return Promise.resolve(result);
+    return result;
   }
 
   private print(): void {

@@ -68,7 +68,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
     this.print();
 
-    return Promise.resolve(this.passwordData);
+    return this.passwordData;
   }
 
   private print(): void {

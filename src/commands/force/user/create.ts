@@ -65,15 +65,15 @@ export class UserCreateCommand extends SfdxCommand {
     this.user = await User.create({ org: this.org });
 
     // merge defaults with provided values with cli > file > defaults
-    const fields: UserFields & Dictionary<string> = await this.aggregateFields(defaultUserFields.getFields());
+    const fields = await this.aggregateFields(defaultUserFields.getFields());
     // because fields is type UserFields & Dictionary<string> we can access these
-    const permsets = fields['permsets'];
-    const generatepassword: string = fields['generatepassword'];
+    const permsets: string = fields.permsets;
+    const generatepassword: string = fields.generatepassword;
 
     // extract the fields and then delete, createUser doesn't expect a permsets or generatepassword
-    delete fields['permsets'];
-    delete fields['generatepassword'];
-    delete fields['generatePassword'];
+    delete fields.permsets;
+    delete fields.generatepassword;
+    delete fields.generatePassword;
 
     try {
       await this.user.createUser(fields);
@@ -85,12 +85,10 @@ export class UserCreateCommand extends SfdxCommand {
     if (permsets) {
       try {
         // permsets can be passed from cli args or file we need to create an array of permset names either way it's passed
-        let permsetArray: string[];
-        if (!isArray(permsets)) {
-          permsetArray = [permsets];
-        } else {
-          permsetArray = permsets as string[];
-        }
+        // it will either be a comma separated string, or an array, force it into an array
+        const permsetArray: string[] = isArray<string>(fields.permsets)
+          ? fields.permsets
+          : fields.permsets.trim().split(',');
 
         await this.user.assignPermissionSets(fields.id, permsetArray);
         this.successes.push({
@@ -132,7 +130,7 @@ export class UserCreateCommand extends SfdxCommand {
 
     this.print(fields);
 
-    return Promise.resolve(Object.assign({ orgId: this.org.getOrgId() }, fields));
+    return Object.assign({ orgId: this.org.getOrgId() }, fields);
   }
 
   private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
