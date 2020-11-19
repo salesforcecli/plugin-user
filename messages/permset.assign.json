@@ -1,0 +1,12 @@
+{
+  "description": "assign a permission set to one or more users of an org",
+  "examples": [
+    "sfdx force:user:permset:assign -n DreamHouse",
+    "sfdx force:user:permset:assign -n DreamHouse -u me@my.org",
+    "sfdx force:user:permset:assign -n DreamHouse -o \"user1@my.org,user2,user3\""
+  ],
+  "flags": {
+    "onBehalfOf": "comma-separated list of usernames or aliases to assign the permission set to",
+    "permsetName": "the name of the permission set to assign"
+  }
+}

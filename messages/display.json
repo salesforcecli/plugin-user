@@ -1,0 +1,4 @@
+{
+  "description": "displays information about a user of a scratch org",
+  "examples": ["sfdx force:user:display", "sfdx force:user:display -u me@my.org --json"]
+}

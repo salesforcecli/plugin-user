@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  release-management: salesforce/npm-release-management@3
+  release-management: salesforce/npm-release-management@4
 
 workflows:
   version: 2
@@ -18,6 +18,7 @@ workflows:
           name: node-12
       - release-management/release-package:
           sign: true
+          github-release: true
           requires:
             - node-latest
           filters:
