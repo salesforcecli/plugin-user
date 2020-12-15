@@ -42,7 +42,7 @@ export class UserDisplayCommand extends SfdxCommand {
     try {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
-        const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT profileid FROM User WHERE username='${username}')`;
+        const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
         profileName = get(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
       }
     } catch (err) {

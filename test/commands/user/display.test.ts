@@ -8,13 +8,11 @@
 import { $$, expect, test } from '@salesforce/command/lib/test';
 import { Aliases, Connection, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
-import { Crypto } from '@salesforce/core/lib/crypto';
 
 const username = 'defaultusername@test.com';
 
 describe('force:user:display', () => {
   async function prepareStubs(queries = false) {
-    stubMethod($$.SANDBOX, Crypto.prototype, 'decrypt').returns('fakepassword');
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(username);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
@@ -31,7 +29,7 @@ describe('force:user:display', () => {
         },
       ]);
       stubMethod($$.SANDBOX, Connection.prototype, 'query')
-        .withArgs(`SELECT name FROM Profile WHERE Id IN (SELECT profileid FROM User WHERE username='${username}')`)
+        .withArgs(`SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`)
         .resolves({
           records: [{ Name: 'QueriedName' }],
         })
@@ -103,7 +101,7 @@ describe('force:user:display', () => {
         { Key: 'Alias', Value: 'testAlias' },
         {
           Key: 'Password',
-          Value: 'fakepassword',
+          Value: '-a098u234/1!@#',
         },
       ];
       const result = JSON.parse(ctx.stdout).result;
