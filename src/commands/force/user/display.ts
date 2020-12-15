@@ -8,7 +8,6 @@
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages } from '@salesforce/core';
-import { Crypto } from '@salesforce/core/lib/crypto';
 import { get } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -32,7 +31,9 @@ export class UserDisplayCommand extends SfdxCommand {
     const username: string = this.org.getUsername();
     const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
     // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
-    const userAuthData: AuthFields = userAuthDataArray.find((uat) => uat.getFields().username === username).getFields();
+    const userAuthData: AuthFields = userAuthDataArray
+      .find((uat) => uat.getFields().username === username)
+      .getFields(true);
     const conn: Connection = this.org.getConnection();
 
     let profileName: string = userAuthData.userProfileName;
@@ -80,8 +81,7 @@ export class UserDisplayCommand extends SfdxCommand {
     }
 
     if (userAuthData.password) {
-      const crypto = new Crypto();
-      rows.push({ Key: 'Password', Value: crypto.decrypt(userAuthData.password) });
+      rows.push({ Key: 'Password', Value: userAuthData.password });
     }
 
     const columns = ['Key', 'Value'];
