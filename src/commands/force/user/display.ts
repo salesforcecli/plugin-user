@@ -82,20 +82,44 @@ export class UserDisplayCommand extends SfdxCommand {
     };
 
     // if they passed in a alias and it maps to something we have an Alias.
-    const alias: string = await Aliases.fetch(this.flags.targetusername);
-
-    if (alias) {
-      // they passed in an alias so we have that
-      result.alias = this.flags.targetusername;
+    const alias = await Aliases.create(Aliases.getDefaultOptions());
+    const aliasContent = alias.getContents().orgs;
+    if (aliasContent) {
+      Object.keys(aliasContent).find((aliasedName) => {
+        result.alias = aliasContent[aliasedName];
+      });
     }
 
     if (userAuthData.password) {
       result.password = userAuthData.password;
     }
 
-    this.ux.styledHeader('User Description');
-    this.ux.styledObject(result);
+    this.print(result);
 
     return result;
+  }
+
+  private print(result: Result): void {
+    const columns = {
+      columns: [
+        { key: 'key', label: 'key' },
+        { key: 'label', label: 'label' },
+      ],
+    };
+
+    const tableRow = [];
+    // to get proper capitalization and spacing, enter the rows
+    tableRow.push({ key: 'Username', label: result.username });
+    tableRow.push({ key: 'Profile Name', label: result.profileName });
+    tableRow.push({ key: 'Id', label: result.id });
+    tableRow.push({ key: 'Org Id', label: result.orgId });
+    tableRow.push({ key: 'Access Token', label: result.accessToken });
+    tableRow.push({ key: 'Instance Url', label: result.instanceUrl });
+    tableRow.push({ key: 'Login Url', label: result.loginUrl });
+    if (result.alias) tableRow.push({ key: 'Alias', label: result.alias });
+    if (result.password) tableRow.push({ key: 'Password', label: result.password });
+
+    this.ux.styledHeader('User Description');
+    this.ux.table(tableRow, columns);
   }
 }
