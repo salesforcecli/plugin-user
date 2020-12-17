@@ -52,7 +52,10 @@ describe('force:user:display', () => {
       ]);
     }
 
-    stubMethod($$.SANDBOX, Aliases, 'fetch').resolves('testAlias');
+    const alias = await Aliases.create(Aliases.getDefaultOptions());
+    stubMethod($$.SANDBOX, Aliases, 'create').resolves(alias);
+
+    stubMethod($$.SANDBOX, alias, 'getContents').returns({ orgs: { testAlias: 'testUser1@test.com' } });
   }
 
   test
