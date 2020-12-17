@@ -85,8 +85,8 @@ export class UserDisplayCommand extends SfdxCommand {
     const alias = await Aliases.create(Aliases.getDefaultOptions());
     const aliasContent = alias.getContents().orgs;
     if (aliasContent) {
-      Object.keys(aliasContent).find((aliasedName) => {
-        result.alias = aliasContent[aliasedName];
+      Object.keys(aliasContent).forEach((aliasedName) => {
+        if (aliasContent[aliasedName] === username) result.alias = aliasedName;
       });
     }
 
