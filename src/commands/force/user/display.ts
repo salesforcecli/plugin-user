@@ -13,9 +13,16 @@ import { get } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
-type Row = {
-  Key: string;
-  Value: string;
+type Result = {
+  username: string;
+  profileName: string;
+  id: string;
+  orgId: string;
+  accessToken: string;
+  instanceUrl: string;
+  loginUrl: string;
+  alias?: string;
+  password?: string;
 };
 
 export class UserDisplayCommand extends SfdxCommand {
@@ -25,7 +32,7 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly requiresDevhubUsername = true;
   public logger: Logger;
 
-  public async run(): Promise<Row[]> {
+  public async run(): Promise<Result> {
     this.logger = await Logger.child(this.constructor.name);
 
     const username: string = this.org.getUsername();
@@ -64,30 +71,31 @@ export class UserDisplayCommand extends SfdxCommand {
       );
     }
 
-    const rows: Row[] = [
-      { Key: 'Access Token', Value: conn.accessToken },
-      { Key: 'Id', Value: userId },
-      { Key: 'Instance Url', Value: userAuthData.instanceUrl },
-      { Key: 'Login Url', Value: userAuthData.loginUrl },
-      { Key: 'Org Id', Value: this.org.getOrgId() },
-      { Key: 'Profile Name', Value: profileName },
-      { Key: 'Username', Value: username },
-    ];
+    const result: Result = {
+      accessToken: conn.accessToken,
+      id: userId,
+      instanceUrl: userAuthData.instanceUrl,
+      loginUrl: userAuthData.loginUrl,
+      orgId: this.org.getOrgId(),
+      profileName,
+      username,
+    };
 
-    const alias: string = await Aliases.fetch(username);
+    // if they passed in a alias and it maps to something we have an Alias.
+    const alias: string = await Aliases.fetch(this.flags.targetusername);
 
     if (alias) {
-      rows.push({ Key: 'Alias', Value: alias });
+      // they passed in an alias so we have that
+      result.alias = this.flags.targetusername;
     }
 
     if (userAuthData.password) {
-      rows.push({ Key: 'Password', Value: userAuthData.password });
+      result.password = userAuthData.password;
     }
 
-    const columns = ['Key', 'Value'];
     this.ux.styledHeader('User Description');
-    this.ux.table(rows, columns);
+    this.ux.styledObject(result);
 
-    return rows;
+    return result;
   }
 }

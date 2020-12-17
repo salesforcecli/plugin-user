@@ -70,40 +70,16 @@ describe('force:user:display', () => {
     ])
     .it('should display the correct information from the default user', (ctx) => {
       // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          Key: 'Access Token',
-        },
-        {
-          Key: 'Id',
-          Value: '1234567890',
-        },
-        {
-          Key: 'Instance Url',
-          Value: 'instanceURL',
-        },
-        {
-          Key: 'Login Url',
-          Value: 'login.test.com',
-        },
-        {
-          Key: 'Org Id',
-          Value: 'abc123',
-        },
-        {
-          Key: 'Profile Name',
-          Value: 'profileName',
-        },
-        {
-          Key: 'Username',
-          Value: 'defaultusername@test.com',
-        },
-        { Key: 'Alias', Value: 'testAlias' },
-        {
-          Key: 'Password',
-          Value: '-a098u234/1!@#',
-        },
-      ];
+      const expected = {
+        alias: 'testUser1@test.com',
+        id: '1234567890',
+        instanceUrl: 'instanceURL',
+        loginUrl: 'login.test.com',
+        orgId: 'abc123',
+        password: '-a098u234/1!@#',
+        profileName: 'profileName',
+        username: 'defaultusername@test.com',
+      };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
     });
@@ -123,39 +99,15 @@ describe('force:user:display', () => {
     ])
     .it('should make queries to the server to get userId and profileName', (ctx) => {
       // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          Key: 'Access Token',
-        },
-        {
-          Key: 'Id',
-          Value: 'QueriedId',
-        },
-        {
-          Key: 'Instance Url',
-          Value: 'instanceURL',
-        },
-        {
-          Key: 'Login Url',
-          Value: 'login.test.com',
-        },
-        {
-          Key: 'Org Id',
-          Value: 'abc123',
-        },
-        {
-          Key: 'Profile Name',
-          Value: 'QueriedName',
-        },
-        {
-          Key: 'Username',
-          Value: 'defaultusername@test.com',
-        },
-        {
-          Key: 'Alias',
-          Value: 'testAlias',
-        },
-      ];
+      const expected = {
+        alias: 'testUser1@test.com',
+        id: 'QueriedId',
+        instanceUrl: 'instanceURL',
+        loginUrl: 'login.test.com',
+        orgId: 'abc123',
+        profileName: 'QueriedName',
+        username: 'defaultusername@test.com',
+      };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
     });
