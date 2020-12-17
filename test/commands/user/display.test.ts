@@ -55,7 +55,7 @@ describe('force:user:display', () => {
     const alias = await Aliases.create(Aliases.getDefaultOptions());
     stubMethod($$.SANDBOX, Aliases, 'create').resolves(alias);
 
-    stubMethod($$.SANDBOX, alias, 'getContents').returns({ orgs: { testAlias: 'testUser1@test.com' } });
+    stubMethod($$.SANDBOX, alias, 'getContents').returns({ orgs: { testAlias: 'defaultusername@test.com' } });
   }
 
   test
@@ -74,7 +74,7 @@ describe('force:user:display', () => {
     .it('should display the correct information from the default user', (ctx) => {
       // testUser1@test.com is aliased to testUser
       const expected = {
-        alias: 'testUser1@test.com',
+        alias: 'testAlias',
         id: '1234567890',
         instanceUrl: 'instanceURL',
         loginUrl: 'login.test.com',
@@ -103,7 +103,7 @@ describe('force:user:display', () => {
     .it('should make queries to the server to get userId and profileName', (ctx) => {
       // testUser1@test.com is aliased to testUser
       const expected = {
-        alias: 'testUser1@test.com',
+        alias: 'testAlias',
         id: 'QueriedId',
         instanceUrl: 'instanceURL',
         loginUrl: 'login.test.com',
