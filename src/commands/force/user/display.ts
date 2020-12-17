@@ -8,15 +8,21 @@
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages } from '@salesforce/core';
-import { Crypto } from '@salesforce/core/lib/crypto';
 import { get } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
-type Row = {
-  Key: string;
-  Value: string;
+type Result = {
+  username: string;
+  profileName: string;
+  id: string;
+  orgId: string;
+  accessToken: string;
+  instanceUrl: string;
+  loginUrl: string;
+  alias?: string;
+  password?: string;
 };
 
 export class UserDisplayCommand extends SfdxCommand {
@@ -26,13 +32,15 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly requiresDevhubUsername = true;
   public logger: Logger;
 
-  public async run(): Promise<Row[]> {
+  public async run(): Promise<Result> {
     this.logger = await Logger.child(this.constructor.name);
 
     const username: string = this.org.getUsername();
     const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
     // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
-    const userAuthData: AuthFields = userAuthDataArray.find((uat) => uat.getFields().username === username).getFields();
+    const userAuthData: AuthFields = userAuthDataArray
+      .find((uat) => uat.getFields().username === username)
+      .getFields(true);
     const conn: Connection = this.org.getConnection();
 
     let profileName: string = userAuthData.userProfileName;
@@ -41,7 +49,7 @@ export class UserDisplayCommand extends SfdxCommand {
     try {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
-        const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT profileid FROM User WHERE username='${username}')`;
+        const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
         profileName = get(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
       }
     } catch (err) {
@@ -63,31 +71,55 @@ export class UserDisplayCommand extends SfdxCommand {
       );
     }
 
-    const rows: Row[] = [
-      { Key: 'Access Token', Value: conn.accessToken },
-      { Key: 'Id', Value: userId },
-      { Key: 'Instance Url', Value: userAuthData.instanceUrl },
-      { Key: 'Login Url', Value: userAuthData.loginUrl },
-      { Key: 'Org Id', Value: this.org.getOrgId() },
-      { Key: 'Profile Name', Value: profileName },
-      { Key: 'Username', Value: username },
-    ];
+    const result: Result = {
+      accessToken: conn.accessToken,
+      id: userId,
+      instanceUrl: userAuthData.instanceUrl,
+      loginUrl: userAuthData.loginUrl,
+      orgId: this.org.getOrgId(),
+      profileName,
+      username,
+    };
 
-    const alias: string = await Aliases.fetch(username);
-
-    if (alias) {
-      rows.push({ Key: 'Alias', Value: alias });
+    // if they passed in a alias and it maps to something we have an Alias.
+    const alias = await Aliases.create(Aliases.getDefaultOptions());
+    const aliasContent = alias.getContents().orgs;
+    if (aliasContent) {
+      Object.keys(aliasContent).forEach((aliasedName) => {
+        if (aliasContent[aliasedName] === username) result.alias = aliasedName;
+      });
     }
 
     if (userAuthData.password) {
-      const crypto = new Crypto();
-      rows.push({ Key: 'Password', Value: crypto.decrypt(userAuthData.password) });
+      result.password = userAuthData.password;
     }
 
-    const columns = ['Key', 'Value'];
-    this.ux.styledHeader('User Description');
-    this.ux.table(rows, columns);
+    this.print(result);
 
-    return rows;
+    return result;
+  }
+
+  private print(result: Result): void {
+    const columns = {
+      columns: [
+        { key: 'key', label: 'key' },
+        { key: 'label', label: 'label' },
+      ],
+    };
+
+    const tableRow = [];
+    // to get proper capitalization and spacing, enter the rows
+    tableRow.push({ key: 'Username', label: result.username });
+    tableRow.push({ key: 'Profile Name', label: result.profileName });
+    tableRow.push({ key: 'Id', label: result.id });
+    tableRow.push({ key: 'Org Id', label: result.orgId });
+    tableRow.push({ key: 'Access Token', label: result.accessToken });
+    tableRow.push({ key: 'Instance Url', label: result.instanceUrl });
+    tableRow.push({ key: 'Login Url', label: result.loginUrl });
+    if (result.alias) tableRow.push({ key: 'Alias', label: result.alias });
+    if (result.password) tableRow.push({ key: 'Password', label: result.password });
+
+    this.ux.styledHeader('User Description');
+    this.ux.table(tableRow, columns);
   }
 }

@@ -8,13 +8,11 @@
 import { $$, expect, test } from '@salesforce/command/lib/test';
 import { Aliases, Connection, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
-import { Crypto } from '@salesforce/core/lib/crypto';
 
 const username = 'defaultusername@test.com';
 
 describe('force:user:display', () => {
   async function prepareStubs(queries = false) {
-    stubMethod($$.SANDBOX, Crypto.prototype, 'decrypt').returns('fakepassword');
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(username);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
@@ -31,7 +29,7 @@ describe('force:user:display', () => {
         },
       ]);
       stubMethod($$.SANDBOX, Connection.prototype, 'query')
-        .withArgs(`SELECT name FROM Profile WHERE Id IN (SELECT profileid FROM User WHERE username='${username}')`)
+        .withArgs(`SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`)
         .resolves({
           records: [{ Name: 'QueriedName' }],
         })
@@ -54,7 +52,10 @@ describe('force:user:display', () => {
       ]);
     }
 
-    stubMethod($$.SANDBOX, Aliases, 'fetch').resolves('testAlias');
+    const alias = await Aliases.create(Aliases.getDefaultOptions());
+    stubMethod($$.SANDBOX, Aliases, 'create').resolves(alias);
+
+    stubMethod($$.SANDBOX, alias, 'getContents').returns({ orgs: { testAlias: 'defaultusername@test.com' } });
   }
 
   test
@@ -72,40 +73,16 @@ describe('force:user:display', () => {
     ])
     .it('should display the correct information from the default user', (ctx) => {
       // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          Key: 'Access Token',
-        },
-        {
-          Key: 'Id',
-          Value: '1234567890',
-        },
-        {
-          Key: 'Instance Url',
-          Value: 'instanceURL',
-        },
-        {
-          Key: 'Login Url',
-          Value: 'login.test.com',
-        },
-        {
-          Key: 'Org Id',
-          Value: 'abc123',
-        },
-        {
-          Key: 'Profile Name',
-          Value: 'profileName',
-        },
-        {
-          Key: 'Username',
-          Value: 'defaultusername@test.com',
-        },
-        { Key: 'Alias', Value: 'testAlias' },
-        {
-          Key: 'Password',
-          Value: 'fakepassword',
-        },
-      ];
+      const expected = {
+        alias: 'testAlias',
+        id: '1234567890',
+        instanceUrl: 'instanceURL',
+        loginUrl: 'login.test.com',
+        orgId: 'abc123',
+        password: '-a098u234/1!@#',
+        profileName: 'profileName',
+        username: 'defaultusername@test.com',
+      };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
     });
@@ -125,39 +102,15 @@ describe('force:user:display', () => {
     ])
     .it('should make queries to the server to get userId and profileName', (ctx) => {
       // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          Key: 'Access Token',
-        },
-        {
-          Key: 'Id',
-          Value: 'QueriedId',
-        },
-        {
-          Key: 'Instance Url',
-          Value: 'instanceURL',
-        },
-        {
-          Key: 'Login Url',
-          Value: 'login.test.com',
-        },
-        {
-          Key: 'Org Id',
-          Value: 'abc123',
-        },
-        {
-          Key: 'Profile Name',
-          Value: 'QueriedName',
-        },
-        {
-          Key: 'Username',
-          Value: 'defaultusername@test.com',
-        },
-        {
-          Key: 'Alias',
-          Value: 'testAlias',
-        },
-      ];
+      const expected = {
+        alias: 'testAlias',
+        id: 'QueriedId',
+        instanceUrl: 'instanceURL',
+        loginUrl: 'login.test.com',
+        orgId: 'abc123',
+        profileName: 'QueriedName',
+        username: 'defaultusername@test.com',
+      };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
     });
