@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/salesforcecli/plugin-user/compare/v1.0.1...v1.0.2) (2020-12-17)
+
+
+### Bug Fixes
+
+* alias actual alias ([55f5bbb](https://github.com/salesforcecli/plugin-user/commit/55f5bbbe098f189f98b52e75a85f646554956173))
+* fix json output, fixed alias ([d26e5a4](https://github.com/salesforcecli/plugin-user/commit/d26e5a4e86dc4623affebcd39d671ab0a0288d10))
+* table output and alias ([4c75d8c](https://github.com/salesforcecli/plugin-user/commit/4c75d8c0e7dbd4436337755fbe5aa5b2f27073fd))
+
 ### [1.0.1](https://github.com/salesforcecli/plugin-user/compare/v1.0.0...v1.0.1) (2020-12-10)
 
 ## 1.0.0 (2020-11-19)
