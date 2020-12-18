@@ -37,6 +37,7 @@ describe('PermissionSetLicense tests', () => {
       expect(commandResult).to.have.property('status').equal(0);
       expect(commandResult.result.failures).to.be.an('array').with.length(0);
       expect(commandResult.result.successes).to.containSubset([{ value: 'WaveEmbeddedApp' }]);
+      expect(commandResult).to.not.have.property('warnings');
     });
 
     it('assigns a psl to default user successfully if already assigned', async () => {
@@ -47,6 +48,8 @@ describe('PermissionSetLicense tests', () => {
       expect(commandResult).to.have.property('status').equal(0);
       expect(commandResult.result.failures).to.be.an('array').with.length(0);
       expect(commandResult.result.successes).to.containSubset([{ value: 'WaveEmbeddedApp' }]);
+      expect(commandResult.warnings).to.be.an('array').with.length(1);
+      expect(commandResult.warnings[0]).to.include(testPSL);
     });
 
     it('fails properly for non-existing psl', async () => {
@@ -58,6 +61,8 @@ describe('PermissionSetLicense tests', () => {
       expect(commandResult.result.successes).to.be.an('array').with.length(0);
       expect(commandResult.result.failures).to.be.an('array').with.length.greaterThan(0);
     });
+
+    it('assigns a psl to multiple users via onBehalfOf', async () => {});
 
     after(async () => {
       await testutils.orgDelete(testProjectName);

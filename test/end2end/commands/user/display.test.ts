@@ -16,6 +16,18 @@ chai.use(subset);
 // add a unique folder name for this test
 const testProjectName = 'testProjectUserDisplay';
 
+const meetsRequiredShape = (commandResult) => {
+  expect(commandResult).to.have.property('status').equal(0);
+  expect(commandResult.result).to.be.an('object').with.property('username');
+  expect(commandResult.result).to.have.property('profileName');
+  expect(commandResult.result).to.have.property('id');
+  expect(commandResult.result).to.have.property('orgId');
+  expect(commandResult.result).to.have.property('instanceUrl');
+  expect(commandResult.result).to.have.property('accessToken');
+  expect(commandResult.result).to.have.property('loginUrl');
+  return true;
+};
+
 describe('UserDisplay tests', () => {
   // some tests run locally (operate on metadata, use filesystem, but don't need an org)
   // this flag makes the org optional
@@ -33,14 +45,31 @@ describe('UserDisplay tests', () => {
         cwd: testProjectName,
       });
       // console.log(JSON.stringify(commandResult.result.searchRecords));
-      expect(commandResult).to.have.property('status').equal(0);
-      expect(commandResult.result).to.be.an('object').with.property('username');
-      expect(commandResult.result).to.have.property('profileName');
-      expect(commandResult.result).to.have.property('id');
-      expect(commandResult.result).to.have.property('orgId');
-      expect(commandResult.result).to.have.property('instanceUrl');
-      expect(commandResult.result).to.have.property('accessToken');
-      expect(commandResult.result).to.have.property('loginUrl');
+      expect(meetsRequiredShape(commandResult)).to.equal(true);
+      expect(commandResult.result).not.to.have.property('alias');
+      expect(commandResult.result).not.to.have.property('password');
+    });
+
+    it('includes the password and alias', async () => {
+      const passwordResult = await exec2JSON('sfdx force:user:password:generate', {
+        cwd: testProjectName,
+      });
+      const commandResult = await exec2JSON('sfdx force:user:display --json', {
+        cwd: testProjectName,
+      });
+      // console.log(JSON.stringify(commandResult.result.searchRecords));
+      expect(meetsRequiredShape(commandResult)).to.equal(true);
+      expect(commandResult.result).to.be.an('object').with.property('username').equal(passwordResult.result.username);
+      expect(commandResult.result).to.have.property('password').equal(passwordResult.result.password);
+      expect(commandResult.result).not.to.have.property('alias');
+
+      const testAlias = 'testAlias';
+      await exec(`sfdx alias:set ${commandResult.result.username as string}=${testAlias}`);
+      const commandResultWithAlias = await exec2JSON('sfdx force:user:display --json', {
+        cwd: testProjectName,
+      });
+      expect(meetsRequiredShape(commandResultWithAlias)).to.equal(true);
+      expect(commandResultWithAlias.result).not.to.have.property('alias').equal(testAlias);
     });
 
     after(async () => {

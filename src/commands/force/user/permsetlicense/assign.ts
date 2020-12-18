@@ -27,6 +27,10 @@ type Result = {
   failures: FailureMsg[];
 };
 
+interface PermissionSetLicense {
+  Id: string;
+}
+
 export class UserPermsetLicenseAssignCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
@@ -48,16 +52,8 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
 
   public async run(): Promise<Result> {
     try {
-      if (this.flags.onbehalfof) {
-        // trim the usernames to avoid whitespace
-        // @Reflect: is there a reason this isn't part of the flags.array's default behavior?
-        this.usernames = this.flags.onbehalfof.map((user) => user.trim());
-      } else {
-        this.usernames = [this.org.getUsername()];
-      }
+      this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
 
-      // @Reflect: why not Promise.all these?  any reason to run them sequentially?
-      // @Reflect: permset can work across users/orgs.  it'd be way simpler to make the user an input and limit it to one PSL at a time.  I kept the approach for consistency
       for (const username of this.usernames) {
         // Convert any aliases to usernames
         const aliasOrUsername = (await Aliases.fetch(username)) || username;
@@ -68,27 +64,14 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
         const user: User = await User.create({ org });
         const fields: UserFields = await user.retrieve(username);
 
-        // @Reflect: putting this.flags.name into the template literal gives https://github.com/typescript-eslint/typescript-eslint/blob/v2.34.0/packages/eslint-plugin/docs/rules/restrict-template-expressions.md,
-        // so I have to cast it even though flags **should** know its type.
         const pslName = this.flags.name as string;
 
-        const psl =
-          // find the psl id
-          // @Reflect: this is such a common pattern I did this to share logic https://github.com/mshanemc/plugin-helpers/blob/master/src/queries.ts
-          // Another useful feature: returning the list of possible PermissionSetLicenses using returnChoices = true, choiceField = 'Master Label'.
-          // Current approach throws           message: "Cannot read property 'Id' of undefined",
-          // probably belongs in core connection
-          (
-            await connection.query(
-              `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
-            )
-          ).records[0] as PermissionSetLicense;
+        const psl = (
+          await connection.query(
+            `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
+          )
+        ).records[0] as PermissionSetLicense;
 
-        // @Reflect: --dev-debug vs. --verbose approach.  For customers who want to know what's happening.
-        // verbose is for human-readable
-        if (!this.flags.json && this.flags.verbose) {
-          this.ux.logJson(psl);
-        }
         try {
           await connection.sobject('PermissionSetLicenseAssign').create({
             AssigneeId: fields.id,
@@ -99,8 +82,9 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
             value: this.flags.name,
           });
         } catch (e) {
-          // @Reflect: idempotency.  If they already have it, the API will throw an error.  But should it?  Would it be better to think, "oh, it's already the way you wanted it, so we're all good"
+          // idempotency.  If they already have it, the API will throw an error about duplicate value.  If it's already the way they wanted, we're ok.
           if (e.message.startsWith('duplicate value found')) {
+            this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, this.flags.name]));
             this.successes.push({
               name: aliasOrUsername,
               value: this.flags.name,
@@ -114,18 +98,15 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
         }
       }
     } catch (e) {
-      // @Reflect: is this a "we should always wrap the whole thing in try/catch just in case?"
       throw SfdxError.wrap(e);
     }
 
     this.print();
 
-    const result: Result = {
+    return {
       successes: this.successes,
       failures: this.failures,
     };
-
-    return result;
   }
 
   private print(): void {
@@ -153,9 +134,4 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
       });
     }
   }
-}
-
-// @Reflect there must be some standardized types for sobjects somewhere, right?
-interface PermissionSetLicense {
-  Id: string;
 }
