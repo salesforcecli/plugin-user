@@ -82,7 +82,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
             value: this.flags.name,
           });
         } catch (e) {
-          // idempotency.  If they already have it, the API will throw an error about duplicate value.  If it's already the way they wanted, we're ok.
+          // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
           if (e.message.startsWith('duplicate value found')) {
             this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, this.flags.name]));
             this.successes.push({
