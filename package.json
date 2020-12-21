@@ -101,7 +101,7 @@
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "test": "sf-test",
-    "test:e2e": "mocha test/end2end/**/*.test.ts --timeout 100000 --parallel",
+    "test:e2e": "mocha test/**/*.e2e.ts --timeout 100000 --parallel",
     "version": "oclif-dev readme && git add README.md"
   },
   "husky": {
