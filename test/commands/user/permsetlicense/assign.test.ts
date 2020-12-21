@@ -63,7 +63,7 @@ describe('force:user:permsetlicense:assign', () => {
       'force:user:permsetlicense:assign',
       '--json',
       '--onbehalfof',
-      'testUser1@test.com, testUser2@test.com',
+      'testUser1@test.com,testUser2@test.com',
       '--name',
       goodPSL,
     ])
