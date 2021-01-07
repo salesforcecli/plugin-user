@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.4](https://github.com/salesforcecli/plugin-user/compare/v1.0.2...v1.0.4) (2021-01-07)
+
+
+### Bug Fixes
+
+* code review 1 ([b217ce2](https://github.com/salesforcecli/plugin-user/commit/b217ce2eefcda923a6a7dbf2dc6711a4e7ff4210))
+* standardized capitalization issues with config file ([a6989ec](https://github.com/salesforcecli/plugin-user/commit/a6989ec73df494ac4e702d0dae729352229e2890))
+
 ### [1.0.3](https://github.com/salesforcecli/plugin-user/compare/v1.0.2...v1.0.3) (2020-12-17)
 
 ### [1.0.2](https://github.com/salesforcecli/plugin-user/compare/v1.0.1...v1.0.2) (2020-12-17)
