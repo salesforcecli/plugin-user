@@ -5,13 +5,62 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+/* eslint-disable  @typescript-eslint/ban-ts-ignore */
+
 import { $$, expect, test } from '@salesforce/command/lib/test';
 import { Aliases, Connection, DefaultUserFields, fs, Org, User } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
+import { IConfig } from '@oclif/config';
+import UserCreateCommand from '../../../src/commands/force/user/create';
 
 const username = 'defaultusername@test.com';
 
 describe('force:user:create', () => {
+  it('will properly merge fields regardless of capitalization', async () => {
+    // notice the varied capitalization
+    stubMethod($$.SANDBOX, fs, 'readJson').resolves({
+      id: '0052D0000043PawWWR',
+      Username: '1605130295132_test-j6asqt5qoprs@example.com',
+      Alias: 'testAlias',
+      Email: username,
+      EmailEncodingKey: 'UTF-8',
+      LanguageLocaleKey: 'en_US',
+      localeSidKey: 'en_US',
+      ProfileId: '00e2D000000bNexWWR',
+      LastName: 'User',
+      timeZoneSidKey: 'America/Los_Angeles',
+    });
+
+    const createCommand = new UserCreateCommand(['-f', 'userConfig.json'], {} as IConfig);
+
+    // @ts-ignore
+    createCommand.flags = { definitionfile: 'testing' };
+
+    // @ts-ignore private method
+    const res = await createCommand.aggregateFields({
+      id: '00555000006lCspAAE',
+      emailEncodingKey: 'UTF-8',
+      languageLocaleKey: 'en_US',
+      localeSidKey: 'en_US',
+      profileId: '00e55000000fvDdAAI',
+      lastName: 'User',
+      timeZoneSidKey: 'America/Los_Angeles',
+    });
+
+    expect(res).to.deep.equal({
+      alias: 'testAlias',
+      email: 'defaultusername@test.com',
+      emailEncodingKey: 'UTF-8',
+      id: '0052D0000043PawWWR',
+      languageLocaleKey: 'en_US',
+      lastName: 'User',
+      localeSidKey: 'en_US',
+      profileId: '00e2D000000bNexWWR',
+      timeZoneSidKey: 'America/Los_Angeles',
+      username: '1605130295132_test-j6asqt5qoprs@example.com',
+    });
+  });
+
   async function prepareStubs(throws: { license?: boolean; duplicate?: boolean } = {}, readsFile = false) {
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, DefaultUserFields, 'create').resolves({
