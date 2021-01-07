@@ -8,7 +8,7 @@
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages } from '@salesforce/core';
-import { get } from '@salesforce/ts-types';
+import { getString } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
@@ -50,24 +50,24 @@ export class UserDisplayCommand extends SfdxCommand {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
         const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
-        profileName = get(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
+        profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name');
       }
     } catch (err) {
       profileName = 'unknown';
       this.logger.debug(
-        `Query for the profile name failed for username: ${username} with message: ${get(err, 'message') as string}`
+        `Query for the profile name failed for username: ${username} with message: ${getString(err, 'message')}`
       );
     }
 
     try {
       if (!userId) {
         const USER_QUERY = `SELECT id FROM User WHERE username='${username}'`;
-        userId = get(await conn.query(USER_QUERY), 'records[0].Id') as string;
+        userId = getString(await conn.query(USER_QUERY), 'records[0].Id');
       }
     } catch (err) {
       userId = 'unknown';
       this.logger.debug(
-        `Query for the user ID failed for username: ${username} with message: ${get(err, 'message') as string}`
+        `Query for the user ID failed for username: ${username} with message: ${getString(err, 'message')}`
       );
     }
 

@@ -18,7 +18,7 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { get, Dictionary, isArray } from '@salesforce/ts-types';
+import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
 Messages.importMessagesDirectory(__dirname);
@@ -123,9 +123,9 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Set the alias if specified
-    if (this.flags.setalias) {
+    if (this.flags.setalias || fields.alias) {
       const alias: Aliases = await Aliases.create(Aliases.getDefaultOptions());
-      alias.set(this.flags.setalias, fields.username);
+      alias.set(this.flags.setalias || fields.alias, fields.username);
     }
 
     this.print(fields);
@@ -136,13 +136,13 @@ export class UserCreateCommand extends SfdxCommand {
   private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
     // For Gacks, the error message is on response.body[0].message but for handled errors
     // the error message is on response.body.Errors[0].description.
-    const errMessage = (get(respBody, 'message') as string) || 'Unknown Error';
+    const errMessage = getString(respBody, 'message') || 'Unknown Error';
     const conn: Connection = this.org.getConnection();
 
     // Provide a more user friendly error message for certain server errors.
     if (errMessage.includes('LICENSE_LIMIT_EXCEEDED')) {
       const res = await conn.query(`SELECT name FROM profile WHERE id='${fields.profileId}'`);
-      const profileName = get(res, 'records[0].Name') as string;
+      const profileName = getString(res, 'records[0].Name');
       throw SfdxError.create('@salesforce/plugin-user', 'create', 'licenseLimitExceeded', [profileName]);
     } else if (errMessage.includes('DUPLICATE_USERNAME')) {
       throw SfdxError.create('@salesforce/plugin-user', 'create', 'duplicateUsername', [fields.username]);
@@ -151,19 +151,24 @@ export class UserCreateCommand extends SfdxCommand {
     }
   }
 
+  private lowerFirstLetter(word: string): string {
+    return word[0].toLowerCase() + word.substr(1);
+  }
+
   private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
       const content = await fs.readJson(this.flags.definitionfile);
       Object.keys(content).forEach((key) => {
-        defaultFields[key] = content[key];
+        // cast entries to lowercase to standardize
+        defaultFields[this.lowerFirstLetter(key)] = content[key];
       });
     }
 
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
         if (defaultFields[key]) {
-          defaultFields[key] = this.varargs[key];
+          defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
         }
       });
     }
@@ -174,7 +179,7 @@ export class UserCreateCommand extends SfdxCommand {
       this.logger.debug(`Querying org for profile name [${name}]`);
       const profileQuery = `SELECT id FROM profile WHERE name='${name}'`;
       const response = await this.org.getConnection().query(profileQuery);
-      defaultFields.profileId = get(response, 'records[0].Id') as string;
+      defaultFields.profileId = getString(response, 'records[0].Id');
       delete defaultFields['profileName'];
     }
 
