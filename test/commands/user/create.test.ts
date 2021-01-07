@@ -16,7 +16,7 @@ import UserCreateCommand from '../../../src/commands/force/user/create';
 const username = 'defaultusername@test.com';
 
 describe('force:user:create', () => {
-  it('will properly merge fields regardelss of capitialization', async () => {
+  it('will properly merge fields regardless of capitalization', async () => {
     // notice the varied capitalization
     stubMethod($$.SANDBOX, fs, 'readJson').resolves({
       id: '0052D0000043PawWWR',
