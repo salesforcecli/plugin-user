@@ -33,3 +33,6 @@ node_modules
 # os specific files
 .DS_Store
 .idea
+
+# local project folders for end-to-end tests
+TestProject*
