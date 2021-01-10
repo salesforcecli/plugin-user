@@ -41,7 +41,7 @@ export class UserCreateCommand extends SfdxCommand {
   public static readonly requiresDevhubUsername = true;
   public static readonly varargs = true;
   public static readonly flagsConfig: FlagsConfig = {
-    alias: flags.string({
+    setalias: flags.string({
       char: 'a',
       description: messages.getMessage('flags.alias'),
     }),
