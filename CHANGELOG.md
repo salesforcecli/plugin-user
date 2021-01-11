@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6](https://github.com/salesforcecli/plugin-user/compare/v1.0.5...v1.0.6) (2021-01-11)
+
+
+### Bug Fixes
+
+* properly pass permset names to core ([dd3b340](https://github.com/salesforcecli/plugin-user/commit/dd3b34040b5e47b821174003852f9c099fc4791f))
+
 ### [1.0.5](https://github.com/salesforcecli/plugin-user/compare/v1.0.4...v1.0.5) (2021-01-10)
 
 
