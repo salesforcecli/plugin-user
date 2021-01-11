@@ -66,7 +66,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         const fields: UserFields = await user.retrieve(username);
 
         try {
-          await user.assignPermissionSets(fields.id, this.flags.permsetname);
+          await user.assignPermissionSets(fields.id, [this.flags.permsetname]);
           this.successes.push({
             name: aliasOrUsername,
             value: this.flags.permsetname,
