@@ -69,14 +69,19 @@
       "@oclif/plugin-help"
     ],
     "topics": {
-      "user": {
-        "description": "commands that perform user-related admin tasks",
+      "force": {
+        "external": true,
         "subtopics": {
-          "permset": {
-            "description": "Use to interact with permission sets assigned to a user"
-          },
-          "password": {
-            "description": "Used to generate and set passwords for users"
+          "user": {
+            "description": "commands that perform user-related admin tasks",
+            "subtopics": {
+              "permset": {
+                "description": "Use to interact with permission sets assigned to a user"
+              },
+              "password": {
+                "description": "Used to generate and set passwords for users"
+              }
+            }
           }
         }
       }
