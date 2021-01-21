@@ -6,26 +6,16 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, AuthInfo, Connection, Org, User } from '@salesforce/core';
-import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
-import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
+import { Aliases, Connection, Org, User } from '@salesforce/core';
+import { stubMethod } from '@salesforce/ts-sinon';
 
 describe('force:user:permset:assign', () => {
-  let authInfoStub: StubbedType<AuthInfo>;
-  const testData = new MockTestOrgData();
-
   async function prepareStubs(throws = false) {
-    const authFields = await testData.getConfig();
-    authInfoStub = stubInterface<AuthInfo>($$.SANDBOX, { getFields: () => authFields });
-
-    stubMethod($$.SANDBOX, AuthInfo, 'create').callsFake(async () => authInfoStub);
-    stubMethod($$.SANDBOX, Connection, 'create').callsFake(async () => Connection.prototype);
+    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
+    stubMethod($$.SANDBOX, Connection.prototype, 'query').resolves({ records: [{ Id: 1234567890 }] });
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
     stubMethod($$.SANDBOX, User, 'create').callsFake(async () => User.prototype);
-    stubMethod($$.SANDBOX, User.prototype, 'retrieve').resolves({
-      id: '0052D0000043PawWWR',
-    });
     if (throws) {
       stubMethod($$.SANDBOX, User.prototype, 'assignPermissionSets').throws(
         new Error('Permission set "abc" not found in target org. Do you need to push source?')
