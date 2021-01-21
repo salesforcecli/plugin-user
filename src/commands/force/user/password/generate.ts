@@ -7,6 +7,7 @@
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User, UserFields } from '@salesforce/core';
+import { Crypto } from '@salesforce/core/lib/crypto';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -55,9 +56,12 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         // userId is used by `assignPassword` so we need to set it here
         authInfo.getFields().userId = fields.id;
         await user.assignPassword(authInfo, password);
+        const crypto = await Crypto.create();
         password.value((pass) => {
           this.passwordData.push({ username: aliasOrUsername, password: pass.toString('utf-8') });
+          authInfo.getFields().password = crypto.encrypt(pass.toString('utf-8'));
         });
+        await authInfo.save();
       } catch (e) {
         if (e.message.includes('Cannot set password for self')) {
           throw SfdxError.create('@salesforce/plugin-user', 'password.generate', 'noSelfSetError');
