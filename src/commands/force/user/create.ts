@@ -126,6 +126,7 @@ export class UserCreateCommand extends SfdxCommand {
     if (this.flags.setalias) {
       const alias: Aliases = await Aliases.create(Aliases.getDefaultOptions());
       alias.set(this.flags.setalias, fields.username);
+      await alias.write();
     }
 
     this.print(fields);
