@@ -28,7 +28,7 @@ describe('force:user:list', () => {
       },
     ]);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
-    stubMethod($$.SANDBOX, Aliases, 'fetch').resolves('testAlias');
+    stubMethod($$.SANDBOX, Aliases.prototype, 'getKeysByValue').returns(['testAlias']);
     stubMethod($$.SANDBOX, Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
@@ -77,7 +77,7 @@ describe('force:user:list', () => {
       // testUser1@test.com is aliased to testUser
       const expected = [
         {
-          defaultMarker: '(A)',
+          defaultMarker: '',
           alias: 'testAlias',
           username: 'testuser@test.com',
           profileName: 'Analytics Cloud Integration User',

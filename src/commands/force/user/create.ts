@@ -168,9 +168,7 @@ export class UserCreateCommand extends SfdxCommand {
 
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
-        if (defaultFields[key]) {
-          defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
-        }
+        defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
       });
     }
 
