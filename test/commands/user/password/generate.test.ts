@@ -7,10 +7,9 @@
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
 import { Aliases, AuthInfo, Connection, Org, User, AuthInfoConfig, Messages } from '@salesforce/core';
-import { spyMethod, StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
+import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
 import { SecureBuffer } from '@salesforce/core/lib/secureBuffer';
-import { Crypto } from '@salesforce/core/lib/crypto';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -19,7 +18,6 @@ describe('force:user:password:generate', () => {
   let authInfoStub: StubbedType<AuthInfo>;
   let authInfoConfigStub: StubbedType<AuthInfoConfig>;
   const testData = new MockTestOrgData();
-  let cryptoSpy;
 
   async function prepareStubs(throws = false) {
     const authFields = await testData.getConfig();
@@ -36,8 +34,6 @@ describe('force:user:password:generate', () => {
     stubMethod($$.SANDBOX, User.prototype, 'retrieve').resolves({
       id: '0052D0000043PawWWR',
     });
-
-    cryptoSpy = spyMethod($$.SANDBOX, Crypto.prototype, 'encrypt');
 
     const secureBuffer: SecureBuffer<void> = new SecureBuffer<void>();
     secureBuffer.consume(Buffer.from('abc', 'utf8'));
@@ -71,7 +67,7 @@ describe('force:user:password:generate', () => {
       ];
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(cryptoSpy.calledTwice).to.be.true;
+      expect(authInfoStub.update.callCount).to.equal(2);
     });
 
   test
@@ -82,7 +78,7 @@ describe('force:user:password:generate', () => {
       const expected = [{ username: 'defaultusername@test.com', password: 'abc' }];
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(cryptoSpy.calledOnce).to.be.true;
+      expect(authInfoStub.update.callCount).to.equal(1);
     });
 
   test
@@ -95,6 +91,6 @@ describe('force:user:password:generate', () => {
       expect(result.message).to.equal(messages.getMessage('noSelfSetError'));
       expect(result.status).to.equal(1);
       expect(result.name).to.equal('noSelfSetError');
-      expect(cryptoSpy.callCount).to.equal(0);
+      expect(authInfoStub.update.callCount).to.equal(0);
     });
 });
