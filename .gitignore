@@ -1,5 +1,5 @@
 # -- CLEAN
-
+tmp/
 # use yarn by default, so ignore npm
 package-lock.json
 
@@ -33,4 +33,3 @@ node_modules
 # os specific files
 .DS_Store
 .idea
-/tmp/
