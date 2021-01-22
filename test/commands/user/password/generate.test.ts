@@ -67,6 +67,7 @@ describe('force:user:password:generate', () => {
       ];
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
+      expect(authInfoStub.update.callCount).to.equal(2);
     });
 
   test
@@ -77,6 +78,7 @@ describe('force:user:password:generate', () => {
       const expected = [{ username: 'defaultusername@test.com', password: 'abc' }];
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
+      expect(authInfoStub.update.callCount).to.equal(1);
     });
 
   test
@@ -89,5 +91,6 @@ describe('force:user:password:generate', () => {
       expect(result.message).to.equal(messages.getMessage('noSelfSetError'));
       expect(result.status).to.equal(1);
       expect(result.name).to.equal('noSelfSetError');
+      expect(authInfoStub.update.callCount).to.equal(0);
     });
 });

@@ -6,11 +6,11 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, Connection, Org } from '@salesforce/core';
+import { Aliases, ConfigAggregator, Connection, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
 describe('force:user:list', () => {
-  async function prepareStubs() {
+  async function prepareStubs(defaultUser?: boolean) {
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
       {
@@ -28,7 +28,11 @@ describe('force:user:list', () => {
       },
     ]);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
-    stubMethod($$.SANDBOX, Aliases, 'fetch').resolves('testAlias');
+    stubMethod($$.SANDBOX, Aliases.prototype, 'getKeysByValue').returns(['testAlias']);
+    if (defaultUser) {
+      const cfa = ConfigAggregator.getInstance();
+      stubMethod($$.SANDBOX, cfa, 'getLocalConfig').returns({ get: () => 'testAlias' });
+    }
     stubMethod($$.SANDBOX, Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
@@ -65,6 +69,31 @@ describe('force:user:list', () => {
       await prepareStubs();
     })
     .stdout()
+    .command(['force:user:list', '--json', '--targetusername', 'testUser', '--targetdevhubusername', 'devhub@test.com'])
+    .it('should display the correct information from the default user', (ctx) => {
+      // testUser1@test.com is aliased to testUser
+      const expected = [
+        {
+          defaultMarker: '',
+          alias: 'testAlias',
+          username: 'testuser@test.com',
+          profileName: 'Analytics Cloud Integration User',
+          orgId: 'abc123',
+          accessToken: 'accessToken',
+          instanceUrl: 'instanceURL',
+          loginUrl: 'login.test.com',
+          userId: '0052D0000043PbGQAU',
+        },
+      ];
+      const result = JSON.parse(ctx.stdout).result;
+      expect(result).to.deep.equal(expected);
+    });
+
+  test
+    .do(async () => {
+      await prepareStubs();
+    })
+    .stdout()
     .command([
       'force:user:list',
       '--json',
@@ -73,7 +102,39 @@ describe('force:user:list', () => {
       '--targetdevhubusername',
       'devhub@test.com',
     ])
-    .it('should display the correct information from the default user', (ctx) => {
+    .it('should display the correct information from the default user with alias', (ctx) => {
+      // testUser1@test.com is aliased to testUser
+      const expected = [
+        {
+          defaultMarker: '',
+          alias: 'testAlias',
+          username: 'testuser@test.com',
+          profileName: 'Analytics Cloud Integration User',
+          orgId: 'abc123',
+          accessToken: 'accessToken',
+          instanceUrl: 'instanceURL',
+          loginUrl: 'login.test.com',
+          userId: '0052D0000043PbGQAU',
+        },
+      ];
+      const result = JSON.parse(ctx.stdout).result;
+      expect(result).to.deep.equal(expected);
+    });
+
+  test
+    .do(async () => {
+      await prepareStubs(true);
+    })
+    .stdout()
+    .command([
+      'force:user:list',
+      '--json',
+      '--targetusername',
+      'testUser1@test.com',
+      '--targetdevhubusername',
+      'devhub@test.com',
+    ])
+    .it('should display the correct information from the default user with alias and it default', (ctx) => {
       // testUser1@test.com is aliased to testUser
       const expected = [
         {

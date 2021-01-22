@@ -2,7 +2,7 @@
   "description": "create a user for a scratch org",
   "examples": [
     "sfdx force:user:create",
-    "sfdx force:user:create -a testuser1 -f config/project-user-def.json",
+    "sfdx force:user:create -a testuser1 -f config/project-user-def.json profileName='Chatter Free User'",
     "sfdx force:user:create username=testuser1@my.org email=me@my.org permsets=DreamHouse",
     "sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true"
   ],

@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, Aliases, AuthInfo } from '@salesforce/core';
+import { Messages, Connection, Aliases, AuthInfo, ConfigAggregator } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
@@ -38,14 +38,16 @@ export class UserListCommand extends SfdxCommand {
     const userInfos: UserInfo = await this.buildUserInfos();
     const profileInfos: ProfileInfo = await this.buildProfileInfos();
     const userAuthData: AuthInfo[] = await this.org.readUserAuthFiles();
-
-    const alias = await Aliases.fetch(this.flags.targetusername);
+    const aliases = await Aliases.create(Aliases.getDefaultOptions());
 
     const authList: AuthList[] = userAuthData.map((authData) => {
       const username = authData.getUsername();
-
+      // if they passed in a alias and it maps to something we have an Alias.
+      const alias = aliases.getKeysByValue(authData.getUsername())[0];
+      const configAgg = ConfigAggregator.getInstance();
+      const defaultUserOrAlias = configAgg.getLocalConfig().get('defaultusername');
       return {
-        defaultMarker: authData.getFields().scratchAdminUsername ? '' : '(A)',
+        defaultMarker: defaultUserOrAlias === username || defaultUserOrAlias === alias ? '(A)' : '',
         alias: alias || '',
         username,
         profileName: profileInfos[userInfos[username].ProfileId],
