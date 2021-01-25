@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages } from '@salesforce/core';
+import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages, SfdxError, sfdc } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -34,7 +34,11 @@ export class UserDisplayCommand extends SfdxCommand {
 
   public async run(): Promise<Result> {
     this.logger = await Logger.child(this.constructor.name);
-
+    if (sfdc.matchesAccessToken(this.flags.targetusername)) {
+      throw new SfdxError(messages.getMessage('accessTokenError'), 'accessTokenError', [
+        messages.getMessage('accessTokenAction'),
+      ]);
+    }
     const username: string = this.org.getUsername();
     const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
     // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
