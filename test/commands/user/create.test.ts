@@ -8,7 +8,7 @@
 /* eslint-disable  @typescript-eslint/ban-ts-ignore */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, Connection, DefaultUserFields, fs, Org, User } from '@salesforce/core';
+import { Aliases, Connection, DefaultUserFields, fs, Logger, Org, User } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { IConfig } from '@oclif/config';
 import UserCreateCommand from '../../../src/commands/force/user/create';
@@ -61,7 +61,7 @@ describe('force:user:create', () => {
     });
   });
 
-  async function prepareStubs(throws: { license?: boolean; duplicate?: boolean } = {}, readsFile = false) {
+  async function prepareStubs(throws: { license?: boolean; duplicate?: boolean } = {}, readsFile?) {
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, DefaultUserFields, 'create').resolves({
       getFields: () => {
@@ -94,7 +94,11 @@ describe('force:user:create', () => {
     }
 
     if (readsFile) {
-      stubMethod($$.SANDBOX, fs, 'readJson').resolves({ generatepassword: true });
+      stubMethod($$.SANDBOX, Connection.prototype, 'query').resolves({
+        records: [{ Id: '12345678' }],
+      });
+      stubMethod($$.SANDBOX, Logger.prototype, 'debug');
+      stubMethod($$.SANDBOX, fs, 'readJson').resolves(readsFile);
     }
   }
 
@@ -131,7 +135,7 @@ describe('force:user:create', () => {
 
   test
     .do(async () => {
-      await prepareStubs({}, true);
+      await prepareStubs({}, { generatepassword: true });
     })
     .stdout()
     .command([
@@ -164,6 +168,48 @@ describe('force:user:create', () => {
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
     });
+
+  test
+    .do(async () => {
+      await prepareStubs({}, { generatepassword: true, profileName: 'System Administrator' });
+    })
+    .stdout()
+    .command([
+      'force:user:create',
+      '--json',
+      '--definitionfile',
+      'parent/child/file.json',
+      '--targetusername',
+      'testUser1@test.com',
+      '--targetdevhubusername',
+      'devhub@test.com',
+      'email=me@my.org',
+      'generatepassword=false',
+      "profileName='Chatter Free User'",
+    ])
+    // we set generatepassword=false in the varargs, in the definitionfile we have generatepassword=true, so we SHOULD NOT generate a password
+    // we should override the profileName with 'Chatter Free User'
+    .it(
+      'will merge fields from the cli args, and the definitionfile correctly, preferring cli args, cli args > file > default',
+      (ctx) => {
+        const expected = {
+          alias: 'testAlias',
+          email: 'me@my.org',
+          emailEncodingKey: 'UTF-8',
+          id: '0052D0000043PawWWR',
+          languageLocaleKey: 'en_US',
+          lastName: 'User',
+          localeSidKey: 'en_US',
+          orgId: 'abc123',
+          // note the new profileId 12345678 -> Chatter Free User from var args
+          profileId: '12345678',
+          timeZoneSidKey: 'America/Los_Angeles',
+          username: '1605130295132_test-j6asqt5qoprs@example.com',
+        };
+        const result = JSON.parse(ctx.stdout).result;
+        expect(result).to.deep.equal(expected);
+      }
+    );
 
   test
     .do(async () => {

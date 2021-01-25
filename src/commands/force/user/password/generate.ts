@@ -57,7 +57,9 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         await user.assignPassword(authInfo, password);
         password.value((pass) => {
           this.passwordData.push({ username: aliasOrUsername, password: pass.toString('utf-8') });
+          authInfo.update({ password: pass.toString('utf-8') });
         });
+        await authInfo.save();
       } catch (e) {
         if (e.message.includes('Cannot set password for self')) {
           throw SfdxError.create('@salesforce/plugin-user', 'password.generate', 'noSelfSetError');

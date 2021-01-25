@@ -7,7 +7,8 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Connection, Messages, User, AuthInfo, Org, UserFields, SfdxError } from '@salesforce/core';
+import { Aliases, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
+import { QueryResult } from 'jsforce';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
@@ -54,19 +55,21 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       } else {
         this.usernames = [this.org.getUsername()];
       }
+      const connection: Connection = this.org.getConnection();
+      const org = await Org.create({ connection });
 
       for (const username of this.usernames) {
         // Convert any aliases to usernames
         const aliasOrUsername = (await Aliases.fetch(username)) || username;
-        const connection: Connection = await Connection.create({
-          authInfo: await AuthInfo.create({ username }),
-        });
-        const org = await Org.create({ connection });
         const user: User = await User.create({ org });
-        const fields: UserFields = await user.retrieve(username);
+        // get userId of whomever the permset will be assigned to via query to avoid AuthInfo if remote user
+        const queryResult: QueryResult<{ Id: string }> = await connection.query(
+          `SELECT Id FROM User WHERE Username='${username}'`
+        );
+        const userId = queryResult.records[0].Id;
 
         try {
-          await user.assignPermissionSets(fields.id, [this.flags.permsetname]);
+          await user.assignPermissionSets(userId, [this.flags.permsetname]);
           this.successes.push({
             name: aliasOrUsername,
             value: this.flags.permsetname,
@@ -84,12 +87,10 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
     this.print();
 
-    const result: Result = {
+    return {
       successes: this.successes,
       failures: this.failures,
     };
-
-    return result;
   }
 
   private print(): void {
