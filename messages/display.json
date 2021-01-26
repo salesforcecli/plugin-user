@@ -1,4 +1,6 @@
 {
   "description": "displays information about a user of a scratch org",
-  "examples": ["sfdx force:user:display", "sfdx force:user:display -u me@my.org --json"]
+  "examples": ["sfdx force:user:display", "sfdx force:user:display -u me@my.org --json"],
+  "accessTokenError": "This command doesn't accept an access token for a username.",
+  "accessTokenAction": "Specify a username or an alias."
 }
