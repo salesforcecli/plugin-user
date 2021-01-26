@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.10](https://github.com/salesforcecli/plugin-user/compare/v1.0.8...v1.0.10) (2021-01-26)
+
+
+### Bug Fixes
+
+* bump to 1.0.9 to release ([88ce843](https://github.com/salesforcecli/plugin-user/commit/88ce8434ddd5b1f30dcf5de0cc4c7d40b579d9fd))
+* error message for display + accessToken ([3464ab3](https://github.com/salesforcecli/plugin-user/commit/3464ab3d697eb30f2f58186aeeaa59fe043ce23c))
+
 ### [1.0.8](https://github.com/salesforcecli/plugin-user/compare/v1.0.7...v1.0.8) (2021-01-21)
 
 ### [1.0.7](https://github.com/salesforcecli/plugin-user/compare/v1.0.6...v1.0.7) (2021-01-14)
