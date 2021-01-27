@@ -133,6 +133,7 @@ describe('force:user:create', () => {
         localeSidKey: 'en_US',
         orgId: 'abc123',
         generatepassword: 'true',
+        generatePassword: true,
         permsets: "'permCLI, permCLI2'",
         profileId: '12345678',
         profileName: 'profileFromArgs',

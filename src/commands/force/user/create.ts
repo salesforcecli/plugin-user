@@ -60,7 +60,7 @@ export class UserCreateCommand extends SfdxCommand {
   private authInfo: AuthInfo;
 
   /**
-   * removes fields that cause errors in sfdx-core's userCreate method
+   * removes fields that cause errors in salesforce api's within sfdx-core's createUser method
    *
    * @param fields a list of combined fields from varargs and the config file
    * @private
@@ -115,7 +115,7 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Generate and set a password if specified
-    if (fields.generatepassword === 'true') {
+    if (fields.generatePassword) {
       try {
         const password = User.generatePasswordUtf8();
         await this.user.assignPassword(this.authInfo, password);
@@ -194,17 +194,12 @@ export class UserCreateCommand extends SfdxCommand {
       defaultFields.profileId = response.records[0].Id;
     }
 
-    // the file schema is camelCase while the cli arg is no capitialization
-    // the flag and file can pass as a string or a proper boolean
-    // we can check only for existence because it could be set to false or 'false'
-    if (
-      defaultFields['generatePassword'] === 'true' ||
-      defaultFields['generatepassword'] === 'true' ||
-      defaultFields['generatePassword'] === true ||
-      defaultFields['generatepassword'] === true
-    ) {
-      // standardize on 'generatepassword'
+    // the file schema is camelCase and boolean while the cli arg is no capitialization and a string
+    if (defaultFields['generatepassword'] === 'true' || defaultFields['generatePassword'] === true) {
+      // since only one may be set, set both variations, prefer camelCase and boolean for coding
+      // this will also maintain --json backwards compatibility for the all lower case scenario
       defaultFields['generatepassword'] = 'true';
+      defaultFields['generatePassword'] = true;
     }
 
     return defaultFields;
