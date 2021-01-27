@@ -57,6 +57,7 @@ export class UserCreateCommand extends SfdxCommand {
   private user: User;
   private successes: SuccessMsg[] = [];
   private failures: FailureMsg[] = [];
+  private authInfo: AuthInfo;
 
   public async run(): Promise<UserFields> {
     this.logger = await Logger.child(this.constructor.name);
@@ -70,20 +71,25 @@ export class UserCreateCommand extends SfdxCommand {
     // because fields is type UserFields & Dictionary<string> we can access these
     const permsets: string = fields.permsets;
     const generatepassword: string = fields.generatepassword;
+    const profileName = fields.profileName;
 
     // extract the fields and then delete, createUser doesn't expect a permsets or generatepassword
     delete fields.permsets;
     delete fields.generatepassword;
     delete fields.generatePassword;
+    delete fields.profileName;
 
     try {
-      await this.user.createUser(fields);
+      this.authInfo = await this.user.createUser(fields);
+      fields.permsets = permsets;
+      fields.profileName = profileName;
+      if (fields.profileName) await this.authInfo.save({ userProfileName: fields.profileName });
     } catch (e) {
       await this.catchCreateUser(e, fields);
     }
 
     // Assign permission sets to the created user
-    if (permsets) {
+    if (fields.permsets) {
       try {
         // permsets can be passed from cli args or file we need to create an array of permset names either way it's passed
         // it will either be a comma separated string, or an array, force it into an array
@@ -108,8 +114,9 @@ export class UserCreateCommand extends SfdxCommand {
     if (generatepassword === 'true' || generatepassword) {
       try {
         const password = User.generatePasswordUtf8();
-        await this.user.assignPassword(await AuthInfo.create({ username: fields.username }), password);
+        await this.user.assignPassword(this.authInfo, password);
         password.value((pass: Buffer) => {
+          this.authInfo.save({ password: pass.toString('utf-8') });
           this.successes.push({
             name: 'Password Assignment',
             value: pass.toString(),
@@ -181,7 +188,6 @@ export class UserCreateCommand extends SfdxCommand {
         .getConnection()
         .query(`SELECT id FROM profile WHERE name='${name}'`);
       defaultFields.profileId = response.records[0].Id;
-      delete defaultFields['profileName'];
     }
 
     // the file schema is camelCase while the cli arg is no capitialization
