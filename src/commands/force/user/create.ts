@@ -195,7 +195,12 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // the file schema is camelCase and boolean while the cli arg is no capitialization and a string
-    if (defaultFields['generatepassword'] === 'true' || defaultFields['generatePassword'] === true) {
+    // we will add logic to capture camelcase in varargs just in case
+    if (
+      defaultFields['generatepassword'] === 'true' ||
+      defaultFields['generatePassword'] === 'true' ||
+      defaultFields['generatePassword'] === true
+    ) {
       // since only one may be set, set both variations, prefer camelCase and boolean for coding
       // this will also maintain --json backwards compatibility for the all lower case scenario
       defaultFields['generatepassword'] = 'true';
