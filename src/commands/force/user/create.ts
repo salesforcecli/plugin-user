@@ -59,6 +59,22 @@ export class UserCreateCommand extends SfdxCommand {
   private failures: FailureMsg[] = [];
   private authInfo: AuthInfo;
 
+  /**
+   * removes fields that cause errors in sfdx-core's userCreate method
+   *
+   * @param fields a list of combined fields from varargs and the config file
+   * @private
+   */
+  private static stripInvalidAPIFields(fields: UserFields & Dictionary<string>): UserFields {
+    const copy = Object.assign({}, fields);
+    // remove invalid fields for userCreate()
+    delete copy.permsets;
+    delete copy.generatepassword;
+    delete copy.generatePassword;
+    delete copy.profileName;
+    return copy as UserFields;
+  }
+
   public async run(): Promise<UserFields> {
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
@@ -68,25 +84,13 @@ export class UserCreateCommand extends SfdxCommand {
 
     // merge defaults with provided values with cli > file > defaults
     const fields = await this.aggregateFields(defaultUserFields.getFields());
-    // because fields is type UserFields & Dictionary<string> we can access these
-    const permsets: string = fields.permsets;
-    const generatepassword: string = fields.generatepassword;
-    const profileName = fields.profileName;
-
-    // extract the fields and then delete, createUser doesn't expect a permsets or generatepassword
-    delete fields.permsets;
-    delete fields.generatepassword;
-    delete fields.generatePassword;
-    delete fields.profileName;
-
     try {
-      this.authInfo = await this.user.createUser(fields);
-      fields.permsets = permsets;
-      fields.profileName = profileName;
-      if (fields.profileName) await this.authInfo.save({ userProfileName: fields.profileName });
+      this.authInfo = await this.user.createUser(UserCreateCommand.stripInvalidAPIFields(fields));
     } catch (e) {
       await this.catchCreateUser(e, fields);
     }
+
+    if (fields.profileName) await this.authInfo.save({ userProfileName: fields.profileName });
 
     // Assign permission sets to the created user
     if (fields.permsets) {
@@ -111,7 +115,7 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Generate and set a password if specified
-    if (generatepassword === 'true' || generatepassword) {
+    if (fields.generatepassword === 'true') {
       try {
         const password = User.generatePasswordUtf8();
         await this.user.assignPassword(this.authInfo, password);
@@ -191,7 +195,14 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // the file schema is camelCase while the cli arg is no capitialization
-    if (defaultFields['generatePassword'] || defaultFields['generatepassword']) {
+    // the flag and file can pass as a string or a proper boolean
+    // we can check only for existence because it could be set to false or 'false'
+    if (
+      defaultFields['generatePassword'] === 'true' ||
+      defaultFields['generatepassword'] === 'true' ||
+      defaultFields['generatePassword'] === true ||
+      defaultFields['generatepassword'] === true
+    ) {
       // standardize on 'generatepassword'
       defaultFields['generatepassword'] = 'true';
     }

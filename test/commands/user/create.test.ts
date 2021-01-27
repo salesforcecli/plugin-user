@@ -118,7 +118,7 @@ describe('force:user:create', () => {
       'testUser1@test.com',
       '--targetdevhubusername',
       'devhub@test.com',
-      "permissionSets='permCLI, permCLI2'",
+      "permsets='permCLI, permCLI2'",
       'generatepassword=true',
       'profileName=profileFromArgs',
     ])
@@ -132,7 +132,8 @@ describe('force:user:create', () => {
         lastName: 'User',
         localeSidKey: 'en_US',
         orgId: 'abc123',
-        permissionSets: "'permCLI, permCLI2'",
+        generatepassword: 'true',
+        permsets: "'permCLI, permCLI2'",
         profileId: '12345678',
         profileName: 'profileFromArgs',
         timeZoneSidKey: 'America/Los_Angeles',
@@ -243,6 +244,7 @@ describe('force:user:create', () => {
         orgId: 'abc123',
         permsets: ['test1', 'test2'],
         profileId: '00e2D000000bNexWWR',
+        generatepassword: 'false',
         timeZoneSidKey: 'America/Los_Angeles',
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       };
@@ -282,6 +284,7 @@ describe('force:user:create', () => {
           languageLocaleKey: 'en_US',
           lastName: 'User',
           localeSidKey: 'en_US',
+          generatepassword: 'false',
           profileName: "'Chatter Free User'",
           orgId: 'abc123',
           // note the new profileId 12345678 -> Chatter Free User from var args
