@@ -49,12 +49,8 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
   public async run(): Promise<Result> {
     try {
-      if (this.flags.onbehalfof) {
-        // trim the usernames to avoid whitespace
-        this.usernames = this.flags.onbehalfof.map((user) => user.trim());
-      } else {
-        this.usernames = [this.org.getUsername()];
-      }
+      this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
+
       const connection: Connection = this.org.getConnection();
       const org = await Org.create({ connection });
 
