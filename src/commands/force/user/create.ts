@@ -57,6 +57,23 @@ export class UserCreateCommand extends SfdxCommand {
   private user: User;
   private successes: SuccessMsg[] = [];
   private failures: FailureMsg[] = [];
+  private authInfo: AuthInfo;
+
+  /**
+   * removes fields that cause errors in salesforce api's within sfdx-core's createUser method
+   *
+   * @param fields a list of combined fields from varargs and the config file
+   * @private
+   */
+  private static stripInvalidAPIFields(fields: UserFields & Dictionary<string>): UserFields {
+    const copy = Object.assign({}, fields);
+    // remove invalid fields for userCreate()
+    delete copy.permsets;
+    delete copy.generatepassword;
+    delete copy.generatePassword;
+    delete copy.profileName;
+    return copy as UserFields;
+  }
 
   public async run(): Promise<UserFields> {
     this.logger = await Logger.child(this.constructor.name);
@@ -67,23 +84,16 @@ export class UserCreateCommand extends SfdxCommand {
 
     // merge defaults with provided values with cli > file > defaults
     const fields = await this.aggregateFields(defaultUserFields.getFields());
-    // because fields is type UserFields & Dictionary<string> we can access these
-    const permsets: string = fields.permsets;
-    const generatepassword: string = fields.generatepassword;
-
-    // extract the fields and then delete, createUser doesn't expect a permsets or generatepassword
-    delete fields.permsets;
-    delete fields.generatepassword;
-    delete fields.generatePassword;
-
     try {
-      await this.user.createUser(fields);
+      this.authInfo = await this.user.createUser(UserCreateCommand.stripInvalidAPIFields(fields));
     } catch (e) {
       await this.catchCreateUser(e, fields);
     }
 
+    if (fields.profileName) await this.authInfo.save({ userProfileName: fields.profileName });
+
     // Assign permission sets to the created user
-    if (permsets) {
+    if (fields.permsets) {
       try {
         // permsets can be passed from cli args or file we need to create an array of permset names either way it's passed
         // it will either be a comma separated string, or an array, force it into an array
@@ -91,7 +101,7 @@ export class UserCreateCommand extends SfdxCommand {
           ? fields.permsets
           : fields.permsets.trim().split(',');
 
-        await this.user.assignPermissionSets(fields.id, permsetArray);
+        await this.user.assignPermissionSets(this.authInfo.getFields().userId, permsetArray);
         this.successes.push({
           name: 'Permission Set Assignment',
           value: permsetArray.join(','),
@@ -105,11 +115,12 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Generate and set a password if specified
-    if (generatepassword === 'true' || generatepassword) {
+    if (fields.generatePassword) {
       try {
         const password = User.generatePasswordUtf8();
-        await this.user.assignPassword(await AuthInfo.create({ username: fields.username }), password);
+        await this.user.assignPassword(this.authInfo, password);
         password.value((pass: Buffer) => {
+          this.authInfo.save({ password: pass.toString('utf-8') });
           this.successes.push({
             name: 'Password Assignment',
             value: pass.toString(),
@@ -170,6 +181,10 @@ export class UserCreateCommand extends SfdxCommand {
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
         defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
+
+        if (key.toLowerCase() === 'generatepassword') {
+          defaultFields['generatePassword'] = this.varargs[key];
+        }
       });
     }
 
@@ -181,13 +196,30 @@ export class UserCreateCommand extends SfdxCommand {
         .getConnection()
         .query(`SELECT id FROM profile WHERE name='${name}'`);
       defaultFields.profileId = response.records[0].Id;
-      delete defaultFields['profileName'];
     }
 
-    // the file schema is camelCase while the cli arg is no capitialization
-    if (defaultFields['generatePassword'] || defaultFields['generatepassword']) {
-      // standardize on 'generatepassword'
+    // the file schema is camelCase and boolean while the cli arg is no capitialization and a string
+    // we will add logic to capture camelcase in varargs just in case
+    if (
+      defaultFields['generatepassword'] === 'true' ||
+      defaultFields['generatePassword'] === 'true' ||
+      defaultFields['generatePassword'] === true
+    ) {
+      // since only one may be set, set both variations, prefer camelCase and boolean for coding
+      // this will also maintain --json backwards compatibility for the all lower case scenario
       defaultFields['generatepassword'] = 'true';
+      defaultFields['generatePassword'] = true;
+    }
+    // for the false case
+    if (
+      defaultFields['generatepassword'] === 'false' ||
+      defaultFields['generatePassword'] === 'false' ||
+      defaultFields['generatePassword'] === false
+    ) {
+      // since only one may be set, set both variations, prefer camelCase and boolean for coding
+      // this will also maintain --json backwards compatibility for the all lower case scenario
+      defaultFields['generatepassword'] = 'false';
+      defaultFields['generatePassword'] = false;
     }
 
     return defaultFields;

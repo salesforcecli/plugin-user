@@ -8,7 +8,7 @@
 /* eslint-disable  @typescript-eslint/ban-ts-ignore */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, Connection, DefaultUserFields, fs, Logger, Org, User } from '@salesforce/core';
+import { Aliases, AuthInfo, Connection, DefaultUserFields, fs, Logger, Org, User } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { IConfig } from '@oclif/config';
 import UserCreateCommand from '../../../src/commands/force/user/create';
@@ -16,6 +16,7 @@ import UserCreateCommand from '../../../src/commands/force/user/create';
 const username = 'defaultusername@test.com';
 
 describe('force:user:create', () => {
+  let authInfoStub;
   it('will properly merge fields regardless of capitalization', async () => {
     // notice the varied capitalization
     stubMethod($$.SANDBOX, fs, 'readJson').resolves({
@@ -29,6 +30,7 @@ describe('force:user:create', () => {
       ProfileId: '00e2D000000bNexWWR',
       LastName: 'User',
       timeZoneSidKey: 'America/Los_Angeles',
+      permsets: ['permset1', 'permset2'],
     });
 
     const createCommand = new UserCreateCommand(['-f', 'userConfig.json'], {} as IConfig);
@@ -54,6 +56,7 @@ describe('force:user:create', () => {
       id: '0052D0000043PawWWR',
       languageLocaleKey: 'en_US',
       lastName: 'User',
+      permsets: ['permset1', 'permset2'],
       localeSidKey: 'en_US',
       profileId: '00e2D000000bNexWWR',
       timeZoneSidKey: 'America/Los_Angeles',
@@ -83,6 +86,7 @@ describe('force:user:create', () => {
     stubMethod($$.SANDBOX, User, 'create').callsFake(() => User.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(username);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
+    authInfoStub = stubMethod($$.SANDBOX, AuthInfo.prototype, 'save').resolves();
 
     if (throws.license) {
       stubMethod($$.SANDBOX, User.prototype, 'createUser').throws(new Error('LICENSE_LIMIT_EXCEEDED'));
@@ -90,7 +94,7 @@ describe('force:user:create', () => {
     } else if (throws.duplicate) {
       stubMethod($$.SANDBOX, User.prototype, 'createUser').throws(new Error('DUPLICATE_USERNAME'));
     } else {
-      stubMethod($$.SANDBOX, User.prototype, 'createUser').resolves();
+      stubMethod($$.SANDBOX, User.prototype, 'createUser').resolves(AuthInfo.prototype);
     }
 
     if (readsFile) {
@@ -101,6 +105,83 @@ describe('force:user:create', () => {
       stubMethod($$.SANDBOX, fs, 'readJson').resolves(readsFile);
     }
   }
+  test
+    .do(async () => {
+      stubMethod($$.SANDBOX, User.prototype, 'assignPassword').resolves();
+      await prepareStubs({}, { profileName: 'profileFromFile', permsets: ['perm1', 'perm2'] });
+    })
+    .stdout()
+    .command([
+      'force:user:create',
+      '--json',
+      '--targetusername',
+      'testUser1@test.com',
+      '--targetdevhubusername',
+      'devhub@test.com',
+      "permsets='permCLI, permCLI2'",
+      'generatepassword=true',
+      'profileName=profileFromArgs',
+    ])
+    .it('will handle a merge multiple permsets and profileNames from args and file (permsets from args)', (ctx) => {
+      const expected = {
+        alias: 'testAlias',
+        email: 'defaultusername@test.com',
+        emailEncodingKey: 'UTF-8',
+        id: '0052D0000043PawWWR',
+        languageLocaleKey: 'en_US',
+        lastName: 'User',
+        localeSidKey: 'en_US',
+        orgId: 'abc123',
+        generatepassword: 'true',
+        generatePassword: true,
+        permsets: "'permCLI, permCLI2'",
+        profileId: '12345678',
+        profileName: 'profileFromArgs',
+        timeZoneSidKey: 'America/Los_Angeles',
+        username: '1605130295132_test-j6asqt5qoprs@example.com',
+      };
+      const result = JSON.parse(ctx.stdout).result;
+      expect(result).to.deep.equal(expected);
+      expect(authInfoStub.callCount).to.be.equal(2);
+    });
+
+  test
+    .do(async () => {
+      await prepareStubs({}, { permsets: ['perm1', 'perm2'] });
+    })
+    .stdout()
+    .command([
+      'force:user:create',
+      '--json',
+      '--targetusername',
+      'testUser1@test.com',
+      '--targetdevhubusername',
+      'devhub@test.com',
+      '--definitionfile',
+      'tempfile.json',
+      'profileName=profileFromArgs',
+      'username=user@cliArgs.com',
+    ])
+    .it('will handle a merge multiple permsets and profileNames from args and file (permsets from file)', (ctx) => {
+      const expected = {
+        alias: 'testAlias',
+        email: 'defaultusername@test.com',
+        emailEncodingKey: 'UTF-8',
+        id: '0052D0000043PawWWR',
+        languageLocaleKey: 'en_US',
+        lastName: 'User',
+        localeSidKey: 'en_US',
+        orgId: 'abc123',
+        permsets: ['perm1', 'perm2'],
+        profileId: '12345678',
+        profileName: 'profileFromArgs',
+        timeZoneSidKey: 'America/Los_Angeles',
+        username: 'user@cliArgs.com',
+      };
+      const result = JSON.parse(ctx.stdout).result;
+      expect(result).to.deep.equal(expected);
+      expect(authInfoStub.callCount).to.be.equal(1);
+    });
 
   test
     .do(async () => {
@@ -131,11 +212,12 @@ describe('force:user:create', () => {
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
+      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
     .do(async () => {
-      await prepareStubs({}, { generatepassword: true });
+      await prepareStubs({}, { generatepassword: true, permsets: ['test1', 'test2'] });
     })
     .stdout()
     .command([
@@ -161,12 +243,16 @@ describe('force:user:create', () => {
         lastName: 'User',
         localeSidKey: 'en_US',
         orgId: 'abc123',
+        permsets: ['test1', 'test2'],
         profileId: '00e2D000000bNexWWR',
+        generatePassword: false,
+        generatepassword: 'false',
         timeZoneSidKey: 'America/Los_Angeles',
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
+      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
@@ -200,6 +286,9 @@ describe('force:user:create', () => {
           languageLocaleKey: 'en_US',
           lastName: 'User',
           localeSidKey: 'en_US',
+          generatePassword: false,
+          generatepassword: 'false',
+          profileName: "'Chatter Free User'",
           orgId: 'abc123',
           // note the new profileId 12345678 -> Chatter Free User from var args
           profileId: '12345678',
@@ -208,6 +297,7 @@ describe('force:user:create', () => {
         };
         const result = JSON.parse(ctx.stdout).result;
         expect(result).to.deep.equal(expected);
+        expect(authInfoStub.callCount).to.be.equal(1);
       }
     );
 
@@ -229,6 +319,7 @@ describe('force:user:create', () => {
       expect(result.status).to.equal(1);
       expect(result.message).to.equal('There are no available user licenses for the user profile "testName".');
       expect(result.name).to.equal('licenseLimitExceeded');
+      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
@@ -248,6 +339,7 @@ describe('force:user:create', () => {
       const result = JSON.parse(ctx.stdout);
       expect(result.status).to.equal(1);
       expect(result.name).to.equal('duplicateUsername');
+      expect(authInfoStub.callCount).to.be.equal(0);
       expect(result.message).to.equal(
         'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.'
       );
