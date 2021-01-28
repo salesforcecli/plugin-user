@@ -33,12 +33,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[]> {
-    if (this.flags.onbehalfof) {
-      // trim the usernames to avoid whitespace
-      this.usernames = this.flags.onbehalfof.map((user) => user.trim());
-    } else {
-      this.usernames = [this.org.getUsername()];
-    }
+    this.usernames = this.flags.onbehalfof ?? this.org.getUsername();
 
     for (const username of this.usernames) {
       try {
