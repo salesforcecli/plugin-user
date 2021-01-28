@@ -30,6 +30,7 @@ describe('force:user:password:generate', () => {
     stubMethod($$.SANDBOX, Connection, 'create').callsFake(async () => Connection.prototype);
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
+    stubMethod($$.SANDBOX, Org.prototype, 'retrieveMaxApiVersion').returns('51.0');
     stubMethod($$.SANDBOX, User, 'create').callsFake(async () => User.prototype);
     stubMethod($$.SANDBOX, User.prototype, 'retrieve').resolves({
       id: '0052D0000043PawWWR',

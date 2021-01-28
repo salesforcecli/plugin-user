@@ -33,7 +33,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[]> {
-    this.usernames = this.flags.onbehalfof ?? this.org.getUsername();
+    this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
 
     for (const username of this.usernames) {
       try {
@@ -56,8 +56,21 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         });
         await authInfo.save();
       } catch (e) {
-        if (e.message.includes('Cannot set password for self')) {
-          throw SfdxError.create('@salesforce/plugin-user', 'password.generate', 'noSelfSetError');
+        if (
+          e.message.includes('Cannot set password for self') ||
+          e.message.includes('The requested Resource does not exist')
+        ) {
+          // we don't have access to the apiVersion from what happened in the try, so until v51 is r2, we have to check versions the hard way
+          const authInfo: AuthInfo = await AuthInfo.create({ username });
+          const connection: Connection = await Connection.create({ authInfo });
+          const org = await Org.create({ connection });
+          if (parseInt(await org.retrieveMaxApiVersion(), 10) >= 51) {
+            throw new SfdxError(messages.getMessage('noSelfSetError'), 'noSelfSetError', [
+              messages.getMessage('noSelfSetErrorAction'),
+              messages.getMessage('scratchFeaturesUrl'),
+            ]);
+          }
+          throw new SfdxError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetError');
         }
         throw SfdxError.wrap(e);
       }
