@@ -181,6 +181,10 @@ export class UserCreateCommand extends SfdxCommand {
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
         defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
+
+        if (key.toLowerCase() === 'generatepassword') {
+          defaultFields['generatePassword'] = this.varargs[key];
+        }
       });
     }
 
@@ -205,6 +209,17 @@ export class UserCreateCommand extends SfdxCommand {
       // this will also maintain --json backwards compatibility for the all lower case scenario
       defaultFields['generatepassword'] = 'true';
       defaultFields['generatePassword'] = true;
+    }
+    // for the false case
+    if (
+      defaultFields['generatepassword'] === 'false' ||
+      defaultFields['generatePassword'] === 'false' ||
+      defaultFields['generatePassword'] === false
+    ) {
+      // since only one may be set, set both variations, prefer camelCase and boolean for coding
+      // this will also maintain --json backwards compatibility for the all lower case scenario
+      defaultFields['generatepassword'] = 'false';
+      defaultFields['generatePassword'] = false;
     }
 
     return defaultFields;
