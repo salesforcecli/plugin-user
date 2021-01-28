@@ -101,7 +101,7 @@ export class UserCreateCommand extends SfdxCommand {
           ? fields.permsets
           : fields.permsets.trim().split(',');
 
-        await this.user.assignPermissionSets(fields.id, permsetArray);
+        await this.user.assignPermissionSets(this.authInfo.getFields().userId, permsetArray);
         this.successes.push({
           name: 'Permission Set Assignment',
           value: permsetArray.join(','),
