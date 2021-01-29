@@ -18,6 +18,7 @@ describe('force:user:password:generate', () => {
   let authInfoStub: StubbedType<AuthInfo>;
   let authInfoConfigStub: StubbedType<AuthInfoConfig>;
   const testData = new MockTestOrgData();
+  let queryStub;
 
   async function prepareStubs(throws = false) {
     const authFields = await testData.getConfig();
@@ -32,8 +33,8 @@ describe('force:user:password:generate', () => {
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
     stubMethod($$.SANDBOX, Org.prototype, 'retrieveMaxApiVersion').returns('51.0');
     stubMethod($$.SANDBOX, User, 'create').callsFake(async () => User.prototype);
-    stubMethod($$.SANDBOX, User.prototype, 'retrieve').resolves({
-      id: '0052D0000043PawWWR',
+    queryStub = stubMethod($$.SANDBOX, Connection.prototype, 'singleRecordQuery').resolves({
+      Id: '0052D0000043PawWWR',
     });
 
     const secureBuffer: SecureBuffer<void> = new SecureBuffer<void>();
@@ -69,6 +70,7 @@ describe('force:user:password:generate', () => {
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
       expect(authInfoStub.update.callCount).to.equal(2);
+      expect(queryStub.callCount).to.equal(2);
     });
 
   test
@@ -80,6 +82,7 @@ describe('force:user:password:generate', () => {
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
       expect(authInfoStub.update.callCount).to.equal(1);
+      expect(queryStub.callCount).to.equal(1);
     });
 
   test
@@ -93,5 +96,6 @@ describe('force:user:password:generate', () => {
       expect(result.status).to.equal(1);
       expect(result.name).to.equal('noSelfSetError');
       expect(authInfoStub.update.callCount).to.equal(0);
+      expect(queryStub.callCount).to.equal(1);
     });
 });

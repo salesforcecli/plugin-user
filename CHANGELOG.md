@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.12](https://github.com/salesforcecli/plugin-user/compare/v1.0.8...v1.0.12) (2021-01-29)
+
+
+### Bug Fixes
+
+* 1.0.11 ([450b6ee](https://github.com/salesforcecli/plugin-user/commit/450b6ee0837133d5629858cc3e4fe8c242b29add))
+* add safety net around passwordGenerate in var args ([021a3f4](https://github.com/salesforcecli/plugin-user/commit/021a3f47baea85bddfbd6c04b901bb3a232af953))
+* assign permset to new user ([2fde9ba](https://github.com/salesforcecli/plugin-user/commit/2fde9ba5d4f7a6336152d1879daeaccf2003ee89))
+* bump to 1.0.9 to release ([88ce843](https://github.com/salesforcecli/plugin-user/commit/88ce8434ddd5b1f30dcf5de0cc4c7d40b579d9fd))
+* code review 1 ([cb90a86](https://github.com/salesforcecli/plugin-user/commit/cb90a86eeac9c68d9052c9744f48a9642e8f9bdc))
+* error message for display + accessToken ([3464ab3](https://github.com/salesforcecli/plugin-user/commit/3464ab3d697eb30f2f58186aeeaa59fe043ce23c))
+* handled false generate(p|P)assword scenario ([1b9cc3c](https://github.com/salesforcecli/plugin-user/commit/1b9cc3c189cb9ab53ea9f4ec00f90b3dd396941d))
+* save profileName and password to the authfile for the new user ([4b0b78d](https://github.com/salesforcecli/plugin-user/commit/4b0b78d41574fa30a53b4a741fa46ae3273fbfb4))
+* update help for create, display, list ([f04b29e](https://github.com/salesforcecli/plugin-user/commit/f04b29e3dcf78bd7c7bdea0045e6ce41851f3795))
+* update password:generate help ([d174f76](https://github.com/salesforcecli/plugin-user/commit/d174f763b4093ba160c3226d7a7af7d8e4d125af))
+* use generatePassword in code, provide both in output ([8617114](https://github.com/salesforcecli/plugin-user/commit/861711430dc6cf31db10fe3f662f023dba9db410))
+
 ### [1.0.8](https://github.com/salesforcecli/plugin-user/compare/v1.0.7...v1.0.8) (2021-01-21)
 
 ### [1.0.7](https://github.com/salesforcecli/plugin-user/compare/v1.0.6...v1.0.7) (2021-01-14)
