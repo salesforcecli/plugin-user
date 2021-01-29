@@ -7,7 +7,6 @@
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
-import { QueryResult } from 'jsforce';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -54,12 +53,12 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         const password = User.generatePasswordUtf8();
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
-        const result: QueryResult<{ Id: string }> = await connection.query(
+        const result: { Id: string } = await connection.singleRecordQuery(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
 
         // userId is used by `assignPassword` so we need to set it here
-        authInfo.getFields().userId = result.records[0].Id;
+        authInfo.getFields().userId = result.Id;
         await user.assignPassword(authInfo, password);
 
         password.value((pass) => {

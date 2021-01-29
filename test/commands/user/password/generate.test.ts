@@ -32,12 +32,8 @@ describe('force:user:password:generate', () => {
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
     stubMethod($$.SANDBOX, User, 'create').callsFake(async () => User.prototype);
-    queryStub = stubMethod($$.SANDBOX, Connection.prototype, 'query').resolves({
-      records: [
-        {
-          Id: '0052D0000043PawWWR',
-        },
-      ],
+    queryStub = stubMethod($$.SANDBOX, Connection.prototype, 'singleRecordQuery').resolves({
+      Id: '0052D0000043PawWWR',
     });
 
     const secureBuffer: SecureBuffer<void> = new SecureBuffer<void>();
