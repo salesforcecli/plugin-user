@@ -6,7 +6,8 @@
  */
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User, UserFields } from '@salesforce/core';
+import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
+import { QueryResult } from 'jsforce';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -51,14 +52,21 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
         const password = User.generatePasswordUtf8();
-        const fields: UserFields = await user.retrieve(username);
+        // we only need the Id, so instead of User.retrieve we'll just query
+        // this avoids permission issues if ProfileId is restricted for the user querying for it
+        const result: QueryResult<{ Id: string }> = await connection.query(
+          `SELECT Id FROM User WHERE Username='${username}'`
+        );
+
         // userId is used by `assignPassword` so we need to set it here
-        authInfo.getFields().userId = fields.id;
+        authInfo.getFields().userId = result.records[0].Id;
         await user.assignPassword(authInfo, password);
+
         password.value((pass) => {
           this.passwordData.push({ username: aliasOrUsername, password: pass.toString('utf-8') });
           authInfo.update({ password: pass.toString('utf-8') });
         });
+
         await authInfo.save();
       } catch (e) {
         if (e.message.includes('Cannot set password for self')) {
