@@ -65,10 +65,11 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
           const connection: Connection = await Connection.create({ authInfo });
           const org = await Org.create({ connection });
           if (parseInt(await org.retrieveMaxApiVersion(), 10) >= 51) {
-            throw new SfdxError(messages.getMessage('noSelfSetError'), 'noSelfSetError', [
-              messages.getMessage('noSelfSetErrorAction'),
-              messages.getMessage('scratchFeaturesUrl'),
-            ]);
+            throw new SfdxError(
+              messages.getMessage('noSelfSetError'),
+              'noSelfSetError',
+              messages.getMessage('noSelfSetErrorActions').split(os.EOL)
+            );
           }
           throw new SfdxError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetError');
         }
