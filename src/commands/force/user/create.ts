@@ -14,6 +14,7 @@ import {
   Logger,
   Messages,
   Org,
+  REQUIRED_FIELDS,
   SfdxError,
   User,
   UserFields,
@@ -106,7 +107,8 @@ export class UserCreateCommand extends SfdxCommand {
           name: 'Permission Set Assignment',
           value: permsetArray.join(','),
         });
-      } catch (err) {
+      } catch (error) {
+        const err = error as SfdxError;
         this.failures.push({
           name: 'Permission Set Assignment',
           message: err.message,
@@ -120,13 +122,15 @@ export class UserCreateCommand extends SfdxCommand {
         const password = User.generatePasswordUtf8();
         await this.user.assignPassword(this.authInfo, password);
         password.value((pass: Buffer) => {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           this.authInfo.save({ password: pass.toString('utf-8') });
           this.successes.push({
             name: 'Password Assignment',
             value: pass.toString(),
           });
         });
-      } catch (err) {
+      } catch (error) {
+        const err = error as SfdxError;
         this.failures.push({
           name: 'Password Assignment',
           message: err.message,
@@ -171,10 +175,10 @@ export class UserCreateCommand extends SfdxCommand {
   private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
-      const content = await fs.readJson(this.flags.definitionfile);
+      const content = (await fs.readJson(this.flags.definitionfile)) as UserFields;
       Object.keys(content).forEach((key) => {
         // cast entries to lowercase to standardize
-        defaultFields[this.lowerFirstLetter(key)] = content[key];
+        defaultFields[this.lowerFirstLetter(key)] = content[key] as keyof typeof REQUIRED_FIELDS;
       });
     }
 
@@ -190,7 +194,7 @@ export class UserCreateCommand extends SfdxCommand {
 
     // check if "profileName" was passed, this needs to become a profileId before calling User.create
     if (defaultFields['profileName']) {
-      const name: string = defaultFields['profileName'] || 'Standard User';
+      const name = (defaultFields['profileName'] || 'Standard User') as string;
       this.logger.debug(`Querying org for profile name [${name}]`);
       const response: QueryResult<{ Id: string }> = await this.org
         .getConnection()
