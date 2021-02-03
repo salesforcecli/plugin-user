@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User, UserFields } from '@salesforce/core';
+import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -33,36 +33,52 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[]> {
-    if (this.flags.onbehalfof) {
-      // trim the usernames to avoid whitespace
-      this.usernames = this.flags.onbehalfof.map((user) => user.trim());
-    } else {
-      this.usernames = [this.org.getUsername()];
-    }
+    this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
 
-    for (const username of this.usernames) {
+    for (const aliasOrUsername of this.usernames) {
       try {
         // Convert any aliases to usernames
         // fetch will return undefined if there's no Alias for that name
-        const aliasOrUsername = (await Aliases.fetch(username)) || username;
+        const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
         const password = User.generatePasswordUtf8();
-        const fields: UserFields = await user.retrieve(username);
+        // we only need the Id, so instead of User.retrieve we'll just query
+        // this avoids permission issues if ProfileId is restricted for the user querying for it
+        const result: { Id: string } = await connection.singleRecordQuery(
+          `SELECT Id FROM User WHERE Username='${username}'`
+        );
+
         // userId is used by `assignPassword` so we need to set it here
-        authInfo.getFields().userId = fields.id;
+        authInfo.getFields().userId = result.Id;
         await user.assignPassword(authInfo, password);
+
         password.value((pass) => {
-          this.passwordData.push({ username: aliasOrUsername, password: pass.toString('utf-8') });
+          this.passwordData.push({ username, password: pass.toString('utf-8') });
           authInfo.update({ password: pass.toString('utf-8') });
         });
+
         await authInfo.save();
       } catch (e) {
-        if (e.message.includes('Cannot set password for self')) {
-          throw SfdxError.create('@salesforce/plugin-user', 'password.generate', 'noSelfSetError');
+        if (
+          e.message.includes('Cannot set password for self') ||
+          e.message.includes('The requested Resource does not exist')
+        ) {
+          // we don't have access to the apiVersion from what happened in the try, so until v51 is r2, we have to check versions the hard way
+          const authInfo: AuthInfo = await AuthInfo.create({ username: aliasOrUsername });
+          const connection: Connection = await Connection.create({ authInfo });
+          const org = await Org.create({ connection });
+          if (parseInt(await org.retrieveMaxApiVersion(), 10) >= 51) {
+            throw new SfdxError(
+              messages.getMessage('noSelfSetError'),
+              'noSelfSetError',
+              messages.getMessage('noSelfSetErrorActions').split(os.EOL)
+            );
+          }
+          throw new SfdxError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetError');
         }
         throw SfdxError.wrap(e);
       }
