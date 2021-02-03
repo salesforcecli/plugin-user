@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.13](https://github.com/salesforcecli/plugin-user/compare/v1.0.12...v1.0.13) (2021-02-03)
+
+
+### Bug Fixes
+
+* auth info of alias ([caf716e](https://github.com/salesforcecli/plugin-user/commit/caf716e3519a33a4d6b0b53f6eda169c90907cbe))
+* explain v51 setPassword changes on command errors ([2dd3ecc](https://github.com/salesforcecli/plugin-user/commit/2dd3ecc168095f0841667dcc9e204f2b049d43f7))
+* remove ProfileId query when we only need User Id ([a81c46c](https://github.com/salesforcecli/plugin-user/commit/a81c46c75c357516fb79fbaaf04152dd10603b12))
+* update output messages ([e8575b5](https://github.com/salesforcecli/plugin-user/commit/e8575b5314593aa4dfd0b8c9a785fa28a480c829))
+* use singleRecordQuery ([85af8dc](https://github.com/salesforcecli/plugin-user/commit/85af8dc8c7d24d1a55fcf5d939c7f171d3d2680b))
+
 ### [1.0.12](https://github.com/salesforcecli/plugin-user/compare/v1.0.8...v1.0.12) (2021-01-29)
 
 
