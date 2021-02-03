@@ -35,11 +35,11 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   public async run(): Promise<PasswordData[]> {
     this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
 
-    for (const username of this.usernames) {
+    for (const aliasOrUsername of this.usernames) {
       try {
         // Convert any aliases to usernames
         // fetch will return undefined if there's no Alias for that name
-        const aliasOrUsername = (await Aliases.fetch(username)) || username;
+        const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });
@@ -57,7 +57,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         await user.assignPassword(authInfo, password);
 
         password.value((pass) => {
-          this.passwordData.push({ username: aliasOrUsername, password: pass.toString('utf-8') });
+          this.passwordData.push({ username, password: pass.toString('utf-8') });
           authInfo.update({ password: pass.toString('utf-8') });
         });
 
@@ -68,7 +68,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
           e.message.includes('The requested Resource does not exist')
         ) {
           // we don't have access to the apiVersion from what happened in the try, so until v51 is r2, we have to check versions the hard way
-          const authInfo: AuthInfo = await AuthInfo.create({ username });
+          const authInfo: AuthInfo = await AuthInfo.create({ username: aliasOrUsername });
           const connection: Connection = await Connection.create({ authInfo });
           const org = await Org.create({ connection });
           if (parseInt(await org.retrieveMaxApiVersion(), 10) >= 51) {
