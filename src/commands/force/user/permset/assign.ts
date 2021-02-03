@@ -49,7 +49,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
   public async run(): Promise<Result> {
     try {
-      this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
+      this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
       const connection: Connection = this.org.getConnection();
       const org = await Org.create({ connection });
@@ -68,12 +68,13 @@ export class UserPermsetAssignCommand extends SfdxCommand {
           await user.assignPermissionSets(userId, [this.flags.permsetname]);
           this.successes.push({
             name: aliasOrUsername,
-            value: this.flags.permsetname,
+            value: this.flags.permsetname as string,
           });
         } catch (e) {
+          const err = e as SfdxError;
           this.failures.push({
             name: aliasOrUsername,
-            message: e.message,
+            message: err.message,
           });
         }
       }

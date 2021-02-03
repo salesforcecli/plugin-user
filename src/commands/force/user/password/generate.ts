@@ -33,7 +33,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[]> {
-    this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
+    this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
     for (const aliasOrUsername of this.usernames) {
       try {
@@ -63,9 +63,10 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
         await authInfo.save();
       } catch (e) {
+        const err = e as SfdxError;
         if (
-          e.message.includes('Cannot set password for self') ||
-          e.message.includes('The requested Resource does not exist')
+          err.message.includes('Cannot set password for self') ||
+          err.message.includes('The requested Resource does not exist')
         ) {
           // we don't have access to the apiVersion from what happened in the try, so until v51 is r2, we have to check versions the hard way
           const authInfo: AuthInfo = await AuthInfo.create({ username: aliasOrUsername });
@@ -80,7 +81,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
           }
           throw new SfdxError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetError');
         }
-        throw SfdxError.wrap(e);
+        throw SfdxError.wrap(err);
       }
     }
 

@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, Aliases, AuthInfo, ConfigAggregator } from '@salesforce/core';
+import { Messages, Connection, Aliases, ConfigAggregator } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
@@ -24,7 +24,9 @@ type AuthList = {
 };
 
 type UserInfo = { Username: string; ProfileId: string; Id: string };
+type UserInfoMap = Record<string, UserInfo>;
 type ProfileInfo = { Id: string; Name: string };
+type ProfileInfoMap = Record<string, string>;
 
 export class UserListCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
@@ -35,9 +37,9 @@ export class UserListCommand extends SfdxCommand {
 
   public async run(): Promise<AuthList[]> {
     this.conn = this.org.getConnection();
-    const userInfos: UserInfo = await this.buildUserInfos();
-    const profileInfos: ProfileInfo = await this.buildProfileInfos();
-    const userAuthData: AuthInfo[] = await this.org.readUserAuthFiles();
+    const userInfos = await this.buildUserInfos();
+    const profileInfos = await this.buildProfileInfos();
+    const userAuthData = await this.org.readUserAuthFiles();
     const aliases = await Aliases.create(Aliases.getDefaultOptions());
 
     const authList: AuthList[] = userAuthData.map((authData) => {
@@ -81,14 +83,14 @@ export class UserListCommand extends SfdxCommand {
    * @private
    * @return Promise<UserInfo>
    */
-  private async buildUserInfos(): Promise<UserInfo> {
+  private async buildUserInfos(): Promise<UserInfoMap> {
     const userRecords = await this.conn.query<UserInfo>('SELECT username, profileid, id FROM User');
 
     if (userRecords.records) {
       return userRecords.records.reduce((userInfo, { Username, ProfileId, Id }) => {
         userInfo[Username] = { ProfileId, Id };
         return userInfo;
-      });
+      }, {});
     }
   }
 
@@ -98,14 +100,14 @@ export class UserListCommand extends SfdxCommand {
    * @private
    * @return Promise<ProfileInfo>
    */
-  private async buildProfileInfos(): Promise<ProfileInfo> {
+  private async buildProfileInfos(): Promise<ProfileInfoMap> {
     const profileRecords = await this.conn.query<ProfileInfo>('SELECT id, name FROM Profile');
 
     if (profileRecords.records) {
       return profileRecords.records.reduce((profileInfo, { Id, Name }) => {
         profileInfo[Id] = Name;
         return profileInfo;
-      });
+      }, {});
     }
   }
 }
