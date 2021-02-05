@@ -36,6 +36,13 @@ interface FailureMsg {
   message: string;
 }
 
+const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
+  if (!fieldsPermsets) return [];
+  return isArray<string>(fieldsPermsets)
+    ? fieldsPermsets
+    : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
+};
+
 export class UserCreateCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
@@ -61,7 +68,7 @@ export class UserCreateCommand extends SfdxCommand {
   private authInfo: AuthInfo;
 
   /**
-   * removes fields that cause errors in salesforce api's within sfdx-core's createUser method
+   * removes fields that cause errors in salesforce APIs within sfdx-core's createUser method
    *
    * @param fields a list of combined fields from varargs and the config file
    * @private
@@ -76,7 +83,7 @@ export class UserCreateCommand extends SfdxCommand {
     return copy as UserFields;
   }
 
-  public async run(): Promise<UserFields> {
+  public async run(): Promise<UserCreateOutput> {
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
       templateUser: this.org.getUsername(),
@@ -98,9 +105,7 @@ export class UserCreateCommand extends SfdxCommand {
       try {
         // permsets can be passed from cli args or file we need to create an array of permset names either way it's passed
         // it will either be a comma separated string, or an array, force it into an array
-        const permsetArray: string[] = isArray<string>(fields.permsets)
-          ? fields.permsets
-          : fields.permsets.trim().split(',');
+        const permsetArray = permsetsStringToArray(fields.permsets);
 
         await this.user.assignPermissionSets(this.authInfo.getFields().userId, permsetArray);
         this.successes.push({
@@ -147,7 +152,12 @@ export class UserCreateCommand extends SfdxCommand {
 
     this.print(fields);
 
-    return Object.assign({ orgId: this.org.getOrgId() }, fields);
+    const { permsets, ...fieldsWithoutPermsets } = fields;
+    return {
+      orgId: this.org.getOrgId(),
+      permissionSetAssignments: permsetsStringToArray(permsets),
+      fields: { ...fieldsWithoutPermsets },
+    };
   }
 
   private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
@@ -202,7 +212,7 @@ export class UserCreateCommand extends SfdxCommand {
       defaultFields.profileId = response.records[0].Id;
     }
 
-    // the file schema is camelCase and boolean while the cli arg is no capitialization and a string
+    // the file schema is camelCase and boolean while the cli arg is no capitalization and a string
     // we will add logic to capture camelcase in varargs just in case
     if (
       defaultFields['generatepassword'] === 'true' ||
@@ -258,3 +268,9 @@ export class UserCreateCommand extends SfdxCommand {
 }
 
 export default UserCreateCommand;
+
+interface UserCreateOutput {
+  orgId: string;
+  permissionSetAssignments: string[];
+  fields: UserFields;
+}
