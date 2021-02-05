@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.14](https://github.com/salesforcecli/plugin-user/compare/v1.0.13...v1.0.14) (2021-02-05)
+
+
+### Bug Fixes
+
+* object for one user, array for multiple ([e37597e](https://github.com/salesforcecli/plugin-user/commit/e37597efc00208d89e904d85db5e6eac3213f26a))
+
 ### [1.0.13](https://github.com/salesforcecli/plugin-user/compare/v1.0.12...v1.0.13) (2021-02-03)
 
 
