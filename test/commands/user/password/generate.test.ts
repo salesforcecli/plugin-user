@@ -78,7 +78,7 @@ describe('force:user:password:generate', () => {
     .stdout()
     .command(['force:user:password:generate', '--json'])
     .it('should generate a new password for the default user', (ctx) => {
-      const expected = [{ username: 'defaultusername@test.com', password: 'abc' }];
+      const expected = { username: 'defaultusername@test.com', password: 'abc' };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
       expect(authInfoStub.update.callCount).to.equal(1);

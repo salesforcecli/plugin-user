@@ -32,7 +32,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private usernames: string[];
   private passwordData: PasswordData[] = [];
 
-  public async run(): Promise<PasswordData[]> {
+  public async run(): Promise<PasswordData[] | PasswordData> {
     this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
     for (const aliasOrUsername of this.usernames) {
@@ -87,7 +87,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
     this.print();
 
-    return this.passwordData;
+    return this.passwordData.length === 1 ? this.passwordData[0] : this.passwordData;
   }
 
   private print(): void {
