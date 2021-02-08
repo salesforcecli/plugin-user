@@ -45,6 +45,9 @@ const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
 };
 
 const standardizePasswordToBoolean = (input: unknown): boolean => {
+  if (typeof input === 'undefined') {
+    return false;
+  }
   if (typeof input === 'boolean') {
     return input;
   }
@@ -52,7 +55,7 @@ const standardizePasswordToBoolean = (input: unknown): boolean => {
     if (input.toLowerCase() === 'true') {
       return true;
     }
-    if (input.toLowerCase() === 'false') {
+    if (input.toLowerCase() === 'false' || input === '') {
       return false;
     }
   }
