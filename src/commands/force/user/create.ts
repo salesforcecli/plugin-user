@@ -48,11 +48,18 @@ const standardizePasswordToBoolean = (input: unknown): boolean => {
   if (typeof input === 'boolean') {
     return input;
   }
-  if (input === 'true' || input === 1) {
-    return true;
+  if (typeof input === 'string') {
+    if (input.toLowerCase() === 'true') {
+      return true;
+    }
+    if (input.toLowerCase() === 'false') {
+      return false;
+    }
   }
-  if (input === 'false' || input === 0) {
-    return false;
+  if (typeof input === 'number') {
+    if (input === 1) {
+      return false;
+    }
   }
   return true;
 };
