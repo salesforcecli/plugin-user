@@ -20,7 +20,7 @@ import {
   UserFields,
 } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
-import { omit } from '@salesforce/kit';
+import { omit, mapKeys } from '@salesforce/kit';
 import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
@@ -42,13 +42,6 @@ const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
   return isArray<string>(fieldsPermsets)
     ? fieldsPermsets
     : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
-};
-
-const lowercaseAllKeys = (input: Record<string, unknown>): Record<string, unknown> => {
-  return Object.keys(input).reduce(function (accum, key) {
-    accum[key.toLowerCase()] = input[key];
-    return accum;
-  }, {});
 };
 
 const standardizePasswordToBoolean = (input: unknown): boolean => {
@@ -171,7 +164,7 @@ export class UserCreateCommand extends SfdxCommand {
     return {
       orgId: this.org.getOrgId(),
       permissionSetAssignments: permsetsStringToArray(permsets),
-      fields: { ...lowercaseAllKeys(fieldsWithoutPermsets) },
+      fields: { ...mapKeys(fieldsWithoutPermsets, (value, key) => key.toLowerCase()) },
     };
   }
 
