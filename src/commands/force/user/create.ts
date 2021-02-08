@@ -20,6 +20,7 @@ import {
   UserFields,
 } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
+import { omit } from '@salesforce/kit';
 import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
@@ -41,6 +42,26 @@ const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
   return isArray<string>(fieldsPermsets)
     ? fieldsPermsets
     : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
+};
+
+const lowercaseAllKeys = (input: Record<string, unknown>): Record<string, unknown> => {
+  return Object.keys(input).reduce(function (accum, key) {
+    accum[key.toLowerCase()] = input[key];
+    return accum;
+  }, {});
+};
+
+const standardizePasswordToBoolean = (input: unknown): boolean => {
+  if (typeof input === 'boolean') {
+    return input;
+  }
+  if (input === 'true' || input === 1) {
+    return true;
+  }
+  if (input === 'false' || input === 0) {
+    return false;
+  }
+  return true;
 };
 
 export class UserCreateCommand extends SfdxCommand {
@@ -74,13 +95,7 @@ export class UserCreateCommand extends SfdxCommand {
    * @private
    */
   private static stripInvalidAPIFields(fields: UserFields & Dictionary<string>): UserFields {
-    const copy = Object.assign({}, fields);
-    // remove invalid fields for userCreate()
-    delete copy.permsets;
-    delete copy.generatepassword;
-    delete copy.generatePassword;
-    delete copy.profileName;
-    return copy as UserFields;
+    return omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName']);
   }
 
   public async run(): Promise<UserCreateOutput> {
@@ -156,7 +171,7 @@ export class UserCreateCommand extends SfdxCommand {
     return {
       orgId: this.org.getOrgId(),
       permissionSetAssignments: permsetsStringToArray(permsets),
-      fields: { ...fieldsWithoutPermsets },
+      fields: { ...lowercaseAllKeys(fieldsWithoutPermsets) },
     };
   }
 
@@ -194,46 +209,27 @@ export class UserCreateCommand extends SfdxCommand {
 
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
-        defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
-
         if (key.toLowerCase() === 'generatepassword') {
-          defaultFields['generatePassword'] = this.varargs[key];
+          // standardize generatePassword casing
+          defaultFields['generatePassword'] = standardizePasswordToBoolean(this.varargs[key]);
+        } else if (key.toLowerCase() === 'profilename') {
+          // standardize profileName casing
+          defaultFields['profileName'] = this.varargs[key];
+        } else {
+          // all other varargs are left "as is"
+          defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
         }
       });
     }
 
     // check if "profileName" was passed, this needs to become a profileId before calling User.create
     if (defaultFields['profileName']) {
-      const name = (defaultFields['profileName'] || 'Standard User') as string;
+      const name = (defaultFields['profileName'] ?? 'Standard User') as string;
       this.logger.debug(`Querying org for profile name [${name}]`);
       const response: QueryResult<{ Id: string }> = await this.org
         .getConnection()
         .query(`SELECT id FROM profile WHERE name='${name}'`);
       defaultFields.profileId = response.records[0].Id;
-    }
-
-    // the file schema is camelCase and boolean while the cli arg is no capitalization and a string
-    // we will add logic to capture camelcase in varargs just in case
-    if (
-      defaultFields['generatepassword'] === 'true' ||
-      defaultFields['generatePassword'] === 'true' ||
-      defaultFields['generatePassword'] === true
-    ) {
-      // since only one may be set, set both variations, prefer camelCase and boolean for coding
-      // this will also maintain --json backwards compatibility for the all lower case scenario
-      defaultFields['generatepassword'] = 'true';
-      defaultFields['generatePassword'] = true;
-    }
-    // for the false case
-    if (
-      defaultFields['generatepassword'] === 'false' ||
-      defaultFields['generatePassword'] === 'false' ||
-      defaultFields['generatePassword'] === false
-    ) {
-      // since only one may be set, set both variations, prefer camelCase and boolean for coding
-      // this will also maintain --json backwards compatibility for the all lower case scenario
-      defaultFields['generatepassword'] = 'false';
-      defaultFields['generatePassword'] = false;
     }
 
     return defaultFields;
@@ -272,5 +268,5 @@ export default UserCreateCommand;
 interface UserCreateOutput {
   orgId: string;
   permissionSetAssignments: string[];
-  fields: UserFields;
+  fields: Record<string, unknown>;
 }

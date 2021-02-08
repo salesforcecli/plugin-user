@@ -8,7 +8,7 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, AuthInfo, Connection, DefaultUserFields, fs, Logger, Org, User } from '@salesforce/core';
+import { Aliases, AuthInfo, Connection, DefaultUserFields, fs, Logger, Org, User, UserFields } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { IConfig } from '@oclif/config';
 import UserCreateCommand from '../../../src/commands/force/user/create';
@@ -66,7 +66,7 @@ describe('force:user:create', () => {
   async function prepareStubs(throws: { license?: boolean; duplicate?: boolean } = {}, readsFile?) {
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, DefaultUserFields, 'create').resolves({
-      getFields: () => {
+      getFields: (): UserFields => {
         return {
           id: '0052D0000043PawWWR',
           username: '1605130295132_test-j6asqt5qoprs@example.com',
@@ -109,7 +109,7 @@ describe('force:user:create', () => {
   test
     .do(async () => {
       stubMethod($$.SANDBOX, User.prototype, 'assignPassword').resolves();
-      await prepareStubs({}, { profileName: 'profileFromFile', permsets: ['perm1', 'perm2'] });
+      await prepareStubs({}, { profilename: 'profileFromFile', permsets: ['perm1', 'perm2'] });
     })
     .stdout()
     .command([
@@ -121,25 +121,24 @@ describe('force:user:create', () => {
       'devhub@test.com',
       "permsets='permCLI, permCLI2'",
       'generatepassword=true',
-      'profileName=profileFromArgs',
+      'profilename=profileFromArgs',
     ])
-    .it('will handle a merge multiple permsets and profileNames from args and file (permsets from args)', (ctx) => {
+    .it('will handle a merge multiple permsets and profilenames from args and file (permsets from args)', (ctx) => {
       const expected = {
         orgId: 'abc123',
         permissionSetAssignments: ['permCLI', 'permCLI2'],
         fields: {
           alias: 'testAlias',
           email: 'defaultusername@test.com',
-          emailEncodingKey: 'UTF-8',
+          emailencodingkey: 'UTF-8',
           id: '0052D0000043PawWWR',
-          languageLocaleKey: 'en_US',
-          lastName: 'User',
-          localeSidKey: 'en_US',
-          generatepassword: 'true',
-          generatePassword: true,
-          profileId: '12345678',
-          profileName: 'profileFromArgs',
-          timeZoneSidKey: 'America/Los_Angeles',
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          generatepassword: true,
+          profileid: '12345678',
+          profilename: 'profileFromArgs',
+          timezonesidkey: 'America/Los_Angeles',
           username: '1605130295132_test-j6asqt5qoprs@example.com',
         },
       };
@@ -162,24 +161,24 @@ describe('force:user:create', () => {
       'devhub@test.com',
       '--definitionfile',
       'tempfile.json',
-      'profileName=profileFromArgs',
+      'profilename=profileFromArgs',
       'username=user@cliArgs.com',
     ])
-    .it('will handle a merge multiple permsets and profileNames from args and file (permsets from file)', (ctx) => {
+    .it('will handle a merge multiple permsets and profilenames from args and file (permsets from file)', (ctx) => {
       const expected = {
         orgId: 'abc123',
         permissionSetAssignments: ['perm1', 'perm2'],
         fields: {
           alias: 'testAlias',
           email: 'defaultusername@test.com',
-          emailEncodingKey: 'UTF-8',
+          emailencodingkey: 'UTF-8',
           id: '0052D0000043PawWWR',
-          languageLocaleKey: 'en_US',
-          lastName: 'User',
-          localeSidKey: 'en_US',
-          profileId: '12345678',
-          profileName: 'profileFromArgs',
-          timeZoneSidKey: 'America/Los_Angeles',
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          profileid: '12345678',
+          profilename: 'profileFromArgs',
+          timezonesidkey: 'America/Los_Angeles',
           username: 'user@cliArgs.com',
         },
       };
@@ -208,13 +207,13 @@ describe('force:user:create', () => {
         fields: {
           alias: 'testAlias',
           email: username,
-          emailEncodingKey: 'UTF-8',
+          emailencodingkey: 'UTF-8',
           id: '0052D0000043PawWWR',
-          languageLocaleKey: 'en_US',
-          lastName: 'User',
-          localeSidKey: 'en_US',
-          profileId: '00e2D000000bNexWWR',
-          timeZoneSidKey: 'America/Los_Angeles',
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          profileid: '00e2D000000bNexWWR',
+          timezonesidkey: 'America/Los_Angeles',
           username: '1605130295132_test-j6asqt5qoprs@example.com',
         },
       };
@@ -248,15 +247,14 @@ describe('force:user:create', () => {
         fields: {
           alias: 'testAlias',
           email: 'me@my.org',
-          emailEncodingKey: 'UTF-8',
+          emailencodingkey: 'UTF-8',
           id: '0052D0000043PawWWR',
-          languageLocaleKey: 'en_US',
-          lastName: 'User',
-          localeSidKey: 'en_US',
-          profileId: '00e2D000000bNexWWR',
-          generatePassword: false,
-          generatepassword: 'false',
-          timeZoneSidKey: 'America/Los_Angeles',
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          profileid: '00e2D000000bNexWWR',
+          generatepassword: false,
+          timezonesidkey: 'America/Los_Angeles',
           username: '1605130295132_test-j6asqt5qoprs@example.com',
         },
       };
@@ -267,7 +265,7 @@ describe('force:user:create', () => {
 
   test
     .do(async () => {
-      await prepareStubs({}, { generatepassword: true, profileName: 'System Administrator' });
+      await prepareStubs({}, { generatepassword: true, profilename: 'System Administrator' });
     })
     .stdout()
     .command([
@@ -281,10 +279,10 @@ describe('force:user:create', () => {
       'devhub@test.com',
       'email=me@my.org',
       'generatepassword=false',
-      "profileName='Chatter Free User'",
+      "profilename='Chatter Free User'",
     ])
     // we set generatepassword=false in the varargs, in the definitionfile we have generatepassword=true, so we SHOULD NOT generate a password
-    // we should override the profileName with 'Chatter Free User'
+    // we should override the profilename with 'Chatter Free User'
     .it(
       'will merge fields from the cli args, and the definitionfile correctly, preferring cli args, cli args > file > default',
       (ctx) => {
@@ -294,17 +292,16 @@ describe('force:user:create', () => {
           fields: {
             alias: 'testAlias',
             email: 'me@my.org',
-            emailEncodingKey: 'UTF-8',
+            emailencodingkey: 'UTF-8',
             id: '0052D0000043PawWWR',
-            languageLocaleKey: 'en_US',
-            lastName: 'User',
-            localeSidKey: 'en_US',
-            generatePassword: false,
-            generatepassword: 'false',
-            profileName: "'Chatter Free User'",
-            // note the new profileId 12345678 -> Chatter Free User from var args
-            profileId: '12345678',
-            timeZoneSidKey: 'America/Los_Angeles',
+            languagelocalekey: 'en_US',
+            lastname: 'User',
+            localesidkey: 'en_US',
+            generatepassword: false,
+            profilename: "'Chatter Free User'",
+            // note the new profileid 12345678 -> Chatter Free User from var args
+            profileid: '12345678',
+            timezonesidkey: 'America/Los_Angeles',
             username: '1605130295132_test-j6asqt5qoprs@example.com',
           },
         };
