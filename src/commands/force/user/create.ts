@@ -20,6 +20,7 @@ import {
   UserFields,
 } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
+import { omit, mapKeys } from '@salesforce/kit';
 import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
@@ -35,6 +36,25 @@ interface FailureMsg {
   name: string;
   message: string;
 }
+
+const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
+  if (!fieldsPermsets) return [];
+  return isArray<string>(fieldsPermsets)
+    ? fieldsPermsets
+    : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
+};
+
+const standardizePasswordToBoolean = (input: unknown): boolean => {
+  if (typeof input === 'boolean') {
+    return input;
+  }
+  if (typeof input === 'string') {
+    if (input.toLowerCase() === 'true') {
+      return true;
+    }
+  }
+  return false;
+};
 
 export class UserCreateCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
@@ -61,22 +81,16 @@ export class UserCreateCommand extends SfdxCommand {
   private authInfo: AuthInfo;
 
   /**
-   * removes fields that cause errors in salesforce api's within sfdx-core's createUser method
+   * removes fields that cause errors in salesforce APIs within sfdx-core's createUser method
    *
    * @param fields a list of combined fields from varargs and the config file
    * @private
    */
   private static stripInvalidAPIFields(fields: UserFields & Dictionary<string>): UserFields {
-    const copy = Object.assign({}, fields);
-    // remove invalid fields for userCreate()
-    delete copy.permsets;
-    delete copy.generatepassword;
-    delete copy.generatePassword;
-    delete copy.profileName;
-    return copy as UserFields;
+    return omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName']);
   }
 
-  public async run(): Promise<UserFields> {
+  public async run(): Promise<UserCreateOutput> {
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
       templateUser: this.org.getUsername(),
@@ -98,9 +112,7 @@ export class UserCreateCommand extends SfdxCommand {
       try {
         // permsets can be passed from cli args or file we need to create an array of permset names either way it's passed
         // it will either be a comma separated string, or an array, force it into an array
-        const permsetArray: string[] = isArray<string>(fields.permsets)
-          ? fields.permsets
-          : fields.permsets.trim().split(',');
+        const permsetArray = permsetsStringToArray(fields.permsets);
 
         await this.user.assignPermissionSets(this.authInfo.getFields().userId, permsetArray);
         this.successes.push({
@@ -147,7 +159,12 @@ export class UserCreateCommand extends SfdxCommand {
 
     this.print(fields);
 
-    return Object.assign({ orgId: this.org.getOrgId() }, fields);
+    const { permsets, ...fieldsWithoutPermsets } = fields;
+    return {
+      orgId: this.org.getOrgId(),
+      permissionSetAssignments: permsetsStringToArray(permsets),
+      fields: { ...mapKeys(fieldsWithoutPermsets, (value, key) => key.toLowerCase()) },
+    };
   }
 
   private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
@@ -184,46 +201,27 @@ export class UserCreateCommand extends SfdxCommand {
 
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
-        defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
-
         if (key.toLowerCase() === 'generatepassword') {
-          defaultFields['generatePassword'] = this.varargs[key];
+          // standardize generatePassword casing
+          defaultFields['generatePassword'] = standardizePasswordToBoolean(this.varargs[key]);
+        } else if (key.toLowerCase() === 'profilename') {
+          // standardize profileName casing
+          defaultFields['profileName'] = this.varargs[key];
+        } else {
+          // all other varargs are left "as is"
+          defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
         }
       });
     }
 
     // check if "profileName" was passed, this needs to become a profileId before calling User.create
     if (defaultFields['profileName']) {
-      const name = (defaultFields['profileName'] || 'Standard User') as string;
+      const name = (defaultFields['profileName'] ?? 'Standard User') as string;
       this.logger.debug(`Querying org for profile name [${name}]`);
       const response: QueryResult<{ Id: string }> = await this.org
         .getConnection()
         .query(`SELECT id FROM profile WHERE name='${name}'`);
       defaultFields.profileId = response.records[0].Id;
-    }
-
-    // the file schema is camelCase and boolean while the cli arg is no capitialization and a string
-    // we will add logic to capture camelcase in varargs just in case
-    if (
-      defaultFields['generatepassword'] === 'true' ||
-      defaultFields['generatePassword'] === 'true' ||
-      defaultFields['generatePassword'] === true
-    ) {
-      // since only one may be set, set both variations, prefer camelCase and boolean for coding
-      // this will also maintain --json backwards compatibility for the all lower case scenario
-      defaultFields['generatepassword'] = 'true';
-      defaultFields['generatePassword'] = true;
-    }
-    // for the false case
-    if (
-      defaultFields['generatepassword'] === 'false' ||
-      defaultFields['generatePassword'] === 'false' ||
-      defaultFields['generatePassword'] === false
-    ) {
-      // since only one may be set, set both variations, prefer camelCase and boolean for coding
-      // this will also maintain --json backwards compatibility for the all lower case scenario
-      defaultFields['generatepassword'] = 'false';
-      defaultFields['generatePassword'] = false;
     }
 
     return defaultFields;
@@ -258,3 +256,9 @@ export class UserCreateCommand extends SfdxCommand {
 }
 
 export default UserCreateCommand;
+
+interface UserCreateOutput {
+  orgId: string;
+  permissionSetAssignments: string[];
+  fields: Record<string, unknown>;
+}
