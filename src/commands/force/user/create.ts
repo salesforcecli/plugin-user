@@ -59,12 +59,7 @@ const standardizePasswordToBoolean = (input: unknown): boolean => {
       return false;
     }
   }
-  if (typeof input === 'number') {
-    if (input === 1) {
-      return false;
-    }
-  }
-  return true;
+  return false;
 };
 
 export class UserCreateCommand extends SfdxCommand {
