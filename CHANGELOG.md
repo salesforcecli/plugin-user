@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/salesforcecli/plugin-user/compare/v1.0.14...v1.1.0) (2021-02-09)
+
+
+### Features
+
+* casing for booleans as string, undefined ([c477a62](https://github.com/salesforcecli/plugin-user/commit/c477a6213add2af8f43d94df381850c1be113747))
+
+
+### Bug Fixes
+
+* also handle nulls ([502a691](https://github.com/salesforcecli/plugin-user/commit/502a69176b9a9c1e791c84b8eda5a963a1a37ec7))
+* handle undefined and empty ([892535f](https://github.com/salesforcecli/plugin-user/commit/892535fcd7e4b675ced62332c6882f527ece3487))
+* more casing issues ([8b3a6f9](https://github.com/salesforcecli/plugin-user/commit/8b3a6f90b15f0330a6b37dbef1fcf81a59eaaa50))
+* user:create matches smoke test json ([b8f9380](https://github.com/salesforcecli/plugin-user/commit/b8f938090f492fa70172aee2af4ad328c70f4c8f))
+
 ### [1.0.14](https://github.com/salesforcecli/plugin-user/compare/v1.0.13...v1.0.14) (2021-02-05)
 
 
