@@ -123,6 +123,40 @@ describe('force:user:list', () => {
 
   test
     .do(async () => {
+      await prepareStubs();
+      const cfa = ConfigAggregator.getInstance();
+      stubMethod($$.SANDBOX, cfa, 'getLocalConfig').returns(undefined);
+    })
+    .stdout()
+    .command([
+      'force:user:list',
+      '--json',
+      '--targetusername',
+      'testUser1@test.com',
+      '--targetdevhubusername',
+      'devhub@test.com',
+    ])
+    .it('handles scenario with no localConfig available', (ctx) => {
+      // testUser1@test.com is aliased to testUser
+      const expected = [
+        {
+          defaultMarker: '',
+          alias: 'testAlias',
+          username: 'testuser@test.com',
+          profileName: 'Analytics Cloud Integration User',
+          orgId: 'abc123',
+          accessToken: 'accessToken',
+          instanceUrl: 'instanceURL',
+          loginUrl: 'login.test.com',
+          userId: '0052D0000043PbGQAU',
+        },
+      ];
+      const result = JSON.parse(ctx.stdout).result;
+      expect(result).to.deep.equal(expected);
+    });
+
+  test
+    .do(async () => {
       await prepareStubs(true);
     })
     .stdout()

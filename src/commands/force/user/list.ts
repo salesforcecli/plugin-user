@@ -47,7 +47,7 @@ export class UserListCommand extends SfdxCommand {
       // if they passed in a alias and it maps to something we have an Alias.
       const alias = aliases.getKeysByValue(authData.getUsername())[0];
       const configAgg = ConfigAggregator.getInstance();
-      const defaultUserOrAlias = configAgg.getLocalConfig().get('defaultusername');
+      const defaultUserOrAlias = configAgg.getLocalConfig()?.get('defaultusername');
       return {
         defaultMarker: defaultUserOrAlias === username || defaultUserOrAlias === alias ? '(A)' : '',
         alias: alias || '',
