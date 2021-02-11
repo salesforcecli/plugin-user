@@ -109,7 +109,7 @@
     "test": "sf-test",
     "test:deprecation-policy": "./bin/run snapshot:compare",
     "test:command-reference": "./bin/run commandreference:generate --erroronwarnings",
-    "test:nut": "mocha **/*.nut.ts",
+    "test:nut": "mocha **/*.nut.ts --timeout 600000",
     "version": "oclif-dev readme && git add README.md"
   },
   "husky": {
