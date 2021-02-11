@@ -9,11 +9,13 @@ import { $$, expect, test } from '@salesforce/command/lib/test';
 import { Aliases, Connection, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
+const user1 = 'defaultusername@test.com';
+const user2 = 'otherUser@test.com';
 const expected = [
   {
     defaultMarker: '(A)',
     alias: 'testAlias',
-    username: 'defaultusername@test.com',
+    username: user1,
     profileName: 'System Administrator',
     orgId: 'abc123',
     accessToken: 'accessToken',
@@ -24,7 +26,7 @@ const expected = [
   {
     defaultMarker: '',
     alias: '',
-    username: 'otherUser@test.com',
+    username: user2,
     profileName: 'System Administrator',
     orgId: 'abc123',
     accessToken: 'accessToken',
@@ -35,15 +37,15 @@ const expected = [
 ];
 
 describe('force:user:list', () => {
-  async function prepareStubs() {
+  beforeEach(async () => {
     stubMethod($$.SANDBOX, Org, 'create').resolves(Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
       {
-        getUsername: () => 'defaultusername@test.com',
+        getUsername: () => user1,
         getFields: () => {
           return {
-            username: 'defaultusername@test.com',
+            username: user1,
             userProfileName: 'profileName',
             userId: '1234567890',
             instanceUrl: 'instanceURL',
@@ -53,10 +55,10 @@ describe('force:user:list', () => {
         },
       },
       {
-        getUsername: () => 'otherUser@test.com',
+        getUsername: () => user2,
         getFields: () => {
           return {
-            username: 'otherUser@test.com',
+            username: user2,
             userProfileName: 'profileName',
             userId: '1234567890',
             instanceUrl: 'instanceURL',
@@ -67,16 +69,14 @@ describe('force:user:list', () => {
       },
     ]);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
-    stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
-    stubMethod($$.SANDBOX, Aliases.prototype, 'getKeysByValue')
-      .withArgs('defaultusername@test.com')
-      .returns(['testAlias']);
+    stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(user1);
+    stubMethod($$.SANDBOX, Aliases.prototype, 'getKeysByValue').withArgs(user1).returns(['testAlias']);
     stubMethod($$.SANDBOX, Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
         records: [
           {
-            Username: 'otherUser@test.com',
+            Username: user2,
             ProfileId: '00e2D0000043PbGQAU',
             Id: '0052D0000043PcBQAU',
           },
@@ -86,7 +86,7 @@ describe('force:user:list', () => {
             Id: '0052D0000043PbBQAU',
           },
           {
-            Username: 'defaultusername@test.com',
+            Username: user1,
             ProfileId: '00e2D0000043PbGQAU',
             Id: '0052D0000043PbGQAU',
           },
@@ -105,12 +105,9 @@ describe('force:user:list', () => {
           },
         ],
       });
-  }
+  });
 
   test
-    .do(async () => {
-      await prepareStubs();
-    })
     .stdout()
     .command(['force:user:list', '--json', '--targetusername', 'testUser', '--targetdevhubusername', 'devhub@test.com'])
     .it('should display the correct information invoked with an alias', (ctx) => {
@@ -119,18 +116,8 @@ describe('force:user:list', () => {
     });
 
   test
-    .do(async () => {
-      await prepareStubs();
-    })
     .stdout()
-    .command([
-      'force:user:list',
-      '--json',
-      '--targetusername',
-      'testUser1@test.com',
-      '--targetdevhubusername',
-      'devhub@test.com',
-    ])
+    .command(['force:user:list', '--json', '--targetusername', user1, '--targetdevhubusername', 'devhub@test.com'])
     .it('should display the correct information invoked by name', (ctx) => {
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
