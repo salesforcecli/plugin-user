@@ -15,7 +15,7 @@ describe('sample nut using existing org', () => {
     session = TestSession.create({
       project: {
         destinationDir: projectPath,
-        gitClone: 'https://github.com/mshanemc/df17AppBuilding',
+        sourceDir: 'test/df17AppBuilding',
       },
       setupCommands: [
         'sfdx force:org:create -d 1 -s -f config/project-scratch-def.json',
@@ -27,9 +27,19 @@ describe('sample nut using existing org', () => {
     });
   });
 
-  it('execs a simple command', () => {
-    const result = execCmd('force:org:open -r --json', { ensureExitCode: 0 });
-    expect(result.jsonOutput).to.have.property('status').equal(0);
+  it('user display', () => {
+    const output = execCmd('force:user:display --json', { ensureExitCode: 0 });
+    expect(output.jsonOutput)
+      .to.have.property('result')
+      .with.keys(['username', 'accessToken', 'id', 'orgId', 'profileName', 'loginUrl', 'instanceUrl']);
+    const result = (output.jsonOutput as Record<string, unknown>).result as Record<string, string>;
+    expect(result.orgId).to.have.length(18);
+    expect(result.id).to.have.length(18);
+    expect(result.accessToken.startsWith(result.orgId.substr(0, 15))).to.be.true;
+  });
+
+  it('assigns a permset to the default user', () => {
+    execCmd('force:user:permset:assign -n VolunteeringApp --json', { ensureExitCode: 0 });
   });
 
   after(async () => {
