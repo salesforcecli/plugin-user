@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, Aliases, ConfigAggregator } from '@salesforce/core';
+import { Messages, Connection, Aliases } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
@@ -37,19 +37,20 @@ export class UserListCommand extends SfdxCommand {
 
   public async run(): Promise<AuthList[]> {
     this.conn = this.org.getConnection();
-    const userInfos = await this.buildUserInfos();
-    const profileInfos = await this.buildProfileInfos();
-    const userAuthData = await this.org.readUserAuthFiles();
-    const aliases = await Aliases.create(Aliases.getDefaultOptions());
+    // parallelize 2 org queries and 2 fs operations
+    const [userInfos, profileInfos, userAuthData, aliases] = await Promise.all([
+      this.buildUserInfos(),
+      this.buildProfileInfos(),
+      this.org.readUserAuthFiles(),
+      Aliases.create(Aliases.getDefaultOptions()),
+    ]);
 
     const authList: AuthList[] = userAuthData.map((authData) => {
       const username = authData.getUsername();
       // if they passed in a alias and it maps to something we have an Alias.
-      const alias = aliases.getKeysByValue(authData.getUsername())[0];
-      const configAgg = ConfigAggregator.getInstance();
-      const defaultUserOrAlias = configAgg.getLocalConfig()?.get('defaultusername');
+      const alias = aliases.getKeysByValue(authData.getUsername())?.[0];
       return {
-        defaultMarker: defaultUserOrAlias === username || defaultUserOrAlias === alias ? '(A)' : '',
+        defaultMarker: this.org.getUsername() === username ? '(A)' : '',
         alias: alias || '',
         username,
         profileName: profileInfos[userInfos[username].ProfileId],
