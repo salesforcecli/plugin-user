@@ -10,7 +10,7 @@ import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 const projectPath = 'testProject_hubAndOrg';
 let session: TestSession;
 
-describe('sample nut using existing org', () => {
+describe('verifies all commands run successfully ', () => {
   before(() => {
     session = TestSession.create({
       project: {
@@ -40,6 +40,26 @@ describe('sample nut using existing org', () => {
 
   it('assigns a permset to the default user', () => {
     execCmd('force:user:permset:assign -n VolunteeringApp --json', { ensureExitCode: 0 });
+  });
+
+  it('creates a secondary user', () => {
+    execCmd('force:user:create --json -a Other', { ensureExitCode: 0 });
+  });
+
+  it('assigns permset to the secondary user', () => {
+    execCmd('force:user:permset:assign -n VolunteeringApp --json --onbehalfof Other', { ensureExitCode: 0 });
+  });
+
+  it('lists the users', () => {
+    execCmd('force:user:list', { ensureExitCode: 0 });
+  });
+
+  it('generates new passwords for main user', () => {
+    execCmd('force:user:password:generate', { ensureExitCode: 0 });
+  });
+
+  it('generates new passwords for secondary user (onbehalfof)', () => {
+    execCmd('force:user:password:generate -o Other', { ensureExitCode: 0 });
   });
 
   after(async () => {

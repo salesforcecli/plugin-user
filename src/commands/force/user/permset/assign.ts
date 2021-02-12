@@ -8,7 +8,6 @@
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
-import { QueryResult } from 'jsforce';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
@@ -43,29 +42,27 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       description: messages.getMessage('flags.onBehalfOf'),
     }),
   };
-  private usernames: string[];
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
 
   public async run(): Promise<Result> {
     try {
-      this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
+      const aliasOrUsernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
       const connection: Connection = this.org.getConnection();
       const org = await Org.create({ connection });
 
-      for (const username of this.usernames) {
+      for (const aliasOrUsername of aliasOrUsernames) {
         // Convert any aliases to usernames
-        const aliasOrUsername = (await Aliases.fetch(username)) || username;
+        const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
         const user: User = await User.create({ org });
         // get userId of whomever the permset will be assigned to via query to avoid AuthInfo if remote user
-        const queryResult: QueryResult<{ Id: string }> = await connection.query(
+        const queryResult = await connection.singleRecordQuery<{ Id: string }>(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
-        const userId = queryResult.records[0].Id;
 
         try {
-          await user.assignPermissionSets(userId, [this.flags.permsetname]);
+          await user.assignPermissionSets(queryResult.Id, [this.flags.permsetname]);
           this.successes.push({
             name: aliasOrUsername,
             value: this.flags.permsetname as string,
