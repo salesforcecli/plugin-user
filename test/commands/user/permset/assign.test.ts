@@ -24,7 +24,7 @@ describe('force:user:permset:assign', () => {
       stubMethod($$.SANDBOX, User.prototype, 'assignPermissionSets').resolves();
     }
 
-    stubMethod($$.SANDBOX, Aliases, 'fetch').withArgs('testUser1@test.com').resolves('testAlias');
+    stubMethod($$.SANDBOX, Aliases, 'fetch').withArgs('testAlias').resolves('testUser1@test.com');
   }
 
   test
@@ -36,7 +36,7 @@ describe('force:user:permset:assign', () => {
       'force:user:permset:assign',
       '--json',
       '--onbehalfof',
-      'testUser1@test.com, testUser2@test.com',
+      'testAlias, testUser2@test.com',
       '--permsetname',
       'DreamHouse',
     ])

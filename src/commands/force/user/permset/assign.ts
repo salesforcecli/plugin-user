@@ -53,7 +53,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       const org = await Org.create({ connection });
 
       for (const aliasOrUsername of aliasOrUsernames) {
-        // Convert any aliases to usernames
+        // Attempt to convert any aliases to usernames.  Not found alias will be **assumed** to be a username
         const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
         const user: User = await User.create({ org });
         // get userId of whomever the permset will be assigned to via query to avoid AuthInfo if remote user
