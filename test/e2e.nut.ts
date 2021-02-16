@@ -17,13 +17,8 @@ describe('verifies all commands run successfully ', () => {
         destinationDir: projectPath,
         sourceDir: 'test/df17AppBuilding',
       },
-      setupCommands: [
-        'sfdx force:org:create -d 1 -s -f config/project-scratch-def.json',
-        'sfdx force:source:push',
-        // 'sfdx force:user:permset:assign -n VolunteeringApp',
-        // 'sfdx force:data:tree:import -p data/masterImportPlan.json',
-        // 'sfdx force:apex:execute -f scripts/setup.cls',
-      ],
+      // create org and push source to get a permset
+      setupCommands: ['sfdx force:org:create -d 1 -s -f config/project-scratch-def.json', 'sfdx force:source:push'],
     });
   });
 
