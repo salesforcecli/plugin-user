@@ -71,9 +71,9 @@ export class UserCreateCommand extends SfdxCommand {
       char: 'f',
       description: messages.getMessage('flags.definitionfile'),
     }),
-    setpassedusernameunique: flags.boolean({
+    setuniqueusername: flags.boolean({
       char: 's',
-      description: messages.getMessage('flags.setpassedusernameunique'),
+      description: messages.getMessage('flags.setuniqueusername'),
     }),
   };
   public logger: Logger;
@@ -221,8 +221,8 @@ export class UserCreateCommand extends SfdxCommand {
       });
     }
 
-    // check if "username" was passed along with "setpassedusernameunique" flag, if so append org id
-    if (this.flags.setpassedusernameunique && defaultFields['username'] !== defaultUsername) {
+    // check if "username" was passed along with "setuniqueusername" flag, if so append org id
+    if (this.flags.setuniqueusername && defaultFields['username'] !== defaultUsername) {
       defaultFields['username'] = `${defaultFields['username']}.${this.org.getOrgId().toLowerCase()}`;
     }
 

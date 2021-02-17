@@ -10,7 +10,7 @@
       "setalias",
       "targetdevhubusername",
       "targetusername",
-      "setpassedusernameunique"
+      "setuniqueusername"
     ]
   },
   {
