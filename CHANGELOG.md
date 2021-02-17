@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/salesforcecli/plugin-user/compare/v1.1.0...v1.1.1) (2021-02-17)
+
+
+### Bug Fixes
+
+* alias OOB, defaultMarker, and perf ([ff4329f](https://github.com/salesforcecli/plugin-user/commit/ff4329f65208585c38717953d5fab588c8734a85))
+* prevent undefined via optional chaining ([605af37](https://github.com/salesforcecli/plugin-user/commit/605af37431dff7fcdba1ecd1b56a2765dc6f5c2b))
+
 ## [1.1.0](https://github.com/salesforcecli/plugin-user/compare/v1.0.14...v1.1.0) (2021-02-09)
 
 
