@@ -109,9 +109,9 @@
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "test": "sf-test",
+    "test:command-reference": "./bin/run commandreference:generate --erroronwarnings --parallel",
     "test:deprecation-policy": "./bin/run snapshot:compare",
-    "test:command-reference": "./bin/run commandreference:generate --erroronwarnings",
-    "test:nut": "mocha **/*.nut.ts --timeout 600000",
+    "test:nut": "mocha **/*.nut.ts --timeout 600000 --parallel --jobs 2",
     "version": "oclif-dev readme && git add README.md"
   },
   "husky": {
