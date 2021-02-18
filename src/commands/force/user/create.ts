@@ -257,7 +257,7 @@ export class UserCreateCommand extends SfdxCommand {
 
 export default UserCreateCommand;
 
-interface UserCreateOutput {
+export interface UserCreateOutput {
   orgId: string;
   permissionSetAssignments: string[];
   fields: Record<string, unknown>;

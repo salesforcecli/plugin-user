@@ -11,7 +11,7 @@ import { Messages, Connection, Aliases, ConfigAggregator } from '@salesforce/cor
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
 
-type AuthList = {
+export type AuthList = {
   defaultMarker: string;
   alias: string;
   username: string;
