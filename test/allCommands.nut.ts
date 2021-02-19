@@ -14,14 +14,12 @@ import { AuthList } from '../src/commands/force/user/list';
 import { UserCreateOutput } from '../src/commands/force/user/create';
 
 use(chaiEach);
-const projectPath = 'testProject_AllUserCommandsWithJSON';
 let session: TestSession;
 
 describe('verifies all commands run successfully ', () => {
   before(() => {
     session = TestSession.create({
       project: {
-        destinationDir: projectPath,
         sourceDir: 'test/df17AppBuilding',
       },
       // create org and push source to get a permset

@@ -6,14 +6,14 @@
  */
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 
-const projectPath = 'testProject_AllUserCommandsNoJSON';
+// const projectPath = 'testProject_AllUserCommandsNoJSON';
 let session: TestSession;
 
 describe('verifies all commands run successfully (no json)', () => {
   before(() => {
     session = TestSession.create({
       project: {
-        destinationDir: projectPath,
+        // destinationDir: projectPath,
         sourceDir: 'test/df17AppBuilding',
       },
       // create org and push source to get a permset

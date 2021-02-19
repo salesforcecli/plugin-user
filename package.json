@@ -35,7 +35,7 @@
     "eslint-plugin-prettier": "^3.1.3",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.2",
-    "mocha": "^7.2.0",
+    "mocha": "^8.3.0",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
@@ -111,7 +111,7 @@
     "test": "sf-test",
     "test:command-reference": "./bin/run commandreference:generate --erroronwarnings --parallel",
     "test:deprecation-policy": "./bin/run snapshot:compare",
-    "test:nut": "mocha **/*.nut.ts --timeout 600000 --parallel --jobs 2",
+    "test:nut": "mocha ./**/*.nut.ts --timeout 600000 --parallel --recursive --jobs 3",
     "version": "oclif-dev readme && git add README.md"
   },
   "husky": {
