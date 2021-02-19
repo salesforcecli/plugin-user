@@ -4,24 +4,19 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { use, expect } from 'chai';
-import * as chaiEach from 'chai-each';
+import { expect } from 'chai';
 
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { env } from '@salesforce/kit';
 import { UserCreateOutput } from '../../../src/commands/force/user/create';
-
-use(chaiEach);
-const projectPath = 'testProject_userCreate';
 let session: TestSession;
 
-describe.skip('creates a user from a file and verifies', () => {
+describe('creates a user from a file and verifies', () => {
   let createdUserId: string;
 
   before(() => {
     session = TestSession.create({
       project: {
-        destinationDir: projectPath,
         sourceDir: 'test/df17AppBuilding',
       },
       // create org and push source to get a permset
