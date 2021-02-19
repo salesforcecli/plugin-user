@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Partner__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>a non-profit that we're working with/for at this event</description>
+    <externalId>false</externalId>
+    <inlineHelpText>a non-profit that we're working with/for at this event</inlineHelpText>
+    <label>Partner</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Volunteer Events</relationshipLabel>
+    <relationshipName>Volunteer_Events</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

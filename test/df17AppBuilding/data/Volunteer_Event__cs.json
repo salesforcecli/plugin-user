@@ -1,0 +1,34 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Volunteer_Event__c",
+                "referenceId": "Volunteer_Event__cRef1"
+            },
+            "Name": "Reading to Kids at Vis Valley Elementary",
+            "Description__c": "<p>It&#39;s our monthly trip to read books for the kindergartners again!  </p><p>We&#39;ll take some of our favorite books...dress as yourselves!</p>",
+            "End__c": "2017-09-18T18:00:00.000+0000",
+            "Start__c": "2017-09-18T15:00:00.000+0000"
+        },
+        {
+            "attributes": {
+                "type": "Volunteer_Event__c",
+                "referenceId": "Volunteer_Event__cRef2"
+            },
+            "Name": "Animal Adoption Fair",
+            "Description__c": "Help people find their next pet from the shelter...we need staff to welcome people, help them complete paperwork, take animals for microchipping, and maintain order",
+            "End__c": "2017-09-18T18:00:00.000+0000",
+            "Start__c": "2017-09-18T15:00:00.000+0000"
+        },
+        {
+            "attributes": {
+                "type": "Volunteer_Event__c",
+                "referenceId": "Volunteer_Event__cRef3"
+            },
+            "Name": "Trail Maintenance",
+            "Description__c": "We need 7 people for some outdoor work--trimming branches and vines and removing roots that might trip people on the local park trails",
+            "End__c": "2017-09-18T18:00:00.000+0000",
+            "Start__c": "2017-09-18T15:00:00.000+0000"
+        }
+    ]
+}
