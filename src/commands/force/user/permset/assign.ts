@@ -22,7 +22,7 @@ type FailureMsg = {
   message: string;
 };
 
-type Result = {
+export type PermsetAssignResult = {
   successes: SuccessMsg[];
   failures: FailureMsg[];
 };
@@ -45,7 +45,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
 
-  public async run(): Promise<Result> {
+  public async run(): Promise<PermsetAssignResult> {
     try {
       const aliasOrUsernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 

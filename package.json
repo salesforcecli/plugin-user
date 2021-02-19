@@ -13,6 +13,7 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
     "@oclif/plugin-command-snapshot": "^2.0.0",
+    "@salesforce/cli-plugins-testkit": "^0.0.8",
     "@salesforce/dev-config": "^2.1.0",
     "@salesforce/dev-scripts": "0.7.0",
     "@salesforce/plugin-command-reference": "^1.3.0",
@@ -21,6 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "chai": "^4.2.0",
+    "chai-each": "^0.0.1",
     "cz-conventional-changelog": "^3.2.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
@@ -107,9 +109,10 @@
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "test": "sf-test",
-    "version": "oclif-dev readme && git add README.md",
+    "test:command-reference": "./bin/run commandreference:generate --erroronwarnings",
     "test:deprecation-policy": "./bin/run snapshot:compare",
-    "test:command-reference": "./bin/run commandreference:generate --erroronwarnings"
+    "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
+    "version": "oclif-dev readme && git add README.md"
   },
   "husky": {
     "hooks": {
