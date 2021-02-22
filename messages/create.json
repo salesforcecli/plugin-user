@@ -8,7 +8,8 @@
   ],
   "flags": {
     "alias": "set an alias for the created username to reference within the CLI",
-    "definitionfile": "file path to a user definition"
+    "definitionfile": "file path to a user definition",
+    "setuniqueusername": "force the username, if specified in the definition file or at the command line, to be unique by appending the org ID"
   },
   "licenseLimitExceeded": "There are no available user licenses for the user profile \"%s\".",
   "duplicateUsername": "The username \"%s\" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.",
