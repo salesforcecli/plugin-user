@@ -179,9 +179,10 @@ export class UserCreateCommand extends SfdxCommand {
 
     // Provide a more user friendly error message for certain server errors.
     if (errMessage.includes('LICENSE_LIMIT_EXCEEDED')) {
-      const res = await conn.query(`SELECT name FROM profile WHERE id='${fields.profileId}'`);
-      const profileName = getString(res, 'records[0].Name');
-      throw SfdxError.create('@salesforce/plugin-user', 'create', 'licenseLimitExceeded', [profileName]);
+      const profile = await conn.singleRecordQuery<{ Name: string }>(
+        `SELECT name FROM profile WHERE id='${fields.profileId}'`
+      );
+      throw SfdxError.create('@salesforce/plugin-user', 'create', 'licenseLimitExceeded', [profile.Name]);
     } else if (errMessage.includes('DUPLICATE_USERNAME')) {
       throw SfdxError.create('@salesforce/plugin-user', 'create', 'duplicateUsername', [fields.username]);
     } else {
