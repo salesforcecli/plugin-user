@@ -19,7 +19,6 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { QueryResult } from 'jsforce';
 import { omit, mapKeys } from '@salesforce/kit';
 import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
@@ -231,10 +230,10 @@ export class UserCreateCommand extends SfdxCommand {
     if (defaultFields['profileName']) {
       const name = (defaultFields['profileName'] ?? 'Standard User') as string;
       this.logger.debug(`Querying org for profile name [${name}]`);
-      const response: QueryResult<{ Id: string }> = await this.org
+      const profile = await this.org
         .getConnection()
-        .query(`SELECT id FROM profile WHERE name='${name}'`);
-      defaultFields.profileId = response.records[0].Id;
+        .singleRecordQuery<{ Id: string }>(`SELECT id FROM profile WHERE name='${name}'`);
+      defaultFields.profileId = profile.Id;
     }
 
     return defaultFields;
