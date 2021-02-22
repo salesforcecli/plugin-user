@@ -194,8 +194,8 @@ export class UserCreateCommand extends SfdxCommand {
   }
 
   private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
-    // username can be overrided both in the file or varargs, save it to check if it was changed somewhere
-    const defaultUsername = defaultFields['username'];
+    // username can be overridden both in the file or varargs, save it to check if it was changed somewhere
+    const defaultUsername = defaultFields.username;
 
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
@@ -222,8 +222,8 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // check if "username" was passed along with "setuniqueusername" flag, if so append org id
-    if (this.flags.setuniqueusername && defaultFields['username'] !== defaultUsername) {
-      defaultFields['username'] = `${defaultFields['username']}.${this.org.getOrgId().toLowerCase()}`;
+    if (this.flags.setuniqueusername && defaultFields.username !== defaultUsername) {
+      defaultFields.username = `${defaultFields.username}.${this.org.getOrgId().toLowerCase()}`;
     }
 
     // check if "profileName" was passed, this needs to become a profileId before calling User.create
