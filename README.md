@@ -1,5 +1,7 @@
 # plugin-user
 
+[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-user.svg?label=@salesforce/plugin-user)](https://www.npmjs.com/package/@salesforce/plugin-user) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-user/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-user/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-user.svg)](https://npmjs.org/package/@salesforce/plugin-user) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-alias/main/LICENSE.txt)
+
 Commands to interact with Users and Permission Sets in a scratch org
 
 This plugin is bundled with the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli). For more information on the CLI, read the [getting started guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm).
@@ -65,7 +67,9 @@ sfdx plugins
 ```
 
 ## Commands
+
 <!-- commands -->
+
 A list of the available commands
 
 - sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -260,4 +264,5 @@ EXAMPLES
   sfdx force:user:permset:assign -n DreamHouse -u me@my.org
   sfdx force:user:permset:assign -n DreamHouse -o "user1@my.org,user2,user3"
 ```
+
 <!-- commandsstop -->
