@@ -1,6 +1,6 @@
 # plugin-user
 
-[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-user.svg?label=@salesforce/plugin-user)](https://www.npmjs.com/package/@salesforce/plugin-user) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-user/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-user/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-user.svg)](https://npmjs.org/package/@salesforce/plugin-user) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-alias/main/LICENSE.txt)
+[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-user.svg?label=@salesforce/plugin-user)](https://www.npmjs.com/package/@salesforce/plugin-user) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-user/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-user/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-user.svg)](https://npmjs.org/package/@salesforce/plugin-user) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-user/main/LICENSE.txt)
 
 Commands to interact with Users and Permission Sets in a scratch org
 
