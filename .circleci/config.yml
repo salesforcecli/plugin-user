@@ -7,7 +7,7 @@ workflows:
   test-and-release:
     jobs:
       - release-management/test-nut:
-          name: nuts-on-
+          name: nuts-on-linux
       - release-management/test-nut:
           name: nuts-on-windows
           os: windows
