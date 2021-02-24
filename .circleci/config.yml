@@ -7,7 +7,10 @@ workflows:
   test-and-release:
     jobs:
       - release-management/test-nut:
-          name: nuts-on-linux
+          name: nuts-on-
+      - release-management/test-nut:
+          name: nuts-on-windows
+          os: windows
       - release-management/validate-pr:
           filters:
             branches:
