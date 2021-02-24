@@ -16,7 +16,6 @@ import UserCreateCommand from '../../../src/commands/force/user/create';
 const username = 'defaultusername@test.com';
 
 describe('force:user:create', () => {
-  let authInfoStub;
   it('will properly merge fields regardless of capitalization', async () => {
     // notice the varied capitalization
     stubMethod($$.SANDBOX, fs, 'readJson').resolves({
@@ -87,7 +86,7 @@ describe('force:user:create', () => {
     stubMethod($$.SANDBOX, User.prototype, 'assignPermissionSets').resolves();
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(username);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
-    authInfoStub = stubMethod($$.SANDBOX, AuthInfo.prototype, 'save').resolves();
+    stubMethod($$.SANDBOX, AuthInfo.prototype, 'save').resolves();
 
     if (throws.license) {
       stubMethod($$.SANDBOX, User.prototype, 'createUser').throws(new Error('LICENSE_LIMIT_EXCEEDED'));
@@ -144,7 +143,6 @@ describe('force:user:create', () => {
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(authInfoStub.callCount).to.be.equal(2);
     });
 
   test
@@ -184,7 +182,6 @@ describe('force:user:create', () => {
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(authInfoStub.callCount).to.be.equal(1);
     });
 
   test
@@ -219,7 +216,6 @@ describe('force:user:create', () => {
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
@@ -260,7 +256,6 @@ describe('force:user:create', () => {
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
@@ -307,7 +302,6 @@ describe('force:user:create', () => {
         };
         const result = JSON.parse(ctx.stdout).result;
         expect(result).to.deep.equal(expected);
-        expect(authInfoStub.callCount).to.be.equal(1);
       }
     );
 
@@ -329,7 +323,6 @@ describe('force:user:create', () => {
       expect(result.status).to.equal(1);
       expect(result.message).to.equal('There are no available user licenses for the user profile "testName".');
       expect(result.name).to.equal('licenseLimitExceeded');
-      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
@@ -349,7 +342,6 @@ describe('force:user:create', () => {
       const result = JSON.parse(ctx.stdout);
       expect(result.status).to.equal(1);
       expect(result.name).to.equal('duplicateUsername');
-      expect(authInfoStub.callCount).to.be.equal(0);
       expect(result.message).to.equal(
         'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.'
       );
