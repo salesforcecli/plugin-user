@@ -26,6 +26,8 @@ describe('verifies all commands run successfully (no json)', () => {
     });
   });
 
+  it(`created a TestSession with ${session.homeDir}`);
+
   it('user display', () => {
     execCmd('force:user:display', { ensureExitCode: 0 });
   });

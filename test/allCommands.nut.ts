@@ -31,6 +31,8 @@ describe('verifies all commands run successfully ', () => {
     });
   });
 
+  it(`created a TestSession with ${session.homeDir}`);
+
   it('user display', () => {
     const output = execCmd('force:user:display --json', { ensureExitCode: 0 });
     expect(output.jsonOutput)
