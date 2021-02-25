@@ -3,17 +3,13 @@
   "adminEmail": "shane@mailinator.com",
   "edition": "Developer",
   "description": "app building workshop",
+  "features": ["EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
     },
     "mobileSettings": {
       "enableS1EncryptedStoragePref2": false
-    },
-    "securitySettings": {
-      "passwordPolicies": {
-        "enableSetPasswordInApi": true
-      }
     }
   }
 }
