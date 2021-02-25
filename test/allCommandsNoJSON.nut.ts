@@ -4,6 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import * as path from 'path';
+
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 
 // const projectPath = 'testProject_AllUserCommandsNoJSON';
@@ -14,10 +16,13 @@ describe('verifies all commands run successfully (no json)', () => {
     session = TestSession.create({
       project: {
         // destinationDir: projectPath,
-        sourceDir: 'test/df17AppBuilding',
+        sourceDir: path.join('test', 'df17AppBuilding'),
       },
       // create org and push source to get a permset
-      setupCommands: ['sfdx force:org:create -d 1 -s -f config/project-scratch-def.json', 'sfdx force:source:push'],
+      setupCommands: [
+        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
+        'sfdx force:source:push',
+      ],
     });
   });
 

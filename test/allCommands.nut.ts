@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import * as path from 'path';
 import { use, expect } from 'chai';
 import * as chaiEach from 'chai-each';
 
@@ -20,10 +21,13 @@ describe('verifies all commands run successfully ', () => {
   before(() => {
     session = TestSession.create({
       project: {
-        sourceDir: 'test/df17AppBuilding',
+        sourceDir: path.join('test', 'df17AppBuilding'),
       },
       // create org and push source to get a permset
-      setupCommands: ['sfdx force:org:create -d 1 -s -f config/project-scratch-def.json', 'sfdx force:source:push'],
+      setupCommands: [
+        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
+        'sfdx force:source:push',
+      ],
     });
   });
 
