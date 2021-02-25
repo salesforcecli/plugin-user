@@ -11,7 +11,7 @@ import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 // const projectPath = 'testProject_AllUserCommandsNoJSON';
 let session: TestSession;
 
-describe.skip('verifies all commands run successfully (no json)', () => {
+describe('verifies all commands run successfully (no json)', () => {
   before(() => {
     session = TestSession.create({
       project: {

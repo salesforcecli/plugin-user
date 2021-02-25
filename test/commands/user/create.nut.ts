@@ -11,7 +11,7 @@ import { env } from '@salesforce/kit';
 import { UserCreateOutput } from '../../../src/commands/force/user/create';
 let session: TestSession;
 
-describe.skip('creates a user from a file and verifies', () => {
+describe('creates a user from a file and verifies', () => {
   let createdUserId: string;
 
   before(() => {
