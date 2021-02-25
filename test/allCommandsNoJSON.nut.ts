@@ -11,7 +11,7 @@ import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 // const projectPath = 'testProject_AllUserCommandsNoJSON';
 let session: TestSession;
 
-describe('verifies all commands run successfully (no json)', () => {
+describe.skip('verifies all commands run successfully (no json)', () => {
   before(() => {
     session = TestSession.create({
       project: {
@@ -25,8 +25,6 @@ describe('verifies all commands run successfully (no json)', () => {
       ],
     });
   });
-
-  it(`created a TestSession with ${session.homeDir}`);
 
   it('user display', () => {
     execCmd('force:user:display', { ensureExitCode: 0 });

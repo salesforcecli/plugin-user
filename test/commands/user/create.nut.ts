@@ -11,7 +11,7 @@ import { env } from '@salesforce/kit';
 import { UserCreateOutput } from '../../../src/commands/force/user/create';
 let session: TestSession;
 
-describe('creates a user from a file and verifies', () => {
+describe.skip('creates a user from a file and verifies', () => {
   let createdUserId: string;
 
   before(() => {
@@ -26,8 +26,6 @@ describe('creates a user from a file and verifies', () => {
       ],
     });
   });
-
-  it(`created a TestSession with ${session.homeDir}`);
 
   it('creates a secondary user with password and permsets assigned', () => {
     const output = execCmd(`force:user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`, {

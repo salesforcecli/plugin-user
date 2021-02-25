@@ -1,8 +1,8 @@
 {
-  "orgName": "workshops",
+  "orgName": "nutPluginUser",
   "adminEmail": "shane@mailinator.com",
   "edition": "Developer",
-  "description": "app building workshop",
+  "description": "nuts for plugin-user",
   "features": ["EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {
