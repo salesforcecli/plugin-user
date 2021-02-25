@@ -546,10 +546,10 @@
     mv "~2"
     safe-json-stringify "~1"
 
-"@salesforce/cli-plugins-testkit@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-0.0.8.tgz#d8c39b03e00e49f005a2e8ca20aebdbb5730018a"
-  integrity sha512-Cc8TERl0syLtlhl28jigWOEHRTWR9zI9hk815vBjsu7azsXC14tYEg3xdM/hcqye5N6OxM3BlDNavoGfy8R6tg==
+"@salesforce/cli-plugins-testkit@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-0.0.11.tgz#69203ccb0c8512948eef9b1736bfe074290ea3c3"
+  integrity sha512-1ssO+bKcl+UI1tnsJmV+7N88T7D3jzZ2NT5VNsKpSyOugnS3UjMT21PhBvfYynMf5TkaERxKAj4OrQvRNzE6Ng==
   dependencies:
     "@salesforce/core" "^2.16.3"
     "@salesforce/kit" "^1.3.4"
@@ -557,6 +557,7 @@
     archiver "^5.2.0"
     debug "^4.3.1"
     shelljs "^0.8.4"
+    sinon "^9.0.2"
 
 "@salesforce/command@^3.0.0", "@salesforce/command@^3.1.0":
   version "3.1.0"
@@ -574,7 +575,27 @@
     chalk "^2.4.2"
     cli-ux "^4.9.3"
 
-"@salesforce/core@^2.16.3", "@salesforce/core@^2.2.0", "@salesforce/core@^2.20.0":
+"@salesforce/core@^2.16.3":
+  version "2.20.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.20.3.tgz#fe39bdabd6053f430114dbf9c5d23d0405e9e6ad"
+  integrity sha512-gX0BJMMppc4j6OiSPSjFRIyL8T6faYtJUVGV0qhx/R3JADiazyRfBgUqvpMmRI/4bxEaV6nXAIU5Rr+EoL0ZqQ==
+  dependencies:
+    "@salesforce/bunyan" "^2.0.0"
+    "@salesforce/kit" "^1.4.3"
+    "@salesforce/schemas" "^1.0.1"
+    "@salesforce/ts-types" "^1.0.0"
+    "@types/graceful-fs" "^4.1.3"
+    "@types/jsforce" "1.9.23"
+    "@types/mkdirp" "1.0.0"
+    debug "^3.1.0"
+    graceful-fs "^4.2.4"
+    jsen "0.6.6"
+    jsforce "^1.10.0"
+    jsonwebtoken "8.5.0"
+    mkdirp "1.0.4"
+    sfdx-faye "^1.0.9"
+
+"@salesforce/core@^2.2.0", "@salesforce/core@^2.20.0":
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.20.0.tgz#5d386fecd92dd5d57c3ec5018fb53ebb3a93527c"
   integrity sha512-NX++KUovJWXmNnSG9W7O7/0u8m9q1Ing3pX/iR12nzAMcslcNCZSeOHtLdA6VY/PvpjHBS9sDU5+bnW0m8olvw==
@@ -639,7 +660,7 @@
     typescript "^4.1.3"
     xunit-file "^1.0.0"
 
-"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.3.3", "@salesforce/kit@^1.3.4":
+"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.3.3", "@salesforce/kit@^1.3.4", "@salesforce/kit@^1.4.3":
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.4.3.tgz#4d066239868fd79069f2e9ac53e28f37be5e9b96"
   integrity sha512-8OuJlEqxTwLtBzX9ur2fiiR9wGx+2k5vi+IQjAXh+5xUJXm9ooWiRwvCsrXsbpgTusHzaG/RYrqcqynJh3RXCA==
