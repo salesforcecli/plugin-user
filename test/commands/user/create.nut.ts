@@ -53,7 +53,7 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
-    await session.zip(undefined, 'artifacts');
+    await session.zip(undefined, './artifacts');
     await session.clean();
   });
 });
