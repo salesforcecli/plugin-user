@@ -22,8 +22,8 @@ describe('creates a user from a file and verifies', () => {
       },
       // create org and push source to get a permset
       setupCommands: [
-        // `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
-        // 'sfdx force:source:push',
+        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
+        'sfdx force:source:push',
       ],
     });
   });
