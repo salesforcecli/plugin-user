@@ -551,7 +551,7 @@
     chalk "^2.4.2"
     cli-ux "^4.9.3"
 
-"@salesforce/core@^2.16.3", "@salesforce/core@^2.18.6", "@salesforce/core@^2.2.0":
+"@salesforce/core@^2.16.3", "@salesforce/core@^2.18.6":
   version "2.18.6"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.18.6.tgz#d7123dfee1a3017ff1c5e8bb17d61e2fd685e4bb"
   integrity sha512-S9INKZX3KWUo5FRmtcktt1ZTHE72PryAb+LIL32J0eV4psUMD7nJT2i4DNlLconPi4+wt/rRaXzbaSPBVtiSfw==
@@ -636,7 +636,7 @@
     typescript "^4.1.3"
     xunit-file "^1.0.0"
 
-"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.3.3", "@salesforce/kit@^1.3.4":
+"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.3.3":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.4.0.tgz#4a43a8633f967066895d865813907eea071ef541"
   integrity sha512-/6owokpdkljkbM5axJ7xVgn6ggMS1YJgtD8zv2gBAfIHT/EgIMnwkyU6Rymb8QmWp93q/RoHXdgNQkDonWYSqw==
@@ -685,7 +685,7 @@
     sinon "5.1.1"
     tslib "^1.10.0"
 
-"@salesforce/ts-types@^1.0.0", "@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.4.4", "@salesforce/ts-types@^1.5.0":
+"@salesforce/ts-types@^1.0.0", "@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-1.5.0.tgz#e2baaca088f30a3f9d10127eb789a12abad44958"
   integrity sha512-fJsVXSJ0s8voDNM7TYulPkiRDdR1bC/rE2hsY/+2q0DDa57UAeql34tEdaBs84GGbe/VGCVbiazkLDJW/bX7KQ==
@@ -5263,7 +5263,7 @@ readable-stream@3, readable-stream@^3.0.0, readable-stream@^3.1.1, readable-stre
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
-readable-stream@^2.0.0, readable-stream@^2.0.5, readable-stream@^2.1.0, readable-stream@~2.3.6:
+readable-stream@^2.0.0, readable-stream@^2.0.5, readable-stream@^2.1.0:
   version "2.3.7"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.7.tgz#1eca1cf711aef814c04f62252a36a62f6cb23b57"
   integrity sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
