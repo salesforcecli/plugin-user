@@ -55,11 +55,7 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
-    try {
-      await session.zip(undefined, 'artifacts');
-    } catch (err) {
-      // ok, prevents Circle from throwing on windows or other artifact issues
-    }
+    await session.zip(undefined, 'artifacts');
     await session.clean();
   });
 });
