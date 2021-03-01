@@ -54,9 +54,7 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
-    //  const zipFilePath = os.platform() === 'win32' ? path.join('..', destDir, name) : path.join(destDir, name);
-
-    await session.zip(undefined, os.platform() === 'win32' ? path.join('..', 'artifacts') : 'artifacts');
+    await session.zip(undefined, path.join('~', 'artifacts'));
     await session.clean();
   });
 });
