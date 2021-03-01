@@ -57,6 +57,11 @@ describe('verifies all commands run successfully (no json)', () => {
   });
 
   after(async () => {
+    try {
+      await session.zip(undefined, 'artifacts');
+    } catch (err) {
+      // ok, prevents Circle from throwing on windows
+    }
     await session.clean();
   });
 });

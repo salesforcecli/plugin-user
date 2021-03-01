@@ -9,6 +9,7 @@ import * as path from 'path';
 import { expect } from 'chai';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { env } from '@salesforce/kit';
+import { OrgUsersConfig } from '@salesforce/core';
 import { UserCreateOutput } from '../../../src/commands/force/user/create';
 let session: TestSession;
 
@@ -54,7 +55,11 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
-    await session.zip(undefined, 'artifacts');
+    try {
+      await session.zip(undefined, 'artifacts');
+    } catch (err) {
+      // ok, prevents Circle from throwing on windows
+    }
     await session.clean();
   });
 });
