@@ -20,6 +20,7 @@ workflows:
           version: latest
           requires:
             - node-latest
+          environment: testkit:*
       - release-management/test-nut:
           name: nuts-on-windows
           version: latest
