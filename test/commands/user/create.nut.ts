@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+
 import * as path from 'path';
 import { expect } from 'chai';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
@@ -21,8 +22,8 @@ describe('creates a user from a file and verifies', () => {
       },
       // create org and push source to get a permset
       setupCommands: [
-        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
-        'sfdx force:source:push',
+        // `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
+        // 'sfdx force:source:push',
       ],
     });
   });
@@ -53,7 +54,7 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
-    await session.zip(undefined, path.join('~', 'artifacts'));
+    await session.zip(undefined, 'artifacts');
     await session.clean();
   });
 });
