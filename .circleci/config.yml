@@ -17,17 +17,19 @@ workflows:
           name: node-12
       - release-management/test-nut:
           name: nuts-on-linux
-          version: latest
+          sfdx_version: latest
           requires:
             - node-latest
-          environment: testkit:*
+          environment:
+            debug: 'testkit:*'
       - release-management/test-nut:
           name: nuts-on-windows
-          version: latest
+          sfdx_version: latest
           os: windows
           requires:
             - node-latest
-          environment: testkit:*
+          environment:
+            debug: 'testkit:*'
       - release-management/release-package:
           sign: true
           github-release: true
