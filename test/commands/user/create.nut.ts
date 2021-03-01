@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
+import * as os from 'os';
 import { expect } from 'chai';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { env } from '@salesforce/kit';
@@ -53,7 +54,9 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
-    await session.zip(undefined, 'artifacts');
+    //  const zipFilePath = os.platform() === 'win32' ? path.join('..', destDir, name) : path.join(destDir, name);
+
+    await session.zip(undefined, os.platform() === 'win32' ? path.join('..', 'artifacts') : 'artifacts');
     await session.clean();
   });
 });
