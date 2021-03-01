@@ -26,6 +26,8 @@ workflows:
           os: windows
           requires:
             - node-latest
+          environment:
+            TESTKIT_ENABLE_ZIP:
       - release-management/release-package:
           sign: true
           github-release: true
