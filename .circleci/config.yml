@@ -31,8 +31,6 @@ workflows:
           github-release: true
           requires:
             - node-latest
-            - nuts-on-linux
-            - nuts-on-windows
           filters:
             branches:
               only: main
