@@ -13,7 +13,7 @@ import { getString } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
-type Result = {
+export type UserDisplayResult = {
   username: string;
   profileName: string;
   id: string;
@@ -32,7 +32,7 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly requiresDevhubUsername = true;
   public logger: Logger;
 
-  public async run(): Promise<Result> {
+  public async run(): Promise<UserDisplayResult> {
     this.logger = await Logger.child(this.constructor.name);
     if (sfdc.matchesAccessToken(this.flags.targetusername)) {
       throw new SfdxError(messages.getMessage('accessTokenError'), 'accessTokenError', [
@@ -75,7 +75,7 @@ export class UserDisplayCommand extends SfdxCommand {
       );
     }
 
-    const result: Result = {
+    const result: UserDisplayResult = {
       accessToken: conn.accessToken,
       id: userId,
       instanceUrl: userAuthData.instanceUrl,
@@ -103,7 +103,7 @@ export class UserDisplayCommand extends SfdxCommand {
     return result;
   }
 
-  private print(result: Result): void {
+  private print(result: UserDisplayResult): void {
     const columns = {
       columns: [
         { key: 'key', label: 'key' },

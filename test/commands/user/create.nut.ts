@@ -30,14 +30,16 @@ describe('creates a user from a file and verifies', () => {
   });
 
   it('creates a secondary user with password and permsets assigned', () => {
-    const output = execCmd(`force:user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`, {
-      ensureExitCode: 0,
-    });
-    expect(output.jsonOutput).to.have.property('result').with.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
-    const result = (output.jsonOutput as Record<string, unknown>).result as UserCreateOutput;
-    expect(result.permissionSetAssignments).to.deep.equal(['VolunteeringApp']);
-    // const fileContents = fs.readJsonSync('config/complexUser.json', true);
-    createdUserId = result.fields.id as string;
+    const output = execCmd<UserCreateOutput>(
+      `force:user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
+    // expect(output.jsonOutput).to.have.property('result').with.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
+    expect(output.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
+    expect(output.result.permissionSetAssignments).to.deep.equal(['VolunteeringApp']);
+    createdUserId = output.result.fields.id as string;
   });
 
   it('verifies the permission set assignment in the org', () => {
