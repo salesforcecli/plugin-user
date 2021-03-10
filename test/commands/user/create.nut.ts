@@ -29,6 +29,33 @@ describe('creates a user from a file and verifies', () => {
     });
   });
 
+  it('creates a user with setuniqueusername from username on commandline', () => {
+    const testUsername = 'test@test.test';
+    const output = execCmd<UserCreateOutput>(
+      `force:user:create --json --setuniqueusername username=${testUsername} profileName="Chatter Free User"`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
+    expect(output.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
+    const usernameResult = output.result.fields.username as string;
+    expect(usernameResult.startsWith(testUsername)).to.be.true;
+    // ends with . followed by the prefix for orgId (lowercased!) and 15 more lowercase characters or digits
+    expect(usernameResult).matches(/.*\.00d[a-z|\d]{15}$/);
+  });
+
+  it('creates a user with setuniqueusername from username on commandline', () => {
+    const output = execCmd<UserCreateOutput>(
+      `force:user:create --json -f ${path.join('config', 'fileWithUsername.json')} --setuniqueusername`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
+    expect(output.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
+    const usernameResult = output.result.fields.username as string;
+    expect(usernameResult).matches(/not\.unique@test\.test\.00d[a-z|\d]{15}$/);
+  });
+
   it('creates a secondary user with password and permsets assigned', () => {
     const output = execCmd<UserCreateOutput>(
       `force:user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`,
@@ -42,6 +69,7 @@ describe('creates a user from a file and verifies', () => {
     createdUserId = output.result.fields.id as string;
   });
 
+  // LEAVE this test last because it changes the executable path
   it('verifies the permission set assignment in the org', () => {
     // use sfdx since queries won't be part of this plugin
     env.setString('TESTKIT_EXECUTABLE_PATH', 'sfdx');
