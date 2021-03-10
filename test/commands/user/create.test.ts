@@ -381,7 +381,6 @@ describe('force:user:create', () => {
       };
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
-      expect(authInfoStub.callCount).to.be.equal(0);
     });
 
   test
@@ -419,7 +418,6 @@ describe('force:user:create', () => {
         };
         const result = JSON.parse(ctx.stdout).result;
         expect(result).to.deep.equal(expected);
-        expect(authInfoStub.callCount).to.be.equal(0);
       }
     );
 });
