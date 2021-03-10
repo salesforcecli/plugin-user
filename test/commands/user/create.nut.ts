@@ -4,11 +4,13 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { expect } from 'chai';
 
+import * as path from 'path';
+import { expect } from 'chai';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { env } from '@salesforce/kit';
 import { UserCreateOutput } from '../../../src/commands/force/user/create';
+
 let session: TestSession;
 
 describe('creates a user from a file and verifies', () => {
@@ -17,20 +19,27 @@ describe('creates a user from a file and verifies', () => {
   before(() => {
     session = TestSession.create({
       project: {
-        sourceDir: 'test/df17AppBuilding',
+        sourceDir: path.join('test', 'df17AppBuilding'),
       },
       // create org and push source to get a permset
-      setupCommands: ['sfdx force:org:create -d 1 -s -f config/project-scratch-def.json', 'sfdx force:source:push'],
+      setupCommands: [
+        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
+        'sfdx force:source:push',
+      ],
     });
   });
 
   it('creates a secondary user with password and permsets assigned', () => {
-    const output = execCmd('force:user:create --json -a Other -f config/complexUser.json', { ensureExitCode: 0 });
-    expect(output.jsonOutput).to.have.property('result').with.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
-    const result = (output.jsonOutput as Record<string, unknown>).result as UserCreateOutput;
-    expect(result.permissionSetAssignments).to.deep.equal(['VolunteeringApp']);
-    // const fileContents = fs.readJsonSync('config/complexUser.json', true);
-    createdUserId = result.fields.id as string;
+    const output = execCmd<UserCreateOutput>(
+      `force:user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
+    // expect(output.jsonOutput).to.have.property('result').with.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
+    expect(output.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
+    expect(output.result.permissionSetAssignments).to.deep.equal(['VolunteeringApp']);
+    createdUserId = output.result.fields.id as string;
   });
 
   it('verifies the permission set assignment in the org', () => {
@@ -48,6 +57,7 @@ describe('creates a user from a file and verifies', () => {
   });
 
   after(async () => {
+    await session.zip(undefined, 'artifacts');
     await session.clean();
   });
 });
