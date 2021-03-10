@@ -19,7 +19,6 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { QueryResult } from 'jsforce';
 import { omit, mapKeys } from '@salesforce/kit';
 import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
@@ -70,6 +69,10 @@ export class UserCreateCommand extends SfdxCommand {
     definitionfile: flags.string({
       char: 'f',
       description: messages.getMessage('flags.definitionfile'),
+    }),
+    setuniqueusername: flags.boolean({
+      char: 's',
+      description: messages.getMessage('flags.setuniqueusername'),
     }),
   };
   public logger: Logger;
@@ -175,9 +178,10 @@ export class UserCreateCommand extends SfdxCommand {
 
     // Provide a more user friendly error message for certain server errors.
     if (errMessage.includes('LICENSE_LIMIT_EXCEEDED')) {
-      const res = await conn.query(`SELECT name FROM profile WHERE id='${fields.profileId}'`);
-      const profileName = getString(res, 'records[0].Name');
-      throw SfdxError.create('@salesforce/plugin-user', 'create', 'licenseLimitExceeded', [profileName]);
+      const profile = await conn.singleRecordQuery<{ Name: string }>(
+        `SELECT name FROM profile WHERE id='${fields.profileId}'`
+      );
+      throw SfdxError.create('@salesforce/plugin-user', 'create', 'licenseLimitExceeded', [profile.Name]);
     } else if (errMessage.includes('DUPLICATE_USERNAME')) {
       throw SfdxError.create('@salesforce/plugin-user', 'create', 'duplicateUsername', [fields.username]);
     } else {
@@ -190,6 +194,9 @@ export class UserCreateCommand extends SfdxCommand {
   }
 
   private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
+    // username can be overridden both in the file or varargs, save it to check if it was changed somewhere
+    const defaultUsername = defaultFields.username;
+
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
       const content = (await fs.readJson(this.flags.definitionfile)) as UserFields;
@@ -214,14 +221,19 @@ export class UserCreateCommand extends SfdxCommand {
       });
     }
 
+    // check if "username" was passed along with "setuniqueusername" flag, if so append org id
+    if (this.flags.setuniqueusername && defaultFields.username !== defaultUsername) {
+      defaultFields.username = `${defaultFields.username}.${this.org.getOrgId().toLowerCase()}`;
+    }
+
     // check if "profileName" was passed, this needs to become a profileId before calling User.create
     if (defaultFields['profileName']) {
       const name = (defaultFields['profileName'] ?? 'Standard User') as string;
       this.logger.debug(`Querying org for profile name [${name}]`);
-      const response: QueryResult<{ Id: string }> = await this.org
+      const profile = await this.org
         .getConnection()
-        .query(`SELECT id FROM profile WHERE name='${name}'`);
-      defaultFields.profileId = response.records[0].Id;
+        .singleRecordQuery<{ Id: string }>(`SELECT id FROM profile WHERE name='${name}'`);
+      defaultFields.profileId = profile.Id;
     }
 
     return defaultFields;
