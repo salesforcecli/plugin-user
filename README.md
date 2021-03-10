@@ -69,19 +69,19 @@ sfdx plugins
 ## Commands
 
 <!-- commands -->
-* [`sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceusercreate-namevalue--a-string--f-string--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceusercreate-namevalue--a-string--f-string--s--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserdisplay--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserlist--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx force:user:password:generate [-o <array>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserpasswordgenerate--o-array--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx force:user:permset:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserpermsetassign--n-string--o-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 create a user for a scratch org
 
 ```
 USAGE
-  $ sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-v <string>] [-u <string>] [--apiversion 
+  $ sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion 
   <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -89,6 +89,11 @@ OPTIONS
                                                                                     username to reference within the CLI
 
   -f, --definitionfile=definitionfile                                               file path to a user definition
+
+  -s, --setuniqueusername                                                           force the username, if specified in
+                                                                                    the definition file or at the
+                                                                                    command line, to be unique by
+                                                                                    appending the org ID
 
   -u, --targetusername=targetusername                                               username or alias for the target
                                                                                     org; overrides default target org
@@ -115,7 +120,7 @@ EXAMPLES
   sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true
 ```
 
-_See code: [src/commands/force/user/create.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.2/src/commands/force/user/create.ts)_
+_See code: [src/commands/force/user/create.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.3/src/commands/force/user/create.ts)_
 
 ## `sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -149,7 +154,7 @@ EXAMPLES
   sfdx force:user:display -u me@my.org --json
 ```
 
-_See code: [src/commands/force/user/display.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.2/src/commands/force/user/display.ts)_
+_See code: [src/commands/force/user/display.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.3/src/commands/force/user/display.ts)_
 
 ## `sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -184,7 +189,7 @@ EXAMPLES
   sfdx force:user:list --json > tmp/MyUserList.json
 ```
 
-_See code: [src/commands/force/user/list.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.2/src/commands/force/user/list.ts)_
+_See code: [src/commands/force/user/list.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.3/src/commands/force/user/list.ts)_
 
 ## `sfdx force:user:password:generate [-o <array>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -228,7 +233,7 @@ EXAMPLES
   sfdx force:user:password:generate -o "user1@my.org,user2@my.org,user3@my.org"
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.2/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.3/src/commands/force/user/password/generate.ts)_
 
 ## `sfdx force:user:permset:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -264,5 +269,5 @@ EXAMPLES
   sfdx force:user:permset:assign -n DreamHouse -o "user1@my.org,user2,user3"
 ```
 
-_See code: [src/commands/force/user/permset/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.2/src/commands/force/user/permset/assign.ts)_
+_See code: [src/commands/force/user/permset/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v1.1.3/src/commands/force/user/permset/assign.ts)_
 <!-- commandsstop -->

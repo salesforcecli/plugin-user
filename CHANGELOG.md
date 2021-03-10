@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/salesforcecli/plugin-user/compare/v1.1.3...v1.2.0) (2021-03-10)
+
+
+### Features
+
+* added setpassedusernameunique flag [#827](https://github.com/salesforcecli/plugin-user/issues/827) ([2e28714](https://github.com/salesforcecli/plugin-user/commit/2e28714f4faa09ddb6e741c15f12730d616109c4))
+* updated flag name after review ([789f1ed](https://github.com/salesforcecli/plugin-user/commit/789f1edb8a3307945fe09d87691fa89e21cd4c68))
+
 ### [1.1.3](https://github.com/salesforcecli/plugin-user/compare/v1.1.2...v1.1.3) (2021-03-08)
 
 ### [1.1.2](https://github.com/salesforcecli/plugin-user/compare/v1.1.1...v1.1.2) (2021-02-18)
