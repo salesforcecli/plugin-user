@@ -18,6 +18,8 @@ import { UserDisplayResult } from '../src/commands/force/user/display';
 use(chaiEach);
 let session: TestSession;
 
+let mainUserId;
+
 describe('verifies all commands run successfully ', () => {
   before(() => {
     session = TestSession.create({
@@ -47,6 +49,7 @@ describe('verifies all commands run successfully ', () => {
     expect(output.result.orgId).to.have.length(18);
     expect(output.result.id).to.have.length(18);
     expect(output.result.accessToken.startsWith(output.result.orgId.substr(0, 15))).to.be.true;
+    mainUserId = output.result.id;
   });
 
   it('assigns a permset to the default user', () => {
@@ -75,6 +78,7 @@ describe('verifies all commands run successfully ', () => {
       'lastname',
       'timezonesidkey'
     );
+    expect(output.result.fields.id).to.not.equal(mainUserId);
   });
 
   it('assigns permset to the secondary user', () => {
@@ -117,7 +121,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   after(async () => {
-    await session.zip(undefined, 'artifacts');
-    await session.clean();
+    await session?.zip(undefined, 'artifacts');
+    await session?.clean();
   });
 });
