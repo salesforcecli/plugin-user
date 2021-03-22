@@ -21,8 +21,8 @@ let session: TestSession;
 let mainUserId;
 
 describe('verifies all commands run successfully ', () => {
-  before(() => {
-    session = TestSession.create({
+  before(async () => {
+    session = await TestSession.create({
       project: {
         sourceDir: path.join('test', 'df17AppBuilding'),
       },
@@ -31,6 +31,7 @@ describe('verifies all commands run successfully ', () => {
         `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
         'sfdx force:source:push',
       ],
+      retries: 2,
     });
   });
 

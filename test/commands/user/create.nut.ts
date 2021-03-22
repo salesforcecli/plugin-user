@@ -16,8 +16,8 @@ let session: TestSession;
 describe('creates a user from a file and verifies', () => {
   let createdUserId: string;
 
-  before(() => {
-    session = TestSession.create({
+  before(async () => {
+    session = await TestSession.create({
       project: {
         sourceDir: path.join('test', 'df17AppBuilding'),
       },
@@ -26,6 +26,7 @@ describe('creates a user from a file and verifies', () => {
         `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
         'sfdx force:source:push',
       ],
+      retries: 2,
     });
   });
 

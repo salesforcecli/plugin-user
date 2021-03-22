@@ -12,8 +12,8 @@ import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 let session: TestSession;
 
 describe('verifies all commands run successfully (no json)', () => {
-  before(() => {
-    session = TestSession.create({
+  before(async () => {
+    session = await TestSession.create({
       project: {
         // destinationDir: projectPath,
         sourceDir: path.join('test', 'df17AppBuilding'),
@@ -23,6 +23,7 @@ describe('verifies all commands run successfully (no json)', () => {
         `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
         'sfdx force:source:push',
       ],
+      retries: 2,
     });
   });
 
