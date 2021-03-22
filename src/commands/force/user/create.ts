@@ -102,6 +102,7 @@ export class UserCreateCommand extends SfdxCommand {
 
     // merge defaults with provided values with cli > file > defaults
     const fields = await this.aggregateFields(defaultUserFields.getFields());
+
     try {
       this.authInfo = await this.user.createUser(UserCreateCommand.stripInvalidAPIFields(fields));
     } catch (e) {
@@ -160,6 +161,7 @@ export class UserCreateCommand extends SfdxCommand {
       await alias.write();
     }
 
+    fields.id = this.authInfo.getFields().userId;
     this.print(fields);
 
     const { permsets, ...fieldsWithoutPermsets } = fields;
