@@ -14,12 +14,14 @@ import { IConfig } from '@oclif/config';
 import UserCreateCommand from '../../../src/commands/force/user/create';
 
 const username = 'defaultusername@test.com';
+const originalUserId = '0052D0000043PawWWR';
+const newUserId = '0052D0000044PawWWR';
 
 describe('force:user:create', () => {
   it('will properly merge fields regardless of capitalization', async () => {
     // notice the varied capitalization
     stubMethod($$.SANDBOX, fs, 'readJson').resolves({
-      id: '0052D0000043PawWWR',
+      id: originalUserId,
       Username: '1605130295132_test-j6asqt5qoprs@example.com',
       Alias: 'testAlias',
       Email: username,
@@ -67,7 +69,7 @@ describe('force:user:create', () => {
     stubMethod($$.SANDBOX, DefaultUserFields, 'create').resolves({
       getFields: (): UserFields => {
         return {
-          id: '0052D0000043PawWWR',
+          id: originalUserId,
           username: '1605130295132_test-j6asqt5qoprs@example.com',
           alias: 'testAlias',
           email: username,
@@ -87,7 +89,18 @@ describe('force:user:create', () => {
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(username);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
     stubMethod($$.SANDBOX, AuthInfo.prototype, 'save').resolves();
-
+    stubMethod($$.SANDBOX, AuthInfo.prototype, 'getFields').returns({
+      userId: newUserId,
+      username: '1605130295132_test-j6asqt5qoprs@example.com',
+      alias: 'testAlias',
+      email: username,
+      emailEncodingKey: 'UTF-8',
+      languageLocaleKey: 'en_US',
+      localeSidKey: 'en_US',
+      profileId: '00e2D000000bNexWWR',
+      lastName: 'User',
+      timeZoneSidKey: 'America/Los_Angeles',
+    });
     if (throws.license) {
       stubMethod($$.SANDBOX, User.prototype, 'createUser').throws(new Error('LICENSE_LIMIT_EXCEEDED'));
       stubMethod($$.SANDBOX, Connection.prototype, 'query').resolves({ records: [{ Name: 'testName' }] });
@@ -130,7 +143,7 @@ describe('force:user:create', () => {
           alias: 'testAlias',
           email: 'defaultusername@test.com',
           emailencodingkey: 'UTF-8',
-          id: '0052D0000043PawWWR',
+          id: newUserId,
           languagelocalekey: 'en_US',
           lastname: 'User',
           localesidkey: 'en_US',
@@ -170,7 +183,7 @@ describe('force:user:create', () => {
           alias: 'testAlias',
           email: 'defaultusername@test.com',
           emailencodingkey: 'UTF-8',
-          id: '0052D0000043PawWWR',
+          id: newUserId,
           languagelocalekey: 'en_US',
           lastname: 'User',
           localesidkey: 'en_US',
@@ -205,7 +218,7 @@ describe('force:user:create', () => {
           alias: 'testAlias',
           email: username,
           emailencodingkey: 'UTF-8',
-          id: '0052D0000043PawWWR',
+          id: newUserId,
           languagelocalekey: 'en_US',
           lastname: 'User',
           localesidkey: 'en_US',
@@ -244,7 +257,7 @@ describe('force:user:create', () => {
           alias: 'testAlias',
           email: 'me@my.org',
           emailencodingkey: 'UTF-8',
-          id: '0052D0000043PawWWR',
+          id: newUserId,
           languagelocalekey: 'en_US',
           lastname: 'User',
           localesidkey: 'en_US',
@@ -288,7 +301,7 @@ describe('force:user:create', () => {
             alias: 'testAlias',
             email: 'me@my.org',
             emailencodingkey: 'UTF-8',
-            id: '0052D0000043PawWWR',
+            id: newUserId,
             languagelocalekey: 'en_US',
             lastname: 'User',
             localesidkey: 'en_US',
@@ -370,7 +383,7 @@ describe('force:user:create', () => {
           alias: 'testAlias',
           email: 'defaultusername@test.com',
           emailencodingkey: 'UTF-8',
-          id: '0052D0000043PawWWR',
+          id: newUserId,
           languagelocalekey: 'en_US',
           lastname: 'User',
           localesidkey: 'en_US',
@@ -407,7 +420,7 @@ describe('force:user:create', () => {
             alias: 'testAlias',
             email: 'defaultusername@test.com',
             emailencodingkey: 'UTF-8',
-            id: '0052D0000043PawWWR',
+            id: newUserId,
             languagelocalekey: 'en_US',
             lastname: 'User',
             localesidkey: 'en_US',
