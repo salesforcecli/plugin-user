@@ -31,7 +31,6 @@ describe('verifies all commands run successfully ', () => {
         `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
         'sfdx force:source:push',
       ],
-      retries: 2,
     });
   });
 
