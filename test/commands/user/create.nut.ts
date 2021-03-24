@@ -16,8 +16,8 @@ let session: TestSession;
 describe('creates a user from a file and verifies', () => {
   let createdUserId: string;
 
-  before(() => {
-    session = TestSession.create({
+  before(async () => {
+    session = await TestSession.create({
       project: {
         sourceDir: path.join('test', 'df17AppBuilding'),
       },

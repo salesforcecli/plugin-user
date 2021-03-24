@@ -12,8 +12,8 @@ import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 let session: TestSession;
 
 describe('verifies all commands run successfully (no json)', () => {
-  before(() => {
-    session = TestSession.create({
+  before(async () => {
+    session = await TestSession.create({
       project: {
         // destinationDir: projectPath,
         sourceDir: path.join('test', 'df17AppBuilding'),
