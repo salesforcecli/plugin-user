@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/salesforcecli/plugin-user/compare/v1.2.0...v1.2.1) (2021-03-24)
+
+
+### Bug Fixes
+
+* wrong user id on create ([56faa19](https://github.com/salesforcecli/plugin-user/commit/56faa19b1aca36ee587e407ebd84d7ed5749a77f))
+
 ## [1.2.0](https://github.com/salesforcecli/plugin-user/compare/v1.1.3...v1.2.0) (2021-03-10)
 
 
