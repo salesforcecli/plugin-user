@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2-ctc-testing.0](https://github.com/salesforcecli/plugin-user/compare/v1.2.1...v1.2.2-ctc-testing.0) (2021-03-25)
+
+
+### Bug Fixes
+
+* another try ([914035c](https://github.com/salesforcecli/plugin-user/commit/914035cdbaf1acbb8dfd4a3ac946f4e57284e11a))
+* release attempt ([48db6a2](https://github.com/salesforcecli/plugin-user/commit/48db6a2a0e54a0c113d85883f104f1a466c31d3b))
+* rename branch ([46768a9](https://github.com/salesforcecli/plugin-user/commit/46768a9a2fbfa8406a4d7445f159b230a4e257fd))
+* try CTC again ([00fc7e2](https://github.com/salesforcecli/plugin-user/commit/00fc7e239a011ff27818c0c928b1939413f5872c))
+
 ### [1.2.1](https://github.com/salesforcecli/plugin-user/compare/v1.2.0...v1.2.1) (2021-03-24)
 
 
