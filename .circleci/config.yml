@@ -30,7 +30,7 @@ workflows:
           prerelease: true
           filters:
             branches:
-              only: ctc-testing
+              only: ctc-testing-2
   test-ts-update:
     triggers:
       - schedule:
