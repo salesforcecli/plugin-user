@@ -1,5 +1,5 @@
 version: 2.1
-###
+####
 orbs:
   release-management: salesforce/npm-release-management@dev:alpha
 
@@ -32,7 +32,7 @@ workflows:
           prerelease: true
           filters:
             branches:
-              only: sm/ctc-testing
+              only: ctc-testing
   test-ts-update:
     triggers:
       - schedule:
