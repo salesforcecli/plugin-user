@@ -1,5 +1,5 @@
 version: 2.1
-#####
+
 orbs:
   release-management: salesforce/npm-release-management@dev:alpha
 
@@ -11,20 +11,7 @@ workflows:
           filters:
             branches:
               ignore: main
-      - release-management/test-package:
-          name: node-latest
-          node_version: latest
       - release-management/release-package:
-          sign: true
-          github-release: true
-          requires:
-            - node-latest
-          filters:
-            branches:
-              only: main
-      - release-management/release-package:
-          requires:
-            - node-latest
           tag: beta
           sign: true
           prerelease: true
