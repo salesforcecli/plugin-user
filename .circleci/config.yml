@@ -1,5 +1,5 @@
 version: 2.1
-# test with command refactored
+# test with command refactored 2
 orbs:
   release-management: salesforce/npm-release-management@dev:alpha
 
