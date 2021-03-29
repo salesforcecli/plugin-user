@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.5](https://github.com/salesforcecli/plugin-user/compare/v1.2.4...v1.2.5) (2021-03-29)
+
+
+### Bug Fixes
+
+* quotes around status in orb ([683b586](https://github.com/salesforcecli/plugin-user/commit/683b586cd7838b191ef9232466a0317d5bab2e49))
+
 ### [1.2.4](https://github.com/salesforcecli/plugin-user/compare/v1.2.3...v1.2.4) (2021-03-29)
 
 
