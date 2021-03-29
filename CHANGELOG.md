@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.4](https://github.com/salesforcecli/plugin-user/compare/v1.2.3...v1.2.4) (2021-03-29)
+
+
+### Bug Fixes
+
+* refactor scripts as commands ([c93b8c8](https://github.com/salesforcecli/plugin-user/commit/c93b8c81d29c0403439641c7817745891ac7ba2a))
+
 ### [1.2.3](https://github.com/salesforcecli/plugin-user/compare/v1.2.2...v1.2.3) (2021-03-26)
 
 
