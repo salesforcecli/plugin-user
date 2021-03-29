@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.7](https://github.com/salesforcecli/plugin-user/compare/v1.2.6...v1.2.7) (2021-03-29)
+
+
+### Bug Fixes
+
+* test orb where configitem in env ([8e2f35f](https://github.com/salesforcecli/plugin-user/commit/8e2f35f2640831839b1d6b4e4c72a3d2765713ce))
+
 ### [1.2.6](https://github.com/salesforcecli/plugin-user/compare/v1.2.5...v1.2.6) (2021-03-29)
 
 
