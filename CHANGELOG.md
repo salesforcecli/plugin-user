@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.8](https://github.com/salesforcecli/plugin-user/compare/v1.2.7...v1.2.8) (2021-04-01)
+
+
+### Bug Fixes
+
+* leif .yml merge [skip-validate-pr] ([a64ad99](https://github.com/salesforcecli/plugin-user/commit/a64ad99e464ac76115223056200930f84ff40189))
+
 ### [1.2.7](https://github.com/salesforcecli/plugin-user/compare/v1.2.6...v1.2.7) (2021-03-29)
 
 
