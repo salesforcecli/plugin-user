@@ -32,7 +32,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
   public static readonly flagsConfig: FlagsConfig = {
-    permsetname: flags.string({
+    permsetname: flags.array({
       char: 'n',
       description: messages.getMessage('flags.permsetName'),
       required: true,
@@ -60,12 +60,12 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         const queryResult = await connection.singleRecordQuery<{ Id: string }>(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
-
+        const permsetArray = this.flags.permsetname as string[];
         try {
-          await user.assignPermissionSets(queryResult.Id, [this.flags.permsetname]);
+          await user.assignPermissionSets(queryResult.Id, permsetArray);
           this.successes.push({
             name: aliasOrUsername,
-            value: this.flags.permsetname as string,
+            value: permsetArray.join(','),
           });
         } catch (e) {
           const err = e as SfdxError;
