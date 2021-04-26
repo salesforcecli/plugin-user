@@ -66,6 +66,24 @@ sfdx plugins:link .
 sfdx plugins
 ```
 
+### Test
+
+Run unit tests (orgs and filesystem are mocked)
+
+```bash
+yarn test
+```
+
+Run not-unit-tests (real orgs, real FS)
+
+```bash
+# use your locally authenticated dev hub.  Supports both JWT and Refresh Token (web) auth
+export TESTKIT_HUB_USERNAME=<username for dev hub>
+yarn test:nuts
+```
+
+For more NUT options and examples, see <https://github.com/salesforcecli/cli-plugins-testkit>
+
 ## Commands
 
 <!-- commands -->
