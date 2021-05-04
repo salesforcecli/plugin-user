@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.10](https://github.com/salesforcecli/plugin-user/compare/v1.2.9...v1.2.10) (2021-05-04)
+
+
+### Bug Fixes
+
+* add note about using aliases for -u or -o ([8f3a684](https://github.com/salesforcecli/plugin-user/commit/8f3a684d3e467f437ed6ea17dd9fe86cf03f6086))
+
 ### [1.2.9](https://github.com/salesforcecli/plugin-user/compare/v1.2.8...v1.2.9) (2021-04-19)
 
 ### [1.2.8](https://github.com/salesforcecli/plugin-user/compare/v1.2.7...v1.2.8) (2021-04-01)
