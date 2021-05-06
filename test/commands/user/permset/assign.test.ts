@@ -45,11 +45,19 @@ describe('force:user:permset:assign', () => {
       const expected = [
         {
           name: 'testAlias',
-          value: 'DreamHouse,LargeDreamHouse',
+          value: 'DreamHouse',
+        },
+        {
+          name: 'testAlias',
+          value: 'LargeDreamHouse',
         },
         {
           name: 'testUser2@test.com',
-          value: 'DreamHouse,LargeDreamHouse',
+          value: 'DreamHouse',
+        },
+        {
+          name: 'testUser2@test.com',
+          value: 'LargeDreamHouse',
         },
       ];
       const result = JSON.parse(ctx.stdout).result;
