@@ -60,19 +60,21 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         const queryResult = await connection.singleRecordQuery<{ Id: string }>(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
-        const permsetArray = this.flags.permsetname as string[];
-        try {
-          await user.assignPermissionSets(queryResult.Id, permsetArray);
-          this.successes.push({
-            name: aliasOrUsername,
-            value: permsetArray.join(','),
-          });
-        } catch (e) {
-          const err = e as SfdxError;
-          this.failures.push({
-            name: aliasOrUsername,
-            message: err.message,
-          });
+        // this is hard to parallelize because core returns void instead of some result object we can handle.  Promise.allSettled might work
+        for (const permsetName of this.flags.permsetname as string[]) {
+          try {
+            await user.assignPermissionSets(queryResult.Id, [permsetName]);
+            this.successes.push({
+              name: aliasOrUsername,
+              value: permsetName,
+            });
+          } catch (e) {
+            const err = e as SfdxError;
+            this.failures.push({
+              name: aliasOrUsername,
+              message: err.message,
+            });
+          }
         }
       }
     } catch (e) {
