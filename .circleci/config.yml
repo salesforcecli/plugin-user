@@ -1,7 +1,7 @@
 version: 2.1
 #
 orbs:
-  release-management: salesforce/npm-release-management@dev:fd8de19
+  release-management: salesforce/npm-release-management@dev:915dc44
 parameters:
   run-auto-workflows:
     description: >
@@ -50,14 +50,14 @@ workflows:
                 - windows
               node_version:
                 - latest
-      # - release-management/test-nut:
-      #     name: nuts-on-linux
-      #     sfdx_version: latest
-      #     requires:
-      #       - release-management/test-package
-      # - release-management/test-nut:
-      #     name: nuts-on-windows
-      #     sfdx_version: latest
-      #     os: windows
-      #     requires:
-      #       - release-management/test-package
+      - release-management/test-nut:
+          name: nuts-on-linux
+          sfdx_version: latest
+          requires:
+            - release-management/test-package
+      - release-management/test-nut:
+          name: nuts-on-windows
+          sfdx_version: latest
+          os: windows
+          requires:
+            - release-management/test-package
