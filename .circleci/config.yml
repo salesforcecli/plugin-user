@@ -1,5 +1,5 @@
 version: 2.1
-#
+
 orbs:
   release-management: salesforce/npm-release-management@dev:915dc44
 parameters:
@@ -27,15 +27,15 @@ parameters:
     description: |
       By default, the latest version of the standalone CLI will be installed.
       To install via npm, supply a version tag such as "latest" or "6".
-    default: ""
+    default: ''
     type: string
   repo_tag:
     description: The tag of the module repo to checkout, '' defaults to branch/PR
-    default: ""
+    default: ''
     type: string
   npm_module_name:
     description: The fully qualified npm module name, i.e. @salesforce/plugins-data
-    default: ""
+    default: ''
     type: string
 workflows:
   version: 2
