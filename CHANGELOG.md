@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/salesforcecli/plugin-user/compare/v1.2.11...v1.3.0) (2021-05-19)
+
+
+### Features
+
+* granular fail/success output ([18814f9](https://github.com/salesforcecli/plugin-user/commit/18814f9d7afeef4ddc600297f7875f7081f95560))
+
 ### [1.2.11](https://github.com/salesforcecli/plugin-user/compare/v1.2.10...v1.2.11) (2021-05-10)
 
 ### [1.2.10](https://github.com/salesforcecli/plugin-user/compare/v1.2.9...v1.2.10) (2021-05-04)
