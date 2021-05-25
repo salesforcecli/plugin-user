@@ -38,9 +38,9 @@ describe('force:user:permset:assign', () => {
       '--onbehalfof',
       'testAlias, testUser2@test.com',
       '--permsetname',
-      'DreamHouse',
+      'DreamHouse, LargeDreamHouse',
     ])
-    .it('should assign the one permset to both users', (ctx) => {
+    .it('should assign both permsets to both users', (ctx) => {
       // testUser1@test.com is aliased to testUser
       const expected = [
         {
@@ -48,8 +48,16 @@ describe('force:user:permset:assign', () => {
           value: 'DreamHouse',
         },
         {
+          name: 'testAlias',
+          value: 'LargeDreamHouse',
+        },
+        {
           name: 'testUser2@test.com',
           value: 'DreamHouse',
+        },
+        {
+          name: 'testUser2@test.com',
+          value: 'LargeDreamHouse',
         },
       ];
       const result = JSON.parse(ctx.stdout).result;

@@ -120,6 +120,26 @@ describe('verifies all commands run successfully ', () => {
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
+  it('assigns 2 permsets to the main user', () => {
+    const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 --json', {
+      ensureExitCode: 0,
+    }).jsonOutput;
+    expect(output.result).to.have.all.keys(['successes', 'failures']);
+    expect(output.result.successes).to.have.length(2);
+    expect(output.result.successes[0]).to.have.all.keys(['name', 'value']);
+    expect(output.result.failures).to.have.length(0);
+  });
+
+  it('assigns 2 permsets to the secondary user', () => {
+    const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 -o Other --json', {
+      ensureExitCode: 0,
+    }).jsonOutput;
+    expect(output.result).to.have.all.keys(['successes', 'failures']);
+    expect(output.result.successes).to.have.length(2);
+    expect(output.result.successes[0]).to.have.all.keys(['name', 'value']);
+    expect(output.result.failures).to.have.length(0);
+  });
+
   after(async () => {
     await session?.zip(undefined, 'artifacts');
     await session?.clean();

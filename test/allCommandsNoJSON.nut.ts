@@ -56,6 +56,14 @@ describe('verifies all commands run successfully (no json)', () => {
     execCmd('force:user:password:generate -o Other', { ensureExitCode: 0 });
   });
 
+  it('assigns 2 permsets to the main user', () => {
+    execCmd('force:user:permset:assign -n PS2,PS3', { ensureExitCode: 0 });
+  });
+
+  it('assigns 2 permsets to the secondary user', () => {
+    execCmd('force:user:permset:assign -n PS2,PS3 -o Other', { ensureExitCode: 0 });
+  });
+
   after(async () => {
     await session.zip(undefined, 'artifacts');
     await session.clean();

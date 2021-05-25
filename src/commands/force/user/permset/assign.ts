@@ -32,7 +32,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
   public static readonly flagsConfig: FlagsConfig = {
-    permsetname: flags.string({
+    permsetname: flags.array({
       char: 'n',
       description: messages.getMessage('flags.permsetName'),
       required: true,
@@ -60,19 +60,21 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         const queryResult = await connection.singleRecordQuery<{ Id: string }>(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
-
-        try {
-          await user.assignPermissionSets(queryResult.Id, [this.flags.permsetname]);
-          this.successes.push({
-            name: aliasOrUsername,
-            value: this.flags.permsetname as string,
-          });
-        } catch (e) {
-          const err = e as SfdxError;
-          this.failures.push({
-            name: aliasOrUsername,
-            message: err.message,
-          });
+        // this is hard to parallelize because core returns void instead of some result object we can handle.  Promise.allSettled might work
+        for (const permsetName of this.flags.permsetname as string[]) {
+          try {
+            await user.assignPermissionSets(queryResult.Id, [permsetName]);
+            this.successes.push({
+              name: aliasOrUsername,
+              value: permsetName,
+            });
+          } catch (e) {
+            const err = e as SfdxError;
+            this.failures.push({
+              name: aliasOrUsername,
+              message: err.message,
+            });
+          }
         }
       }
     } catch (e) {
