@@ -618,7 +618,7 @@
     chalk "^2.4.2"
     cli-ux "^4.9.3"
 
-"@salesforce/core@^2.16.3", "@salesforce/core@^2.2.0", "@salesforce/core@^2.20.3", "@salesforce/core@^2.23.2":
+"@salesforce/core@^2.16.3", "@salesforce/core@^2.2.0", "@salesforce/core@^2.20.3", "@salesforce/core@^2.23.3":
   version "2.23.3"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.23.3.tgz#b0a9feb29b5c1acc151a817838a0ca1bffb327e6"
   integrity sha512-asfQ8SCbhO1g5NkrQiOKQLRqYVII5oufKz+sNMii1M9HBLXEAZRy/rVpTwJy37GMgD+G3iXZvGDtpt14vkMECg==
