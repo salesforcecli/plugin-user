@@ -6,8 +6,8 @@
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@oclif/config": "^1.17.0",
-    "@salesforce/command": "forcedotcom/cli-packages#56702da",
-    "@salesforce/core": "forcedotcom/sfdx-core#6bf40d1",
+    "@salesforce/command": "3.2.0-beta",
+    "@salesforce/core": "2.24.0-beta",
     "tslib": "^2"
   },
   "devDependencies": {
