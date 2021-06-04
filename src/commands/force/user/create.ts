@@ -201,6 +201,7 @@ export class UserCreateCommand extends SfdxCommand {
 
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
       const content = (await fs.readJson(this.flags.definitionfile)) as UserFields;
       Object.keys(content).forEach((key) => {
         // cast entries to lowercase to standardize
