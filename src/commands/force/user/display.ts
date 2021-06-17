@@ -30,7 +30,6 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
   public static readonly requiresDevhubUsername = true;
-  public logger: Logger;
 
   public async run(): Promise<UserDisplayResult> {
     this.logger = await Logger.child(this.constructor.name);
