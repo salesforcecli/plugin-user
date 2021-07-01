@@ -96,11 +96,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
               ? passwordCondition.length
               : PasswordComplexityTypes[orgPasswordPolicy.passwordPolicies.complexity];
           }
-        } else
-          passwordCondition = {
-            length: 10,
-            complexity: 1,
-          };
+        }
         const password = User.generatePasswordUtf8(passwordCondition);
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
