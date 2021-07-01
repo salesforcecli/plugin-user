@@ -27,6 +27,10 @@ interface OrgPasswordPolicy {
   };
 }
 
+interface ProfilePasswordPolicy {
+  minimumPasswordLength: number;
+  passwordComplexity: number;
+}
 enum PasswordComplexityTypes {
   NoRestriction = 0,
   AlphaNumeric = 1,
@@ -65,29 +69,38 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         const connection: Connection = await Connection.create({ authInfo });
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const list: any = await connection.metadata.list({ type: 'ProfilePasswordPolicy' });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const profPasswordPolicies: any = await connection.metadata.read('ProfilePasswordPolicy', [list.fullName]);
-        const passwordCondition: PasswordConditions = {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          length: profPasswordPolicies.minimumPasswordLength,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          complexity: profPasswordPolicies.passwordComplexity,
-        };
+        let passwordCondition: PasswordConditions;
+        if (connection.metadata) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const list: any = await connection.metadata.list({ type: 'ProfilePasswordPolicy' });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+          const profPasswordPolicies: ProfilePasswordPolicy = JSON.parse(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            JSON.stringify(await connection.metadata.read('ProfilePasswordPolicy', [list.fullName]))
+          );
+          passwordCondition = {
+            length: profPasswordPolicies.minimumPasswordLength,
+            complexity: profPasswordPolicies.passwordComplexity,
+          };
 
-        if (!passwordCondition.length || !passwordCondition.complexity) {
-          const orgPasswordPolicies = await connection.metadata.read('SecuritySettings', ['passwordPolicies']);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          const orgPasswordPolicy: OrgPasswordPolicy = JSON.parse(JSON.stringify(orgPasswordPolicies));
-          passwordCondition.length = passwordCondition.length
-            ? passwordCondition.length
-            : orgPasswordPolicy.passwordPolicies.minimumPasswordLength;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          passwordCondition.complexity = passwordCondition.complexity
-            ? passwordCondition.length
-            : PasswordComplexityTypes[orgPasswordPolicy.passwordPolicies.complexity];
-        }
+          if (!passwordCondition.length || !passwordCondition.complexity) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            const orgPasswordPolicy: OrgPasswordPolicy = JSON.parse(
+              JSON.stringify(await connection.metadata.read('SecuritySettings', ['passwordPolicies']))
+            );
+            passwordCondition.length = passwordCondition.length
+              ? passwordCondition.length
+              : orgPasswordPolicy.passwordPolicies?.minimumPasswordLength;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            passwordCondition.complexity = passwordCondition.complexity
+              ? passwordCondition.length
+              : PasswordComplexityTypes[orgPasswordPolicy.passwordPolicies.complexity];
+          }
+        } else
+          passwordCondition = {
+            length: 10,
+            complexity: 1,
+          };
         const password = User.generatePasswordUtf8(passwordCondition);
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
