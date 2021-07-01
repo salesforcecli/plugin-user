@@ -7,13 +7,33 @@
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
-
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 interface PasswordData {
   username?: string;
   password: string;
+}
+
+interface PasswordConditions {
+  length: number;
+  complexity: number;
+}
+
+interface OrgPasswordPolicy {
+  passwordPolicies?: {
+    minimumPasswordLength: number;
+    complexity: string;
+  };
+}
+
+enum PasswordComplexityTypes {
+  NoRestriction = 0,
+  AlphaNumeric = 1,
+  UpperLowerCaseNumeric = 3,
+  UpperLowerCaseNumericSpecialCharacters = 4,
+  Any3UpperLowerCaseNumericSpecialCharacters = 5,
+  SpecialCharacters = 5,
 }
 
 export class UserPasswordGenerateCommand extends SfdxCommand {
@@ -45,13 +65,35 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         const connection: Connection = await Connection.create({ authInfo });
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
-        const password = User.generatePasswordUtf8();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const list: any = await connection.metadata.list({ type: 'ProfilePasswordPolicy' });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const profPasswordPolicies: any = await connection.metadata.read('ProfilePasswordPolicy', [list.fullName]);
+        const passwordCondition: PasswordConditions = {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          length: profPasswordPolicies.minimumPasswordLength,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          complexity: profPasswordPolicies.passwordComplexity,
+        };
+
+        if (!passwordCondition.length || !passwordCondition.complexity) {
+          const orgPasswordPolicies = await connection.metadata.read('SecuritySettings', ['passwordPolicies']);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          const orgPasswordPolicy: OrgPasswordPolicy = JSON.parse(JSON.stringify(orgPasswordPolicies));
+          passwordCondition.length = passwordCondition.length
+            ? passwordCondition.length
+            : orgPasswordPolicy.passwordPolicies.minimumPasswordLength;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          passwordCondition.complexity = passwordCondition.complexity
+            ? passwordCondition.length
+            : PasswordComplexityTypes[orgPasswordPolicy.passwordPolicies.complexity];
+        }
+        const password = User.generatePasswordUtf8(passwordCondition);
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
         const result: { Id: string } = await connection.singleRecordQuery(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
-
         // userId is used by `assignPassword` so we need to set it here
         authInfo.getFields().userId = result.Id;
         await user.assignPassword(authInfo, password);
