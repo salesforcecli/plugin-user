@@ -7,37 +7,14 @@
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
+import { PasswordConditions } from '@salesforce/core/lib/user';
+
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 interface PasswordData {
   username?: string;
   password: string;
-}
-
-interface PasswordConditions {
-  length: number;
-  complexity: number;
-}
-
-interface OrgPasswordPolicy {
-  passwordPolicies?: {
-    minimumPasswordLength: number;
-    complexity: string;
-  };
-}
-
-interface ProfilePasswordPolicy {
-  minimumPasswordLength: number;
-  passwordComplexity: number;
-}
-enum PasswordComplexityTypes {
-  NoRestriction = 0,
-  AlphaNumeric = 1,
-  UpperLowerCaseNumeric = 3,
-  UpperLowerCaseNumericSpecialCharacters = 4,
-  Any3UpperLowerCaseNumericSpecialCharacters = 5,
-  SpecialCharacters = 5,
 }
 
 export class UserPasswordGenerateCommand extends SfdxCommand {
@@ -50,6 +27,14 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       char: 'o',
       description: messages.getMessage('flags.onBehalfOf'),
     }),
+    length: flags.number({
+      char: 'l',
+      description: messages.getMessage('flags.length'),
+    }),
+    complexity: flags.number({
+      char: 'c',
+      description: messages.getMessage('flags.complexity'),
+    }),
   };
   public org: Org;
 
@@ -58,6 +43,12 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
   public async run(): Promise<PasswordData[] | PasswordData> {
     this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
+    if (this.flags.length > 20 || this.flags.length < 8)
+      throw new SfdxError(messages.getMessage('lengthOutOfBound'), 'lengthOutOfBound');
+    const passwordCondition: PasswordConditions = {
+      length: this.flags.length ? parseInt(this.flags.length, 10) : 13,
+      complexity: this.flags.complexity ? parseInt(this.flags.complexity, 10) : 5,
+    };
 
     for (const aliasOrUsername of this.usernames) {
       try {
@@ -69,40 +60,13 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         const connection: Connection = await Connection.create({ authInfo });
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
-        let passwordCondition: PasswordConditions;
-        if (connection.metadata) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const list: any = await connection.metadata.list({ type: 'ProfilePasswordPolicy' });
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-          const profPasswordPolicies: ProfilePasswordPolicy = JSON.parse(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-            JSON.stringify(await connection.metadata.read('ProfilePasswordPolicy', [list.fullName]))
-          );
-          passwordCondition = {
-            length: profPasswordPolicies.minimumPasswordLength,
-            complexity: profPasswordPolicies.passwordComplexity,
-          };
-
-          if (!passwordCondition.length || !passwordCondition.complexity) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-            const orgPasswordPolicy: OrgPasswordPolicy = JSON.parse(
-              JSON.stringify(await connection.metadata.read('SecuritySettings', ['passwordPolicies']))
-            );
-            passwordCondition.length = passwordCondition.length
-              ? passwordCondition.length
-              : orgPasswordPolicy.passwordPolicies?.minimumPasswordLength;
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            passwordCondition.complexity = passwordCondition.complexity
-              ? passwordCondition.length
-              : PasswordComplexityTypes[orgPasswordPolicy.passwordPolicies.complexity];
-          }
-        }
         const password = User.generatePasswordUtf8(passwordCondition);
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
         const result: { Id: string } = await connection.singleRecordQuery(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
+
         // userId is used by `assignPassword` so we need to set it here
         authInfo.getFields().userId = result.Id;
         await user.assignPassword(authInfo, password);
