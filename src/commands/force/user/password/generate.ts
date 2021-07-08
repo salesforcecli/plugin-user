@@ -51,8 +51,8 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
     this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
     const passwordCondition: PasswordConditions = {
-      length: this.flags.length ? asNumber(this.flags.length) : 13,
-      complexity: this.flags.complexity ? asNumber(this.flags.complexity) : 5,
+      length: asNumber(this.flags.length, 13),
+      complexity: asNumber(this.flags.complexity, 5),
     };
 
     for (const aliasOrUsername of this.usernames) {
