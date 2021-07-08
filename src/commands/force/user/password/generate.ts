@@ -27,7 +27,6 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       description: messages.getMessage('flags.onBehalfOf'),
     }),
   };
-  public org: Org;
 
   private usernames: string[];
   private passwordData: PasswordData[] = [];
