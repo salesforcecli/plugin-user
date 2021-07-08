@@ -8,7 +8,7 @@ import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
 import { PasswordConditions } from '@salesforce/core/lib/user';
-
+import { asNumber } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
@@ -27,13 +27,19 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       char: 'o',
       description: messages.getMessage('flags.onBehalfOf'),
     }),
-    length: flags.number({
+    length: flags.integer({
       char: 'l',
       description: messages.getMessage('flags.length'),
+      min: 8,
+      max: 1000,
+      default: 13,
     }),
-    complexity: flags.number({
+    complexity: flags.integer({
       char: 'c',
       description: messages.getMessage('flags.complexity'),
+      min: 0,
+      max: 5,
+      default: 5,
     }),
   };
   public org: Org;
@@ -43,11 +49,10 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
   public async run(): Promise<PasswordData[] | PasswordData> {
     this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
-    if (this.flags.length > 20 || this.flags.length < 8)
-      throw new SfdxError(messages.getMessage('lengthOutOfBound'), 'lengthOutOfBound');
+
     const passwordCondition: PasswordConditions = {
-      length: this.flags.length ? parseInt(this.flags.length, 10) : 13,
-      complexity: this.flags.complexity ? parseInt(this.flags.complexity, 10) : 5,
+      length: this.flags.length ? asNumber(this.flags.length) : 13,
+      complexity: this.flags.complexity ? asNumber(this.flags.complexity) : 5,
     };
 
     for (const aliasOrUsername of this.usernames) {
