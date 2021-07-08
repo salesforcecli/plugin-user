@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { use, expect } from 'chai';
+import { use, expect, assert } from 'chai';
 import * as chaiEach from 'chai-each';
 
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
@@ -120,12 +120,49 @@ describe('verifies all commands run successfully ', () => {
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
+  it('generates new password for secondary user (onbehalfof) with length 12', () => {
+    const output = execCmd('force:user:password:generate -o Other --json -l 12', { ensureExitCode: 0 }).jsonOutput;
+    const passwordResult = JSON.parse(JSON.stringify(output.result));
+    expect(output).to.have.property('result').includes.keys(['username', 'password']);
+    expect(passwordResult.password.length).to.equal(12);
+    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])(?=.{12})');
+    // testing the default complexity
+    expect(complexity5Regex.test(passwordResult.password));
+  });
+
+  it('generates new password for secondary user (onbehalfof) with complexity 3', () => {
+    const output = execCmd('force:user:password:generate -o Other --json -c 3', { ensureExitCode: 0 }).jsonOutput;
+    const passwordResult = JSON.parse(JSON.stringify(output.result));
+    expect(output).to.have.property('result').includes.keys(['username', 'password']);
+    // testing default length
+    expect(passwordResult.password.length).to.equal(13);
+    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{14})');
+    expect(complexity3Regex.test(passwordResult.password));
+  });
+
+  it('generates new password for secondary user (onbehalfof) with complexity 7 should thrown an error', () => {
+    try {
+      execCmd('force:user:password:generate -o Other --json -c 7', { ensureExitCode: 0 }).jsonOutput;
+      assert("This should throw and error and shouldn't reach here");
+    } catch (err) {
+      expect(err);
+    }
+  });
+  it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
+    try {
+      execCmd('force:user:password:generate -o Other --json -l 7', { ensureExitCode: 0 }).jsonOutput;
+      assert("This should throw and error and shouldn't reach here");
+    } catch (err) {
+      expect(err);
+    }
+  });
   it('assigns 2 permsets to the main user', () => {
     const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 --json', {
       ensureExitCode: 0,
     }).jsonOutput;
     expect(output.result).to.have.all.keys(['successes', 'failures']);
     expect(output.result.successes).to.have.length(2);
+
     expect(output.result.successes[0]).to.have.all.keys(['name', 'value']);
     expect(output.result.failures).to.have.length(0);
   });
