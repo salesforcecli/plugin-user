@@ -42,7 +42,6 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       default: 5,
     }),
   };
-  public org: Org;
 
   private usernames: string[];
   private passwordData: PasswordData[] = [];

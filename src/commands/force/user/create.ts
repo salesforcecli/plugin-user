@@ -13,7 +13,6 @@ import {
   fs,
   Logger,
   Messages,
-  Org,
   REQUIRED_FIELDS,
   SfdxError,
   User,
@@ -75,8 +74,6 @@ export class UserCreateCommand extends SfdxCommand {
       description: messages.getMessage('flags.setuniqueusername'),
     }),
   };
-  public logger: Logger;
-  public org: Org;
 
   private user: User;
   private successes: SuccessMsg[] = [];
