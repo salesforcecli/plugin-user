@@ -34,6 +34,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       max: 1000,
       default: 13,
     }),
+    // the higher the value, the stronger the password
     complexity: flags.integer({
       char: 'c',
       description: messages.getMessage('flags.complexity'),
