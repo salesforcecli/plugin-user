@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { use, expect, assert } from 'chai';
+import { use, expect } from 'chai';
 import * as chaiEach from 'chai-each';
 
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
@@ -121,40 +121,35 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('generates new password for secondary user (onbehalfof) with length 12', () => {
-    const output = execCmd('force:user:password:generate -o Other --json -l 12', { ensureExitCode: 0 }).jsonOutput;
-    const passwordResult = JSON.parse(JSON.stringify(output.result));
-    expect(output).to.have.property('result').includes.keys(['username', 'password']);
-    expect(passwordResult.password.length).to.equal(12);
+    const output = execCmd<{ username: string; password: string }>(
+      'force:user:password:generate -o Other --json -l 12',
+      { ensureExitCode: 0 }
+    ).jsonOutput.result;
+
+    expect(output.password.length).to.equal(12);
     const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])(?=.{12})');
     // testing the default complexity
-    expect(complexity5Regex.test(passwordResult.password));
+    expect(complexity5Regex.test(output.password));
   });
 
   it('generates new password for secondary user (onbehalfof) with complexity 3', () => {
-    const output = execCmd('force:user:password:generate -o Other --json -c 3', { ensureExitCode: 0 }).jsonOutput;
-    const passwordResult = JSON.parse(JSON.stringify(output.result));
-    expect(output).to.have.property('result').includes.keys(['username', 'password']);
+    const output = execCmd<{ username: string; password: string }>(
+      'force:user:password:generate -o Other --json -c 3',
+      { ensureExitCode: 0 }
+    ).jsonOutput.result;
     // testing default length
-    expect(passwordResult.password.length).to.equal(13);
+    expect(output.password.length).to.equal(13);
     const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{14})');
-    expect(complexity3Regex.test(passwordResult.password));
+    expect(complexity3Regex.test(output.password));
   });
 
   it('generates new password for secondary user (onbehalfof) with complexity 7 should thrown an error', () => {
-    try {
-      execCmd('force:user:password:generate -o Other --json -c 7', { ensureExitCode: 0 }).jsonOutput;
-      assert("This should throw and error and shouldn't reach here");
-    } catch (err) {
-      expect(err);
-    }
+    const output = execCmd('force:user:password:generate -o Other --json -c 7', { ensureExitCode: 1 }).jsonOutput;
+    expect(output.message).to.equal('Expected integer less than or equal to 5 but received 7');
   });
   it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
-    try {
-      execCmd('force:user:password:generate -o Other --json -l 7', { ensureExitCode: 0 }).jsonOutput;
-      assert("This should throw and error and shouldn't reach here");
-    } catch (err) {
-      expect(err);
-    }
+    const output = execCmd('force:user:password:generate -o Other --json -l 7', { ensureExitCode: 1 }).jsonOutput;
+    expect(output.message).to.equal('Expected integer greater than or equal to 8 but received 7');
   });
   it('assigns 2 permsets to the main user', () => {
     const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 --json', {
