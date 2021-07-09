@@ -115,6 +115,26 @@ describe('verifies all commands run successfully ', () => {
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
+  it('generates new passwords for main user testing default length and complexity', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json', {
+      ensureExitCode: 0,
+    }).jsonOutput.result;
+    // testing default length
+    expect(output.password.length).to.equal(13);
+    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])');
+    // testing default complexity
+    expect(complexity5Regex.test(output.password));
+  });
+
+  it('generates new passwords for main user testing  length 11 and complexity 5', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json -l 11 -c 3', {
+      ensureExitCode: 0,
+    }).jsonOutput.result;
+    expect(output.password.length).to.equal(11);
+    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
+    expect(complexity3Regex.test(output.password));
+  });
+
   it('generates new password for secondary user (onbehalfof)', () => {
     const output = execCmd('force:user:password:generate -o Other --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
@@ -127,7 +147,7 @@ describe('verifies all commands run successfully ', () => {
     ).jsonOutput.result;
 
     expect(output.password.length).to.equal(12);
-    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])(?=.{12})');
+    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])');
     // testing the default complexity
     expect(complexity5Regex.test(output.password));
   });
@@ -139,7 +159,7 @@ describe('verifies all commands run successfully ', () => {
     ).jsonOutput.result;
     // testing default length
     expect(output.password.length).to.equal(13);
-    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{14})');
+    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
     expect(complexity3Regex.test(output.password));
   });
 
