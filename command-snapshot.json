@@ -8,9 +8,9 @@
       "json",
       "loglevel",
       "setalias",
+      "setuniqueusername",
       "targetdevhubusername",
-      "targetusername",
-      "setuniqueusername"
+      "targetusername"
     ]
   },
   {
@@ -26,7 +26,16 @@
   {
     "command": "force:user:password:generate",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["apiversion", "json", "loglevel", "onbehalfof", "targetdevhubusername", "targetusername"]
+    "flags": [
+      "apiversion",
+      "complexity",
+      "json",
+      "length",
+      "loglevel",
+      "onbehalfof",
+      "targetdevhubusername",
+      "targetusername"
+    ]
   },
   {
     "command": "force:user:permset:assign",

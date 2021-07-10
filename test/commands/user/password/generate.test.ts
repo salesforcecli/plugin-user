@@ -20,7 +20,7 @@ describe('force:user:password:generate', () => {
   const testData = new MockTestOrgData();
   let queryStub;
 
-  async function prepareStubs(throws = false) {
+  async function prepareStubs(throws = false, generatePassword = true) {
     const authFields = await testData.getConfig();
     authInfoStub = stubInterface<AuthInfo>($$.SANDBOX, { getFields: () => authFields });
     authInfoConfigStub = stubInterface<AuthInfoConfig>($$.SANDBOX, {
@@ -37,9 +37,11 @@ describe('force:user:password:generate', () => {
       Id: '0052D0000043PawWWR',
     });
 
-    const secureBuffer: SecureBuffer<void> = new SecureBuffer<void>();
-    secureBuffer.consume(Buffer.from('abc', 'utf8'));
-    stubMethod($$.SANDBOX, User, 'generatePasswordUtf8').returns(secureBuffer);
+    if (generatePassword) {
+      const secureBuffer: SecureBuffer<void> = new SecureBuffer<void>();
+      secureBuffer.consume(Buffer.from('abc', 'utf8'));
+      stubMethod($$.SANDBOX, User, 'generatePasswordUtf8').returns(secureBuffer);
+    }
 
     if (throws) {
       stubMethod($$.SANDBOX, User.prototype, 'assignPassword').throws(new Error('Cannot set password for self'));
@@ -83,6 +85,15 @@ describe('force:user:password:generate', () => {
       expect(result).to.deep.equal(expected);
       expect(authInfoStub.update.callCount).to.equal(1);
       expect(queryStub.callCount).to.equal(1);
+    });
+
+  test
+    .do(() => prepareStubs(false, false))
+    .stdout()
+    .command(['force:user:password:generate', '--json', '-u', 'testUser2@test.com', '-l', '12'])
+    .it('should generate a new passsword of length 12', (ctx) => {
+      const result = JSON.parse(ctx.stdout).result;
+      expect(result.password.length).to.deep.equal(12);
     });
 
   test

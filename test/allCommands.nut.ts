@@ -115,17 +115,69 @@ describe('verifies all commands run successfully ', () => {
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
+  it('generates new passwords for main user testing default length and complexity', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json', {
+      ensureExitCode: 0,
+    }).jsonOutput.result;
+    // testing default length
+    expect(output.password.length).to.equal(13);
+    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])');
+    // testing default complexity
+    expect(complexity5Regex.test(output.password));
+  });
+
+  it('generates new passwords for main user testing  length 11 and complexity 5', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json -l 11 -c 3', {
+      ensureExitCode: 0,
+    }).jsonOutput.result;
+    expect(output.password.length).to.equal(11);
+    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
+    expect(complexity3Regex.test(output.password));
+  });
+
   it('generates new password for secondary user (onbehalfof)', () => {
     const output = execCmd('force:user:password:generate -o Other --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
+  it('generates new password for secondary user (onbehalfof) with length 12', () => {
+    const output = execCmd<{ username: string; password: string }>(
+      'force:user:password:generate -o Other --json -l 12',
+      { ensureExitCode: 0 }
+    ).jsonOutput.result;
+
+    expect(output.password.length).to.equal(12);
+    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[]_-])');
+    // testing the default complexity
+    expect(complexity5Regex.test(output.password));
+  });
+
+  it('generates new password for secondary user (onbehalfof) with complexity 3', () => {
+    const output = execCmd<{ username: string; password: string }>(
+      'force:user:password:generate -o Other --json -c 3',
+      { ensureExitCode: 0 }
+    ).jsonOutput.result;
+    // testing default length
+    expect(output.password.length).to.equal(13);
+    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
+    expect(complexity3Regex.test(output.password));
+  });
+
+  it('generates new password for secondary user (onbehalfof) with complexity 7 should thrown an error', () => {
+    const output = execCmd('force:user:password:generate -o Other --json -c 7', { ensureExitCode: 1 }).jsonOutput;
+    expect(output.message).to.equal('Expected integer less than or equal to 5 but received 7');
+  });
+  it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
+    const output = execCmd('force:user:password:generate -o Other --json -l 7', { ensureExitCode: 1 }).jsonOutput;
+    expect(output.message).to.equal('Expected integer greater than or equal to 8 but received 7');
+  });
   it('assigns 2 permsets to the main user', () => {
     const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 --json', {
       ensureExitCode: 0,
     }).jsonOutput;
     expect(output.result).to.have.all.keys(['successes', 'failures']);
     expect(output.result.successes).to.have.length(2);
+
     expect(output.result.successes[0]).to.have.all.keys(['name', 'value']);
     expect(output.result.failures).to.have.length(0);
   });
