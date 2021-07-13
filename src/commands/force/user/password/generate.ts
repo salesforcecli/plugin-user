@@ -7,7 +7,8 @@
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
-
+import { PasswordConditions } from '@salesforce/core/lib/user';
+import { asNumber } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
@@ -26,6 +27,21 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       char: 'o',
       description: messages.getMessage('flags.onBehalfOf'),
     }),
+    length: flags.integer({
+      char: 'l',
+      description: messages.getMessage('flags.length'),
+      min: 8,
+      max: 1000,
+      default: 13,
+    }),
+    // the higher the value, the stronger the password
+    complexity: flags.integer({
+      char: 'c',
+      description: messages.getMessage('flags.complexity'),
+      min: 0,
+      max: 5,
+      default: 5,
+    }),
   };
 
   private usernames: string[];
@@ -33,6 +49,11 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
   public async run(): Promise<PasswordData[] | PasswordData> {
     this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
+
+    const passwordCondition: PasswordConditions = {
+      length: asNumber(this.flags.length, 13),
+      complexity: asNumber(this.flags.complexity, 5),
+    };
 
     for (const aliasOrUsername of this.usernames) {
       try {
@@ -44,7 +65,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         const connection: Connection = await Connection.create({ authInfo });
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
-        const password = User.generatePasswordUtf8();
+        const password = User.generatePasswordUtf8(passwordCondition);
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
         const result: { Id: string } = await connection.singleRecordQuery(
