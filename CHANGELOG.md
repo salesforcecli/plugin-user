@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/salesforcecli/plugin-user/compare/v1.3.1...v1.4.0) (2021-07-13)
+
+
+### Features
+
+* checking metadata ([9c52240](https://github.com/salesforcecli/plugin-user/commit/9c5224000a281932541d7f6963043934fbe6af31))
+* update password generation functionality ([b1e9c39](https://github.com/salesforcecli/plugin-user/commit/b1e9c39bfebf42376dd7479544f2de799f749626))
+
 ### [1.3.1](https://github.com/salesforcecli/plugin-user/compare/v1.3.0...v1.3.1) (2021-07-08)
 
 ## [1.3.0](https://github.com/salesforcecli/plugin-user/compare/v1.2.11...v1.3.0) (2021-05-19)
