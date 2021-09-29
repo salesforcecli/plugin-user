@@ -97,6 +97,8 @@ export class UserDisplayCommand extends SfdxCommand {
       result.password = userAuthData.password;
     }
 
+    this.ux.warn(messages.getMessage('securityWarning'));
+    this.ux.log('');
     this.print(result);
 
     return result;
