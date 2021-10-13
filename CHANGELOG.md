@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.2](https://github.com/salesforcecli/plugin-user/compare/v1.5.1...v1.5.2) (2021-10-13)
+
+
+### Bug Fixes
+
+* update dependencies ([2cb3aa4](https://github.com/salesforcecli/plugin-user/commit/2cb3aa43018fa6986bb8f819c9a362f049b0bf29))
+
+### [1.5.1](https://github.com/salesforcecli/plugin-user/compare/v1.5.0...v1.5.1) (2021-10-12)
+
+## [1.5.0](https://github.com/salesforcecli/plugin-user/compare/v1.4.0...v1.5.0) (2021-09-29)
+
+
+### Features
+
+* add security warning ([#217](https://github.com/salesforcecli/plugin-user/issues/217)) ([a4e35f9](https://github.com/salesforcecli/plugin-user/commit/a4e35f93e4a077c25397c98daaf49595ef7e5d59))
+
 ## [1.4.0](https://github.com/salesforcecli/plugin-user/compare/v1.3.1...v1.4.0) (2021-07-13)
 
 
