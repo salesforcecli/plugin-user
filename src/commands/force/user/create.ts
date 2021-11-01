@@ -18,7 +18,7 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { omit, mapKeys } from '@salesforce/kit';
+import { omit, mapKeys, toBoolean } from '@salesforce/kit';
 import { getString, Dictionary, isArray } from '@salesforce/ts-types';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
 
@@ -40,18 +40,6 @@ const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
   return isArray<string>(fieldsPermsets)
     ? fieldsPermsets
     : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
-};
-
-const standardizePasswordToBoolean = (input: unknown): boolean => {
-  if (typeof input === 'boolean') {
-    return input;
-  }
-  if (typeof input === 'string') {
-    if (input.toLowerCase() === 'true') {
-      return true;
-    }
-  }
-  return false;
 };
 
 export class UserCreateCommand extends SfdxCommand {
@@ -210,7 +198,7 @@ export class UserCreateCommand extends SfdxCommand {
       Object.keys(this.varargs).forEach((key) => {
         if (key.toLowerCase() === 'generatepassword') {
           // standardize generatePassword casing
-          defaultFields['generatePassword'] = standardizePasswordToBoolean(this.varargs[key]);
+          defaultFields['generatePassword'] = toBoolean(this.varargs[key]);
         } else if (key.toLowerCase() === 'profilename') {
           // standardize profileName casing
           defaultFields['profileName'] = this.varargs[key];
