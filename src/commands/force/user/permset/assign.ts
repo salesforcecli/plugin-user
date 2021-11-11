@@ -78,6 +78,9 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         }
       }
     } catch (e) {
+      if (!(e instanceof SfdxError)) {
+        throw e;
+      }
       throw SfdxError.wrap(e);
     }
 
