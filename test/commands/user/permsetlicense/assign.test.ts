@@ -10,7 +10,7 @@ import { Aliases, AuthInfo, Connection, Org, User } from '@salesforce/core';
 import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
 
-describe('force:user:permsetlicense:assign', () => {
+describe.only('force:user:permsetlicense:assign', () => {
   let authInfoStub: StubbedType<AuthInfo>;
   const testData = new MockTestOrgData();
 
@@ -22,8 +22,8 @@ describe('force:user:permsetlicense:assign', () => {
     authInfoStub = stubInterface<AuthInfo>($$.SANDBOX, { getFields: () => authFields });
 
     stubMethod($$.SANDBOX, AuthInfo, 'create').callsFake(async () => authInfoStub);
-    stubMethod($$.SANDBOX, Connection, 'create').callsFake(async () => Connection.prototype);
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
+    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
     stubMethod($$.SANDBOX, User, 'create').callsFake(async () => User.prototype);
     stubMethod($$.SANDBOX, User.prototype, 'retrieve').resolves({
@@ -31,7 +31,7 @@ describe('force:user:permsetlicense:assign', () => {
     });
 
     stubMethod($$.SANDBOX, Aliases, 'fetch').withArgs('testUser1@test.com').resolves('testAlias');
-    stubMethod($$.SANDBOX, Connection.prototype, 'query')
+    stubMethod($$.SANDBOX, Connection.prototype, 'singleRecordQuery')
       .withArgs(`select Id from PermissionSetLicense where DeveloperName = '${goodPSL}' or MasterLabel = '${goodPSL}'`)
       .resolves({
         records: [
@@ -41,9 +41,7 @@ describe('force:user:permsetlicense:assign', () => {
         ],
       })
       .withArgs(`select Id from PermissionSetLicense where DeveloperName = '${badPSL}' or MasterLabel = '${badPSL}'`)
-      .resolves({
-        records: [],
-      });
+      .throws();
 
     stubMethod($$.SANDBOX, Connection.prototype, 'sobject').callsFake(() => {
       return {
@@ -80,6 +78,7 @@ describe('force:user:permsetlicense:assign', () => {
         },
       ];
       const result = JSON.parse(ctx.stdout).result;
+      expect(result.failures).to.deep.equal([]);
       expect(result.successes).to.deep.equal(expected);
     });
 
@@ -89,15 +88,9 @@ describe('force:user:permsetlicense:assign', () => {
     })
     .stdout()
     .command(['force:user:permsetlicense:assign', '--json', '--name', badPSL])
-    .it('should fail with the correct error message when no PSL exists by that name', (ctx) => {
-      // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          name: 'defaultusername@test.com',
-          message: "Cannot read property 'Id' of undefined",
-        },
-      ];
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result.failures).to.deep.equal(expected);
+    .it('should fail with the correct error message when no PSL exists', (ctx) => {
+      const result = JSON.parse(ctx.stdout);
+      expect(result.message).to.equal('PermissionSetLicense not found');
+      expect(result.status).to.equal(1);
     });
 });
