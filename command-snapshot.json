@@ -41,5 +41,10 @@
     "command": "force:user:permset:assign",
     "plugin": "@salesforce/plugin-user",
     "flags": ["apiversion", "json", "loglevel", "onbehalfof", "permsetname", "targetusername"]
+  },
+  {
+    "command": "force:user:permsetlicense:assign",
+    "plugin": "@salesforce/plugin-user",
+    "flags": ["apiversion", "json", "loglevel", "name", "onbehalfof", "targetusername"]
   }
 ]

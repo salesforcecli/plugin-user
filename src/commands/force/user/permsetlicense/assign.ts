@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Connection, Messages, User, AuthInfo, Org, UserFields, SfdxError } from '@salesforce/core';
+import { Aliases, Connection, Messages, User, AuthInfo, Org, UserFields } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -22,7 +22,7 @@ type FailureMsg = {
   message: string;
 };
 
-type Result = {
+export type PSLResult = {
   successes: SuccessMsg[];
   failures: FailureMsg[];
 };
@@ -46,59 +46,52 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
       description: messages.getMessage('flags.onBehalfOf'),
     }),
   };
-  private usernames: string[];
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
 
-  public async run(): Promise<Result> {
-    try {
-      this.usernames = this.flags.onbehalfof ?? [this.org.getUsername()];
+  public async run(): Promise<PSLResult> {
+    const usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
-      for (const username of this.usernames) {
-        // Convert any aliases to usernames
-        const aliasOrUsername = (await Aliases.fetch(username)) || username;
-        const connection: Connection = await Connection.create({
-          authInfo: await AuthInfo.create({ username }),
+    for (const username of usernames) {
+      // Convert any aliases to usernames
+      const aliasOrUsername = (await Aliases.fetch(username)) || username;
+      const connection: Connection = await Connection.create({
+        authInfo: await AuthInfo.create({ username }),
+      });
+      const org = await Org.create({ connection });
+      const user: User = await User.create({ org });
+      const fields: UserFields = await user.retrieve(username);
+
+      const pslName = this.flags.name as string;
+
+      const psl = await connection.singleRecordQuery<PermissionSetLicense>(
+        `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
+      );
+
+      try {
+        await connection.sobject('PermissionSetLicenseAssign').create({
+          AssigneeId: fields.id,
+          PermissionSetLicenseId: psl.Id,
         });
-        const org = await Org.create({ connection });
-        const user: User = await User.create({ org });
-        const fields: UserFields = await user.retrieve(username);
-
-        const pslName = this.flags.name as string;
-
-        const psl = (
-          await connection.query(
-            `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
-          )
-        ).records[0] as PermissionSetLicense;
-
-        try {
-          await connection.sobject('PermissionSetLicenseAssign').create({
-            AssigneeId: fields.id,
-            PermissionSetLicenseId: psl.Id,
-          });
+        this.successes.push({
+          name: aliasOrUsername,
+          value: this.flags.name as string,
+        });
+      } catch (e) {
+        // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
+        if (e instanceof Error && e.message.startsWith('duplicate value found')) {
+          this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, pslName]));
           this.successes.push({
             name: aliasOrUsername,
-            value: this.flags.name,
+            value: pslName,
           });
-        } catch (e) {
-          // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
-          if (e.message.startsWith('duplicate value found')) {
-            this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, this.flags.name]));
-            this.successes.push({
-              name: aliasOrUsername,
-              value: this.flags.name,
-            });
-          } else {
-            this.failures.push({
-              name: aliasOrUsername,
-              message: e.message,
-            });
-          }
+        } else {
+          this.failures.push({
+            name: aliasOrUsername,
+            message: e instanceof Error ? e.message : 'error contained no message',
+          });
         }
       }
-    } catch (e) {
-      throw SfdxError.wrap(e);
     }
 
     this.print();
