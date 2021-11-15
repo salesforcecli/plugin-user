@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Connection, Messages, User, AuthInfo, Org, UserFields } from '@salesforce/core';
+import { Aliases, Messages, SfdxError, User, UserFields } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -48,58 +48,91 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
   };
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
+  private pslId: string;
 
   public async run(): Promise<PSLResult> {
     const usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
+    this.logger.debug(`will assign permset to users: ${usernames.join(', ')}`);
+    const pslName = this.flags.name as string;
 
-    for (const username of usernames) {
-      // Convert any aliases to usernames
-      const aliasOrUsername = (await Aliases.fetch(username)) || username;
-      const connection: Connection = await Connection.create({
-        authInfo: await AuthInfo.create({ username }),
-      });
-      const org = await Org.create({ connection });
-      const user: User = await User.create({ org });
-      const fields: UserFields = await user.retrieve(username);
-
-      const pslName = this.flags.name as string;
-
-      const psl = await connection.singleRecordQuery<PermissionSetLicense>(
-        `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
-      );
-
-      try {
-        await connection.sobject('PermissionSetLicenseAssign').create({
-          AssigneeId: fields.id,
-          PermissionSetLicenseId: psl.Id,
-        });
-        this.successes.push({
-          name: aliasOrUsername,
-          value: this.flags.name as string,
-        });
-      } catch (e) {
-        // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
-        if (e instanceof Error && e.message.startsWith('duplicate value found')) {
-          this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, pslName]));
-          this.successes.push({
-            name: aliasOrUsername,
-            value: pslName,
-          });
+    const conn = this.org.getConnection();
+    try {
+      this.pslId = (
+        await conn.singleRecordQuery<PermissionSetLicense>(
+          `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
+        )
+      ).Id;
+    } catch {
+      throw new SfdxError('PermissionSetLicense not found');
+    }
+    (await Promise.all(usernames.map((username) => this.usernameToPSLAssignment({ pslName, username })))).map(
+      (result) => {
+        if (isSuccess(result)) {
+          this.successes.push(result);
         } else {
-          this.failures.push({
-            name: aliasOrUsername,
-            message: e instanceof Error ? e.message : 'error contained no message',
-          });
+          this.failures.push(result);
         }
       }
-    }
+    );
 
     this.print();
+    this.setExitCode();
 
     return {
       successes: this.successes,
       failures: this.failures,
     };
+  }
+
+  // handles one username/psl combo so these can run in parallel
+  private async usernameToPSLAssignment({
+    pslName,
+    username,
+  }: {
+    pslName: string;
+    username: string;
+  }): Promise<SuccessMsg | FailureMsg> {
+    // Convert any aliases to usernames
+    const aliasOrUsername = (await Aliases.fetch(username)) || username;
+
+    const user: User = await User.create({ org: this.org });
+    const fields: UserFields = await user.retrieve(username);
+
+    try {
+      await this.org.getConnection().sobject('PermissionSetLicenseAssign').create({
+        AssigneeId: fields.id,
+        PermissionSetLicenseId: this.pslId,
+      });
+      return {
+        name: aliasOrUsername,
+        value: pslName,
+      };
+    } catch (e) {
+      // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
+      // but we're going to call that a success
+      if (e instanceof Error && e.message.startsWith('duplicate value found')) {
+        this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, pslName]));
+        return {
+          name: aliasOrUsername,
+          value: pslName,
+        };
+      } else {
+        return {
+          name: aliasOrUsername,
+          message: e instanceof Error ? e.message : 'error contained no message',
+        };
+      }
+    }
+  }
+
+  private setExitCode(): void {
+    if (this.failures.length && this.successes.length) {
+      process.exitCode = 69;
+    } else if (this.failures.length) {
+      process.exitCode = 1;
+    } else if (this.successes.length) {
+      process.exitCode = 0;
+    }
   }
 
   private print(): void {
@@ -128,3 +161,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     }
   }
 }
+
+const isSuccess = (input: SuccessMsg | FailureMsg): input is SuccessMsg => {
+  return (input as SuccessMsg).value !== undefined;
+};

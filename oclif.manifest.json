@@ -1,0 +1,393 @@
+{
+  "version": "1.5.2",
+  "commands": {
+    "force:user:create": {
+      "id": "force:user:create",
+      "description": "create a user for a scratch org\nCreate a user for a scratch org, optionally setting an alias for use by the CLI, assigning permission sets (e.g., permsets=ps1,ps2), generating a password (e.g., generatepassword=true), and setting User sObject fields.",
+      "usage": "<%= command.id %> [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "@salesforce/plugin-user",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": [
+        "sfdx force:user:create",
+        "sfdx force:user:create -a testuser1 -f config/project-user-def.json profileName='Chatter Free User'",
+        "sfdx force:user:create username=testuser1@my.org email=me@my.org permsets=DreamHouse",
+        "sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true"
+      ],
+      "flags": {
+        "json": { "name": "json", "type": "boolean", "description": "format output as json", "allowNo": false },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetdevhubusername": {
+          "name": "targetdevhubusername",
+          "type": "option",
+          "char": "v",
+          "description": "username or alias for the dev hub org; overrides default dev hub org"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org"
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command"
+        },
+        "setalias": {
+          "name": "setalias",
+          "type": "option",
+          "char": "a",
+          "description": "set an alias for the created username to reference within the CLI"
+        },
+        "definitionfile": {
+          "name": "definitionfile",
+          "type": "option",
+          "char": "f",
+          "description": "file path to a user definition"
+        },
+        "setuniqueusername": {
+          "name": "setuniqueusername",
+          "type": "boolean",
+          "char": "s",
+          "description": "force the username, if specified in the definition file or at the command line, to be unique by appending the org ID",
+          "allowNo": false
+        }
+      },
+      "args": []
+    },
+    "force:user:display": {
+      "id": "force:user:display",
+      "description": "displays information about a user of a scratch org\nOutput includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable.",
+      "usage": "<%= command.id %> [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "@salesforce/plugin-user",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": ["sfdx force:user:display", "sfdx force:user:display -u me@my.org --json"],
+      "flags": {
+        "json": { "name": "json", "type": "boolean", "description": "format output as json", "allowNo": false },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetdevhubusername": {
+          "name": "targetdevhubusername",
+          "type": "option",
+          "char": "v",
+          "description": "username or alias for the dev hub org; overrides default dev hub org"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org"
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command"
+        }
+      },
+      "args": []
+    },
+    "force:user:list": {
+      "id": "force:user:list",
+      "description": "list all authenticated users of an org\nThe original scratch org admin is marked with \"(A)\"",
+      "usage": "<%= command.id %> [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "@salesforce/plugin-user",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": [
+        "sfdx force:user:list",
+        "sfdx force:user:list -u me@my.org --json",
+        "sfdx force:user:list --json > tmp/MyUserList.json"
+      ],
+      "flags": {
+        "json": { "name": "json", "type": "boolean", "description": "format output as json", "allowNo": false },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetdevhubusername": {
+          "name": "targetdevhubusername",
+          "type": "option",
+          "char": "v",
+          "description": "username or alias for the dev hub org; overrides default dev hub org"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org"
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command"
+        }
+      },
+      "args": []
+    },
+    "force:user:password:generate": {
+      "id": "force:user:password:generate",
+      "description": "generate a password for scratch org users\nGenerates and sets a random password for one or more scratch org users. Targets the usernames listed with the --onbehalfof parameter or the --targetusername parameter. Defaults to the defaultusername.\n\nIf you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub, --targetdevhubusername is required.\n\nTo change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the types of characters used in the generated password: \n\n0 - lower case letters only\n1 - lower case letters and numbers only\n2 - lower case letters and symbols only\n3 - lower and upper case letters and numbers only\n4 - lower and upper case letters and symbols only\n5 - lower and upper case letters and numbers and symbols only \n\nTo see a password that was previously generated, run \"sfdx force:user:display\".",
+      "usage": "<%= command.id %> [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "@salesforce/plugin-user",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": [
+        "sfdx force:user:password:generate",
+        "sfdx force:user:password:generate -l 12",
+        "sfdx force:user:password:generate -c 3",
+        "sfdx force:user:password:generate -u me@my.org --json",
+        "sfdx force:user:password:generate -o \"user1@my.org,user2@my.org,user3@my.org\""
+      ],
+      "flags": {
+        "json": { "name": "json", "type": "boolean", "description": "format output as json", "allowNo": false },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetdevhubusername": {
+          "name": "targetdevhubusername",
+          "type": "option",
+          "char": "v",
+          "description": "username or alias for the dev hub org; overrides default dev hub org"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org"
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command"
+        },
+        "onbehalfof": {
+          "name": "onbehalfof",
+          "type": "option",
+          "char": "o",
+          "description": "comma-separated list of usernames or aliases to assign the password to"
+        },
+        "length": {
+          "name": "length",
+          "type": "option",
+          "char": "l",
+          "description": "number of characters in the generated password; valid values are between 8 and 1000",
+          "default": 13
+        },
+        "complexity": {
+          "name": "complexity",
+          "type": "option",
+          "char": "c",
+          "description": "level of password complexity or strength; the higher the value, the stronger the password",
+          "default": 5
+        }
+      },
+      "args": []
+    },
+    "force:user:permset:assign": {
+      "id": "force:user:permset:assign",
+      "description": "assign a permission set to one or more users of an org\nTo specify an alias for the -u or -o parameter, use the username alias you set with the \"alias:set\" CLI command, not the User.Alias value of the org user.",
+      "usage": "<%= command.id %> -n <array> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "@salesforce/plugin-user",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": [
+        "sfdx force:user:permset:assign -n \"DreamHouse, LargeDreamHouse\"",
+        "sfdx force:user:permset:assign -n DreamHouse -u me@my.org",
+        "sfdx force:user:permset:assign -n DreamHouse -o \"user1@my.org,user2,user3\""
+      ],
+      "flags": {
+        "json": { "name": "json", "type": "boolean", "description": "format output as json", "allowNo": false },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org"
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command"
+        },
+        "permsetname": {
+          "name": "permsetname",
+          "type": "option",
+          "char": "n",
+          "description": "comma-separated list of permission sets to assign",
+          "required": true
+        },
+        "onbehalfof": {
+          "name": "onbehalfof",
+          "type": "option",
+          "char": "o",
+          "description": "comma-separated list of usernames or aliases to assign the permission set to"
+        }
+      },
+      "args": []
+    },
+    "force:user:permsetlicense:assign": {
+      "id": "force:user:permsetlicense:assign",
+      "description": "assign a permission set license to one or more users of an org",
+      "usage": "<%= command.id %> -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "@salesforce/plugin-user",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": [
+        "sfdx force:user:permsetlicense:assign -n DreamHouse",
+        "sfdx force:user:permsetlicense:assign -n DreamHouse -u me@my.org",
+        "sfdx force:user:permsetlicense:assign -n DreamHouse -o \"user1@my.org,user2,user3\""
+      ],
+      "flags": {
+        "json": { "name": "json", "type": "boolean", "description": "format output as json", "allowNo": false },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org"
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command"
+        },
+        "name": {
+          "name": "name",
+          "type": "option",
+          "char": "n",
+          "description": "the name of the permission set license to assign",
+          "required": true
+        },
+        "onbehalfof": {
+          "name": "onbehalfof",
+          "type": "option",
+          "char": "o",
+          "description": "comma-separated list of usernames or aliases to assign the permission set license to"
+        }
+      },
+      "args": []
+    }
+  }
+}
