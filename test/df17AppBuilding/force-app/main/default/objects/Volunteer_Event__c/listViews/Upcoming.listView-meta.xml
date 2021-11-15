@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Upcoming</fullName>
+    <columns>NAME</columns>
+    <columns>Partner__c</columns>
+    <columns>Start__c</columns>
+    <columns>Hours__c</columns>
+    <columns>Description__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>Start__c</field>
+        <operation>greaterThan</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>Upcoming</label>
+</ListView>

@@ -6,12 +6,12 @@
  */
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, Aliases, AuthInfo } from '@salesforce/core';
+import { Messages, Connection, Aliases } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
 
-type AuthList = {
+export type AuthList = {
   defaultMarker: string;
   alias: string;
   username: string;
@@ -24,7 +24,9 @@ type AuthList = {
 };
 
 type UserInfo = { Username: string; ProfileId: string; Id: string };
+type UserInfoMap = Record<string, UserInfo>;
 type ProfileInfo = { Id: string; Name: string };
+type ProfileInfoMap = Record<string, string>;
 
 export class UserListCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
@@ -35,17 +37,20 @@ export class UserListCommand extends SfdxCommand {
 
   public async run(): Promise<AuthList[]> {
     this.conn = this.org.getConnection();
-    const userInfos: UserInfo = await this.buildUserInfos();
-    const profileInfos: ProfileInfo = await this.buildProfileInfos();
-    const userAuthData: AuthInfo[] = await this.org.readUserAuthFiles();
-
-    const alias = await Aliases.fetch(this.flags.targetusername);
+    // parallelize 2 org queries and 2 fs operations
+    const [userInfos, profileInfos, userAuthData, aliases] = await Promise.all([
+      this.buildUserInfos(),
+      this.buildProfileInfos(),
+      this.org.readUserAuthFiles(),
+      Aliases.create(Aliases.getDefaultOptions()),
+    ]);
 
     const authList: AuthList[] = userAuthData.map((authData) => {
       const username = authData.getUsername();
-
+      // if they passed in a alias and it maps to something we have an Alias.
+      const alias = aliases.getKeysByValue(authData.getUsername())?.[0];
       return {
-        defaultMarker: authData.getFields().scratchAdminUsername ? '' : '(A)',
+        defaultMarker: this.org.getUsername() === username ? '(A)' : '',
         alias: alias || '',
         username,
         profileName: profileInfos[userInfos[username].ProfileId],
@@ -79,14 +84,14 @@ export class UserListCommand extends SfdxCommand {
    * @private
    * @return Promise<UserInfo>
    */
-  private async buildUserInfos(): Promise<UserInfo> {
+  private async buildUserInfos(): Promise<UserInfoMap> {
     const userRecords = await this.conn.query<UserInfo>('SELECT username, profileid, id FROM User');
 
     if (userRecords.records) {
       return userRecords.records.reduce((userInfo, { Username, ProfileId, Id }) => {
         userInfo[Username] = { ProfileId, Id };
         return userInfo;
-      });
+      }, {});
     }
   }
 
@@ -96,14 +101,14 @@ export class UserListCommand extends SfdxCommand {
    * @private
    * @return Promise<ProfileInfo>
    */
-  private async buildProfileInfos(): Promise<ProfileInfo> {
+  private async buildProfileInfos(): Promise<ProfileInfoMap> {
     const profileRecords = await this.conn.query<ProfileInfo>('SELECT id, name FROM Profile');
 
     if (profileRecords.records) {
       return profileRecords.records.reduce((profileInfo, { Id, Name }) => {
         profileInfo[Id] = Name;
         return profileInfo;
-      });
+      }, {});
     }
   }
 }

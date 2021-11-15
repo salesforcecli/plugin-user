@@ -1,0 +1,15 @@
+{
+  "orgName": "nutPluginUser",
+  "adminEmail": "shane@mailinator.com",
+  "edition": "Developer",
+  "description": "nuts for plugin-user",
+  "features": ["EnableSetPasswordInApi"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    }
+  }
+}

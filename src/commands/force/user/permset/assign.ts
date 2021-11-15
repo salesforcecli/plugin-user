@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Connection, Messages, User, AuthInfo, Org, UserFields, SfdxError } from '@salesforce/core';
+import { Aliases, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
@@ -22,7 +22,7 @@ type FailureMsg = {
   message: string;
 };
 
-type Result = {
+export type PermsetAssignResult = {
   successes: SuccessMsg[];
   failures: FailureMsg[];
 };
@@ -32,7 +32,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
   public static readonly flagsConfig: FlagsConfig = {
-    permsetname: flags.string({
+    permsetname: flags.array({
       char: 'n',
       description: messages.getMessage('flags.permsetName'),
       required: true,
@@ -42,40 +42,39 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       description: messages.getMessage('flags.onBehalfOf'),
     }),
   };
-  private usernames: string[];
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
 
-  public async run(): Promise<Result> {
+  public async run(): Promise<PermsetAssignResult> {
     try {
-      if (this.flags.onbehalfof) {
-        // trim the usernames to avoid whitespace
-        this.usernames = this.flags.onbehalfof.map((user) => user.trim());
-      } else {
-        this.usernames = [this.org.getUsername()];
-      }
+      const aliasOrUsernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
-      for (const username of this.usernames) {
-        // Convert any aliases to usernames
-        const aliasOrUsername = (await Aliases.fetch(username)) || username;
-        const connection: Connection = await Connection.create({
-          authInfo: await AuthInfo.create({ username }),
-        });
-        const org = await Org.create({ connection });
+      const connection: Connection = this.org.getConnection();
+      const org = await Org.create({ connection });
+
+      for (const aliasOrUsername of aliasOrUsernames) {
+        // Attempt to convert any aliases to usernames.  Not found alias will be **assumed** to be a username
+        const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
         const user: User = await User.create({ org });
-        const fields: UserFields = await user.retrieve(username);
-
-        try {
-          await user.assignPermissionSets(fields.id, this.flags.permsetname);
-          this.successes.push({
-            name: aliasOrUsername,
-            value: this.flags.permsetname,
-          });
-        } catch (e) {
-          this.failures.push({
-            name: aliasOrUsername,
-            message: e.message,
-          });
+        // get userId of whomever the permset will be assigned to via query to avoid AuthInfo if remote user
+        const queryResult = await connection.singleRecordQuery<{ Id: string }>(
+          `SELECT Id FROM User WHERE Username='${username}'`
+        );
+        // this is hard to parallelize because core returns void instead of some result object we can handle.  Promise.allSettled might work
+        for (const permsetName of this.flags.permsetname as string[]) {
+          try {
+            await user.assignPermissionSets(queryResult.Id, [permsetName]);
+            this.successes.push({
+              name: aliasOrUsername,
+              value: permsetName,
+            });
+          } catch (e) {
+            const err = e as SfdxError;
+            this.failures.push({
+              name: aliasOrUsername,
+              message: err.message,
+            });
+          }
         }
       }
     } catch (e) {
@@ -84,12 +83,10 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
     this.print();
 
-    const result: Result = {
+    return {
       successes: this.successes,
       failures: this.failures,
     };
-
-    return result;
   }
 
   private print(): void {

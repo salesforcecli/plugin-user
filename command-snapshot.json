@@ -1,0 +1,45 @@
+[
+  {
+    "command": "force:user:create",
+    "plugin": "@salesforce/plugin-user",
+    "flags": [
+      "apiversion",
+      "definitionfile",
+      "json",
+      "loglevel",
+      "setalias",
+      "setuniqueusername",
+      "targetdevhubusername",
+      "targetusername"
+    ]
+  },
+  {
+    "command": "force:user:display",
+    "plugin": "@salesforce/plugin-user",
+    "flags": ["apiversion", "json", "loglevel", "targetdevhubusername", "targetusername"]
+  },
+  {
+    "command": "force:user:list",
+    "plugin": "@salesforce/plugin-user",
+    "flags": ["apiversion", "json", "loglevel", "targetdevhubusername", "targetusername"]
+  },
+  {
+    "command": "force:user:password:generate",
+    "plugin": "@salesforce/plugin-user",
+    "flags": [
+      "apiversion",
+      "complexity",
+      "json",
+      "length",
+      "loglevel",
+      "onbehalfof",
+      "targetdevhubusername",
+      "targetusername"
+    ]
+  },
+  {
+    "command": "force:user:permset:assign",
+    "plugin": "@salesforce/plugin-user",
+    "flags": ["apiversion", "json", "loglevel", "onbehalfof", "permsetname", "targetusername"]
+  }
+]

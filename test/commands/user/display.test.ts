@@ -114,4 +114,20 @@ describe('force:user:display', () => {
       const result = JSON.parse(ctx.stdout).result;
       expect(result).to.deep.equal(expected);
     });
+
+  test
+    .stdout()
+    .command([
+      'force:user:display',
+      '--json',
+      '--targetusername',
+      '00D54000000GxYk!ARwAQOZEBxYvKxKlNJfvJEGyj7fNj6TA61Fn5RxJzaYm79hR9IYjx2x147a2GH2DGtne21DW.g_8DD0rzNF.COIAXcmq0FfJ',
+      '--targetdevhubusername',
+      'devhub@test.com',
+    ])
+    .it('should throw when username is an accessToken', (ctx) => {
+      const response = JSON.parse(ctx.stdout);
+      expect(response.status).to.equal(1);
+      expect(response.name).to.equal('accessTokenError');
+    });
 });

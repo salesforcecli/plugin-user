@@ -1,5 +1,5 @@
 # -- CLEAN
-
+tmp/
 # use yarn by default, so ignore npm
 package-lock.json
 
@@ -20,9 +20,15 @@ lib
 *unitcoverage
 .nyc_output
 coverage
+test_session*
 
 # generated docs
 docs
+
+# ignore sfdx-trust files
+*.tgz
+*.sig
+package.json.bak.
 
 # -- CLEAN ALL
 node_modules
@@ -33,6 +39,3 @@ node_modules
 # os specific files
 .DS_Store
 .idea
-
-# local project folders for end-to-end tests
-TestProject*

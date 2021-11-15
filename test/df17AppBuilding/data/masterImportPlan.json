@@ -1,0 +1,11 @@
+[
+    {
+        "sobject": "Volunteer_Event__c",
+        "saveRefs": true,
+        "resolveRefs": false,
+        "files": [
+            "Volunteer_Event__cs.json"
+        ]
+    }
+
+]

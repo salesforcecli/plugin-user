@@ -7,13 +7,13 @@
 
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages } from '@salesforce/core';
-import { get } from '@salesforce/ts-types';
+import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages, SfdxError, sfdc } from '@salesforce/core';
+import { getString } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
-type Result = {
+export type UserDisplayResult = {
   username: string;
   profileName: string;
   id: string;
@@ -30,11 +30,14 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
   public static readonly requiresDevhubUsername = true;
-  public logger: Logger;
 
-  public async run(): Promise<Result> {
+  public async run(): Promise<UserDisplayResult> {
     this.logger = await Logger.child(this.constructor.name);
-
+    if (sfdc.matchesAccessToken(this.flags.targetusername)) {
+      throw new SfdxError(messages.getMessage('accessTokenError'), 'accessTokenError', [
+        messages.getMessage('accessTokenAction'),
+      ]);
+    }
     const username: string = this.org.getUsername();
     const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
     // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
@@ -50,28 +53,28 @@ export class UserDisplayCommand extends SfdxCommand {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
         const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
-        profileName = get(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
+        profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name');
       }
     } catch (err) {
       profileName = 'unknown';
       this.logger.debug(
-        `Query for the profile name failed for username: ${username} with message: ${get(err, 'message') as string}`
+        `Query for the profile name failed for username: ${username} with message: ${getString(err, 'message')}`
       );
     }
 
     try {
       if (!userId) {
         const USER_QUERY = `SELECT id FROM User WHERE username='${username}'`;
-        userId = get(await conn.query(USER_QUERY), 'records[0].Id') as string;
+        userId = getString(await conn.query(USER_QUERY), 'records[0].Id');
       }
     } catch (err) {
       userId = 'unknown';
       this.logger.debug(
-        `Query for the user ID failed for username: ${username} with message: ${get(err, 'message') as string}`
+        `Query for the user ID failed for username: ${username} with message: ${getString(err, 'message')}`
       );
     }
 
-    const result: Result = {
+    const result: UserDisplayResult = {
       accessToken: conn.accessToken,
       id: userId,
       instanceUrl: userAuthData.instanceUrl,
@@ -94,12 +97,14 @@ export class UserDisplayCommand extends SfdxCommand {
       result.password = userAuthData.password;
     }
 
+    this.ux.warn(messages.getMessage('securityWarning'));
+    this.ux.log('');
     this.print(result);
 
     return result;
   }
 
-  private print(result: Result): void {
+  private print(result: UserDisplayResult): void {
     const columns = {
       columns: [
         { key: 'key', label: 'key' },
