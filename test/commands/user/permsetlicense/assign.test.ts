@@ -10,7 +10,7 @@ import { Aliases, AuthInfo, Connection, Org, User } from '@salesforce/core';
 import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
 
-describe.only('force:user:permsetlicense:assign', () => {
+describe('force:user:permsetlicense:assign', () => {
   let authInfoStub: StubbedType<AuthInfo>;
   const testData = new MockTestOrgData();
 
