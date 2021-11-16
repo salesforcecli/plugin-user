@@ -53,6 +53,8 @@ describe('PermissionSetLicense tests', () => {
   });
 
   it('assigns a psl to multiple users via onBehalfOf', async () => {
+    const anotherPSL = 'SurveyCreatorPsl';
+
     const originalUsername = session.setup[0].result.username as string;
     expect(originalUsername).to.be.a('string');
     // create a second user
@@ -64,15 +66,15 @@ describe('PermissionSetLicense tests', () => {
     ).jsonOutput.result.fields.username as string;
     expect(secondUsername).to.be.a('string');
     const commandResult = execCmd<PSLResult>(
-      `force:user:permsetlicense:assign -n ${testPSL} -o ${originalUsername},${secondUsername} --json`,
+      `force:user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},${secondUsername} --json`,
       {
         ensureExitCode: 0,
       }
     ).jsonOutput.result;
     expect(commandResult.failures).to.deep.equal([]);
     expect(commandResult.successes).to.deep.equal([
-      { value: testPSL, name: originalUsername },
-      { value: testPSL, name: secondUsername },
+      { value: anotherPSL, name: originalUsername },
+      { value: anotherPSL, name: secondUsername },
     ]);
   });
 
