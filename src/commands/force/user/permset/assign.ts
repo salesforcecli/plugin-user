@@ -78,10 +78,10 @@ export class UserPermsetAssignCommand extends SfdxCommand {
         }
       }
     } catch (e) {
-      if (!(e instanceof SfdxError)) {
-        throw e;
+      if (e instanceof Error || typeof e === 'string') {
+        throw SfdxError.wrap(e);
       }
-      throw SfdxError.wrap(e);
+      throw e;
     }
 
     this.print();
