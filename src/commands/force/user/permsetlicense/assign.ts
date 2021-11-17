@@ -51,8 +51,8 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
   private pslId: string;
 
   public async run(): Promise<PSLResult> {
-    const usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
-    this.logger.debug(`will assign permset to users: ${usernames.join(', ')}`);
+    const usernamesOrAliases = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
+    this.logger.debug(`will assign permset to users: ${usernamesOrAliases.join(', ')}`);
     const pslName = this.flags.name as string;
 
     const conn = this.org.getConnection();
@@ -65,15 +65,17 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     } catch {
       throw new SfdxError('PermissionSetLicense not found');
     }
-    (await Promise.all(usernames.map((username) => this.usernameToPSLAssignment({ pslName, username })))).map(
-      (result) => {
-        if (isSuccess(result)) {
-          this.successes.push(result);
-        } else {
-          this.failures.push(result);
-        }
+    (
+      await Promise.all(
+        usernamesOrAliases.map((usernameOrAlias) => this.usernameToPSLAssignment({ pslName, usernameOrAlias }))
+      )
+    ).map((result) => {
+      if (isSuccess(result)) {
+        this.successes.push(result);
+      } else {
+        this.failures.push(result);
       }
-    );
+    });
 
     this.print();
     this.setExitCode();
@@ -87,16 +89,16 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
   // handles one username/psl combo so these can run in parallel
   private async usernameToPSLAssignment({
     pslName,
-    username,
+    usernameOrAlias,
   }: {
     pslName: string;
-    username: string;
+    usernameOrAlias: string;
   }): Promise<SuccessMsg | FailureMsg> {
     // Convert any aliases to usernames
-    const aliasOrUsername = (await Aliases.fetch(username)) || username;
+    const resolvedUsername = (await Aliases.fetch(usernameOrAlias)) || usernameOrAlias;
 
     const user: User = await User.create({ org: this.org });
-    const fields: UserFields = await user.retrieve(username);
+    const fields: UserFields = await user.retrieve(resolvedUsername);
 
     try {
       await this.org.getConnection().sobject('PermissionSetLicenseAssign').create({
@@ -104,21 +106,21 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
         PermissionSetLicenseId: this.pslId,
       });
       return {
-        name: aliasOrUsername,
+        name: resolvedUsername,
         value: pslName,
       };
     } catch (e) {
       // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
       // but we're going to call that a success
       if (e instanceof Error && e.message.startsWith('duplicate value found')) {
-        this.ux.warn(messages.getMessage('duplicateValue', [aliasOrUsername, pslName]));
+        this.ux.warn(messages.getMessage('duplicateValue', [resolvedUsername, pslName]));
         return {
-          name: aliasOrUsername,
+          name: resolvedUsername,
           value: pslName,
         };
       } else {
         return {
-          name: aliasOrUsername,
+          name: resolvedUsername,
           message: e instanceof Error ? e.message : 'error contained no message',
         };
       }
