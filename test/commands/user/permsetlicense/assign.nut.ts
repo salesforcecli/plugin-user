@@ -66,7 +66,7 @@ describe('PermissionSetLicense tests', () => {
     ).jsonOutput.result.fields.username as string;
     expect(secondUsername).to.be.a('string');
     const commandResult = execCmd<PSLResult>(
-      `force:user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},${secondUsername} --json`,
+      `force:user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},Other --json`,
       {
         ensureExitCode: 0,
       }
