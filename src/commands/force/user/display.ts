@@ -33,7 +33,7 @@ export class UserDisplayCommand extends SfdxCommand {
 
   public async run(): Promise<UserDisplayResult> {
     this.logger = await Logger.child(this.constructor.name);
-    if (sfdc.matchesAccessToken(this.flags.targetusername)) {
+    if (sfdc.matchesAccessToken(this.flags.targetusername as string)) {
       throw new SfdxError(messages.getMessage('accessTokenError'), 'accessTokenError', [
         messages.getMessage('accessTokenAction'),
       ]);
