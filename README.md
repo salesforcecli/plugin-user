@@ -228,12 +228,11 @@ Generates and sets a random password for one or more scratch org users. Targets 
 
 If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub, --targetdevhubusername is required.
 
-To change the password strength, set the --complexity parameter to a value between 0 and 5. 
-Each value specifies the types of characters used in the generated password: 
+To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the types of characters used in the generated password: 
 
-0 - lower case letters only.
-1 - lower case letters and numbers only.
-2 - lower case letters and symbols only.
+0 - lower case letters only
+1 - lower case letters and numbers only
+2 - lower case letters and symbols only
 3 - lower and upper case letters and numbers only
 4 - lower and upper case letters and symbols only
 5 - lower and upper case letters and numbers and symbols only 
@@ -277,12 +276,12 @@ DESCRIPTION
   If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub, 
   --targetdevhubusername is required.
 
-  To change the password strength, set the --complexity parameter to a value between 0 and 5. 
-  Each value specifies the types of characters used in the generated password: 
+  To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the 
+  types of characters used in the generated password: 
 
-  0 - lower case letters only.
-  1 - lower case letters and numbers only.
-  2 - lower case letters and symbols only.
+  0 - lower case letters only
+  1 - lower case letters and numbers only
+  2 - lower case letters and symbols only
   3 - lower and upper case letters and numbers only
   4 - lower and upper case letters and symbols only
   5 - lower and upper case letters and numbers and symbols only 
