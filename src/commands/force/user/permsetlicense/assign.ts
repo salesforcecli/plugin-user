@@ -129,7 +129,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
 
   private setExitCode(): void {
     if (this.failures.length && this.successes.length) {
-      process.exitCode = 69;
+      process.exitCode = 68;
     } else if (this.failures.length) {
       process.exitCode = 1;
     } else if (this.successes.length) {
