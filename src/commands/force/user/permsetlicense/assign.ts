@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Messages, SfdxError, User, UserFields } from '@salesforce/core';
+import { Aliases, Messages, SfdxError } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -97,12 +97,15 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     // Convert any aliases to usernames
     const resolvedUsername = (await Aliases.fetch(usernameOrAlias)) || usernameOrAlias;
 
-    const user: User = await User.create({ org: this.org });
-    const fields: UserFields = await user.retrieve(resolvedUsername);
+    const AssigneeId = (
+      await this.org
+        .getConnection()
+        .singleRecordQuery<{ Id: string }>(`select id from user where username = '${resolvedUsername}'`)
+    ).Id;
 
     try {
       await this.org.getConnection().sobject('PermissionSetLicenseAssign').create({
-        AssigneeId: fields.id,
+        AssigneeId,
         PermissionSetLicenseId: this.pslId,
       });
       return {
