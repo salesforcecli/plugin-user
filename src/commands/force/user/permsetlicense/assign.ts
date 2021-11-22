@@ -100,7 +100,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     const AssigneeId = (
       await this.org
         .getConnection()
-        .singleRecordQuery<{ Id: string }>(`select id from user where username = '${resolvedUsername}'`)
+        .singleRecordQuery<{ Id: string }>(`select Id from User where Username = '${resolvedUsername}'`)
     ).Id;
 
     try {
