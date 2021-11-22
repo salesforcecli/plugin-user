@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/salesforcecli/plugin-user/compare/v1.5.3...v1.6.0) (2021-11-22)
+
+
+### Features
+
+* assign psl ([75965da](https://github.com/salesforcecli/plugin-user/commit/75965da74bbd9ded96dd2dfc0c3309e8e3eabcf7))
+* assign PSL with messages ([fd5a22f](https://github.com/salesforcecli/plugin-user/commit/fd5a22fe027a5ae9c8d837353a710c20897833b3))
+
+
+### Bug Fixes
+
+* oops, wrong exit code (68 is partial success) ([2236044](https://github.com/salesforcecli/plugin-user/commit/22360444ae98ca6bae8fd4bc6976403ead6ca4fa))
+* warning for duplicate PSL assignment ([6c71d6e](https://github.com/salesforcecli/plugin-user/commit/6c71d6e60e9647fdf526bb97f4a66c1c212bcb16))
+
 ### [1.5.3](https://github.com/salesforcecli/plugin-user/compare/v1.5.2...v1.5.3) (2021-11-18)
 
 ### [1.5.2](https://github.com/salesforcecli/plugin-user/compare/v1.5.1...v1.5.2) (2021-10-13)
