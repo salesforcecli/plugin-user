@@ -40,7 +40,7 @@ export class UserDisplayCommand extends SfdxCommand {
     }
     const username: string = this.org.getUsername();
     const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
-    // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
+    // userAuthD ataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
     const userAuthData: AuthFields = userAuthDataArray
       .find((uat) => uat.getFields().username === username)
       .getFields(true);
@@ -50,7 +50,7 @@ export class UserDisplayCommand extends SfdxCommand {
     let userId: string = userAuthData.userId;
 
     try {
-      // the user executing this command may not have access to the Profile sObject.
+      // the user  executing this command may not have access to the Profile sObject.
       if (!profileName) {
         const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
         profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name');

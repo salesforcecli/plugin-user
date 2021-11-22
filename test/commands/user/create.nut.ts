@@ -8,7 +8,7 @@
 import * as path from 'path';
 import { expect } from 'chai';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
-import { env } from '@salesforce/kit';
+import { AuthInfo, Connection } from '@salesforce/core';
 import { UserCreateOutput } from '../../../src/commands/force/user/create';
 
 let session: TestSession;
@@ -69,19 +69,15 @@ describe('creates a user from a file and verifies', () => {
     createdUserId = output.result.fields.id as string;
   });
 
-  // LEAVE this test last because it changes the executable path
-  it('verifies the permission set assignment in the org', () => {
-    // use sfdx since queries won't be part of this plugin
-    env.setString('TESTKIT_EXECUTABLE_PATH', 'sfdx');
-    const output = execCmd(
-      `force:data:soql:query --json -q "select PermissionSet.Name from PermissionSetAssignment where AssigneeId = '${createdUserId}'"`,
-      { ensureExitCode: 0 }
+  it('verifies the permission set assignment in the org', async () => {
+    const connection = await Connection.create({
+      authInfo: await AuthInfo.create({ username: session.setup[0].result.username }),
+    });
+    const queryResult = await connection.query<{ Id: string; PermissionSet: { Name: string } }>(
+      `select PermissionSet.Name from PermissionSetAssignment where AssigneeId = '${createdUserId}'`
     );
-    const result = (output.jsonOutput as Record<string, unknown>).result as {
-      records: [{ Id: string; PermissionSet: { Name: string } }];
-    };
     // there will also be a profile in there, too, with a cryptic name on it
-    expect(result.records.some((assignment) => assignment.PermissionSet.Name === 'VolunteeringApp'));
+    expect(queryResult.records.some((assignment) => assignment.PermissionSet.Name === 'VolunteeringApp'));
   });
 
   after(async () => {
