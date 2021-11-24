@@ -3,7 +3,7 @@
   "adminEmail": "shane@mailinator.com",
   "edition": "Developer",
   "description": "nuts for plugin-user",
-  "features": ["EnableSetPasswordInApi"],
+  "features": ["EnableSetPasswordInApi", "AnalyticsAppEmbedded", "DataMaskUser"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
