@@ -686,9 +686,9 @@
     cli-ux "^4.9.3"
 
 "@salesforce/core@^2.24.0", "@salesforce/core@^2.29.0", "@salesforce/core@^2.31.0":
-  version "2.31.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.31.0.tgz#cdeaa9968060afb52f40c12bf5a4f9844a2a1909"
-  integrity sha512-ROEjX/M0ZHpGlmRfNUoDKsE4ppOZUU5Hcl3XHr2pCO7F505imAmhKg8I+XfGSxXyj4bL/kftkNTK5xFffJ+6mw==
+  version "2.31.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.31.1.tgz#e8463fdc827a81af49bb99474a809085b98dd1cd"
+  integrity sha512-pPOV34ImMIYqGMrx37IvJt3sjiqg0w6R3ofOS6+PdOeg4Gbchk9huNP9HBJSk45/QGINdbseEZDP495P0TDwxw==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.5.0"
