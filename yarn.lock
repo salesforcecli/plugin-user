@@ -648,9 +648,9 @@
     safe-json-stringify "~1"
 
 "@salesforce/cli-plugins-testkit@^1.4.17":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-1.5.4.tgz#a8dc36508d3d457b5578382c78b446b99d63ee35"
-  integrity sha512-jg/AXQET8XC2l33TB4bi8D4a4R3YRj2J60indtLhzH/5a7m84rcKmgrpy7AZpzLzIyw1HE92vfvv0bS31EqMrg==
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-1.5.10.tgz#68f6a742935e077d545b8446da5893d5545e3e81"
+  integrity sha512-eFtdAzQW/DN25HEnhC6wk+QpBIy5e+g4LXwosykvS38I2BpjC03et9qjpdAhCBePl4pRGCXhyb17Gj6sHDJNoQ==
   dependencies:
     "@salesforce/core" "^2.24.0"
     "@salesforce/kit" "^1.5.13"
