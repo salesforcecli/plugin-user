@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Messages, SfdxError } from '@salesforce/core';
+import { GlobalInfo, Messages, SfError } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -63,7 +63,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
         )
       ).Id;
     } catch {
-      throw new SfdxError('PermissionSetLicense not found');
+      throw new SfError('PermissionSetLicense not found');
     }
     (
       await Promise.all(
@@ -95,7 +95,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     usernameOrAlias: string;
   }): Promise<SuccessMsg | FailureMsg> {
     // Convert any aliases to usernames
-    const resolvedUsername = (await Aliases.fetch(usernameOrAlias)) || usernameOrAlias;
+    const resolvedUsername = (await GlobalInfo.getInstance()).aliases.resolveUsername(usernameOrAlias);
 
     const AssigneeId = (
       await this.org
@@ -144,10 +144,8 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     if (this.successes.length > 0) {
       this.ux.styledHeader('Permset Licenses Assigned');
       this.ux.table(this.successes, {
-        columns: [
-          { key: 'name', label: 'Username' },
-          { key: 'value', label: 'Permission Set License Assignment' },
-        ],
+        name: { header: 'Username' },
+        value: { header: 'Permission Set License Assignment' },
       });
     }
 
@@ -157,12 +155,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
       }
 
       this.ux.styledHeader('Failures');
-      this.ux.table(this.failures, {
-        columns: [
-          { key: 'name', label: 'Username' },
-          { key: 'message', label: 'Error Message' },
-        ],
-      });
+      this.ux.table(this.failures, { name: { header: 'Username' } }, { message: { header: 'Error Message' } });
     }
   }
 }

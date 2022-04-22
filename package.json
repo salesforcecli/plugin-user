@@ -1,20 +1,20 @@
 {
   "name": "@salesforce/plugin-user",
   "description": "Commands to interact with Users and Permission Sets",
-  "version": "1.7.1",
+  "version": "2.0.0",
   "author": "Salesforce",
+  "main": "lib/index.js",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/config": "^1.18.1",
-    "@salesforce/command": "^4.2.0",
-    "@salesforce/core": "^2.31.0",
-    "@salesforce/kit": "^1.5.18",
+    "@oclif/core": "^1.7.0",
+    "@salesforce/command": "^5.0.5",
+    "@salesforce/core": "^3.13.1",
+    "@salesforce/kit": "^1.5.38",
     "tslib": "^2"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1",
-    "@oclif/plugin-command-snapshot": "2.1.1",
-    "@salesforce/cli-plugins-testkit": "^1.4.17",
+    "@oclif/plugin-command-snapshot": "3.1.3",
+    "@salesforce/cli-plugins-testkit": "^1.5.28",
     "@salesforce/dev-config": "^3.0.0",
     "@salesforce/dev-scripts": "^2.0.0",
     "@salesforce/plugin-command-reference": "^1.3.0",
@@ -39,6 +39,7 @@
     "lint-staged": "^11.0.0",
     "mocha": "^9.1.3",
     "nyc": "^15.1.0",
+    "oclif": "^2.6.3",
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "shx": "0.3.4",
@@ -114,7 +115,7 @@
     "test:command-reference": "./bin/run commandreference:generate --erroronwarnings",
     "test:deprecation-policy": "./bin/run snapshot:compare",
     "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
-    "version": "oclif-dev readme"
+    "version": "oclif readme"
   },
   "publishConfig": {
     "access": "public"

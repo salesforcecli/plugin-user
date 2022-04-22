@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, Aliases } from '@salesforce/core';
+import { Messages, Connection, GlobalInfo } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
@@ -42,13 +42,13 @@ export class UserListCommand extends SfdxCommand {
       this.buildUserInfos(),
       this.buildProfileInfos(),
       this.org.readUserAuthFiles(),
-      Aliases.create(Aliases.getDefaultOptions()),
+      (await GlobalInfo.getInstance()).aliases,
     ]);
 
     const authList: AuthList[] = userAuthData.map((authData) => {
       const username = authData.getUsername();
       // if they passed in a alias and it maps to something we have an Alias.
-      const alias = aliases.getKeysByValue(authData.getUsername())?.[0];
+      const alias = aliases.get(username);
       return {
         defaultMarker: this.org.getUsername() === username ? '(A)' : '',
         alias: alias || '',
@@ -63,13 +63,11 @@ export class UserListCommand extends SfdxCommand {
     });
 
     const columns = {
-      columns: [
-        { key: 'defaultMarker', label: 'Default' },
-        { key: 'alias', label: 'Alias' },
-        { key: 'username', label: 'Username' },
-        { key: 'profileName', label: 'Profile Name' },
-        { key: 'userId', label: 'User Id' },
-      ],
+      defaultMarker: { header: 'Default' },
+      alias: { header: 'Alias' },
+      username: { header: 'Username' },
+      profileName: { header: 'Profile Name' },
+      userId: { header: 'User Id' },
     };
 
     this.ux.styledHeader(`Users in org ${this.org.getOrgId()}`);

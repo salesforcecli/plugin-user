@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Aliases, AuthFields, AuthInfo, Connection, Logger, Messages, SfdxError, sfdc } from '@salesforce/core';
+import { AuthFields, AuthInfo, Connection, Logger, Messages, SfError, sfdc, GlobalInfo } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -34,13 +34,13 @@ export class UserDisplayCommand extends SfdxCommand {
   public async run(): Promise<UserDisplayResult> {
     this.logger = await Logger.child(this.constructor.name);
     if (sfdc.matchesAccessToken(this.flags.targetusername as string)) {
-      throw new SfdxError(messages.getMessage('accessTokenError'), 'accessTokenError', [
+      throw new SfError(messages.getMessage('accessTokenError'), 'accessTokenErrorError', [
         messages.getMessage('accessTokenAction'),
       ]);
     }
     const username: string = this.org.getUsername();
     const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
-    // userAuthD ataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
+    // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
     const userAuthData: AuthFields = userAuthDataArray
       .find((uat) => uat.getFields().username === username)
       .getFields(true);
@@ -50,7 +50,7 @@ export class UserDisplayCommand extends SfdxCommand {
     let userId: string = userAuthData.userId;
 
     try {
-      // the user  executing this command may not have access to the Profile sObject.
+      // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
         const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
         profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name');
@@ -84,13 +84,10 @@ export class UserDisplayCommand extends SfdxCommand {
       username,
     };
 
-    // if they passed in a alias and it maps to something we have an Alias.
-    const alias = await Aliases.create(Aliases.getDefaultOptions());
-    const aliasContent = alias.getContents().orgs;
-    if (aliasContent) {
-      Object.keys(aliasContent).forEach((aliasedName) => {
-        if (aliasContent[aliasedName] === username) result.alias = aliasedName;
-      });
+    const globalInfo = await GlobalInfo.getInstance();
+    const alias = globalInfo.aliases.get(username);
+    if (alias) {
+      result.alias = alias;
     }
 
     if (userAuthData.password) {
@@ -106,10 +103,8 @@ export class UserDisplayCommand extends SfdxCommand {
 
   private print(result: UserDisplayResult): void {
     const columns = {
-      columns: [
-        { key: 'key', label: 'key' },
-        { key: 'label', label: 'label' },
-      ],
+      key: { header: 'key' },
+      label: { header: 'label' },
     };
 
     const tableRow = [];
