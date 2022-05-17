@@ -21,7 +21,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
-  public static readonly requiresDevhubUsername = true;
+  public static readonly supportsDevhubUsername = true;
   public static readonly flagsConfig: FlagsConfig = {
     onbehalfof: flags.array({
       char: 'o',
