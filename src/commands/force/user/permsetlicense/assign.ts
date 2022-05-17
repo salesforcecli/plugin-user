@@ -97,13 +97,13 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     // Convert any aliases to usernames
     const resolvedUsername = (await GlobalInfo.getInstance()).aliases.resolveUsername(usernameOrAlias);
 
-    const AssigneeId = (
-      await this.org
-        .getConnection()
-        .singleRecordQuery<{ Id: string }>(`select Id from User where Username = '${resolvedUsername}'`)
-    ).Id;
-
     try {
+      const AssigneeId = (
+        await this.org
+          .getConnection()
+          .singleRecordQuery<{ Id: string }>(`select Id from User where Username = '${resolvedUsername}'`)
+      ).Id;
+
       await this.org.getConnection().sobject('PermissionSetLicenseAssign').create({
         AssigneeId,
         PermissionSetLicenseId: this.pslId,
