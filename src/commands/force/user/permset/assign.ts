@@ -85,6 +85,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
     }
 
     this.print();
+    this.setExitCode();
 
     return {
       successes: this.successes,
@@ -105,6 +106,16 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
       this.ux.styledHeader('Failures');
       this.ux.table(this.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
+    }
+  }
+
+  private setExitCode(): void {
+    if (this.failures.length && this.successes.length) {
+      process.exitCode = 68;
+    } else if (this.failures.length) {
+      process.exitCode = 1;
+    } else if (this.successes.length) {
+      process.exitCode = 0;
     }
   }
 }
