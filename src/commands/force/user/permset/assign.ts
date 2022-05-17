@@ -94,16 +94,17 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   }
 
   private print(): void {
-    if (this.successes.length > 0) {
+    if (this.failures.length > 0 && this.successes.length > 0) {
+      this.ux.styledHeader('Partial Success');
       this.ux.styledHeader('Permsets Assigned');
       this.ux.table(this.successes, { name: { header: 'Username' }, value: { header: 'Permission Set Assignment' } });
-    }
-
-    if (this.failures.length > 0) {
-      if (this.successes.length > 0) {
-        this.ux.log('');
-      }
-
+      this.ux.log('');
+      this.ux.styledHeader('Failures');
+      this.ux.table(this.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
+    } else if (this.successes.length > 0) {
+      this.ux.styledHeader('Permsets Assigned');
+      this.ux.table(this.successes, { name: { header: 'Username' }, value: { header: 'Permission Set Assignment' } });
+    } else if (this.failures.length > 0) {
       this.ux.styledHeader('Failures');
       this.ux.table(this.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
     }
