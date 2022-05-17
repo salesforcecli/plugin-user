@@ -151,6 +151,7 @@ export class UserCreateCommand extends SfdxCommand {
 
     fields.id = this.authInfo.getFields().userId;
     this.print(fields);
+    this.setExitCode();
 
     const { permsets, ...fieldsWithoutPermsets } = fields;
     return {
@@ -249,6 +250,16 @@ export class UserCreateCommand extends SfdxCommand {
       this.ux.table(this.failures, { name: { header: 'Action' }, message: { header: 'Error Message' } });
     } else {
       this.ux.log(userCreatedSuccessMsg);
+    }
+  }
+
+  private setExitCode(): void {
+    if (this.failures.length && this.successes.length) {
+      process.exitCode = 68;
+    } else if (this.failures.length) {
+      process.exitCode = 1;
+    } else if (this.successes.length) {
+      process.exitCode = 0;
     }
   }
 }
