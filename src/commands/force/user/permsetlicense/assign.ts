@@ -141,6 +141,9 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
   }
 
   private print(): void {
+    if (this.failures.length > 0 && this.successes.length > 0) {
+      this.ux.styledHeader('Partial Success');
+    }
     if (this.successes.length > 0) {
       this.ux.styledHeader('Permset Licenses Assigned');
       this.ux.table(this.successes, {
