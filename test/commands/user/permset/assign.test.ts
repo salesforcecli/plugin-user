@@ -6,7 +6,7 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, Connection, Org, User } from '@salesforce/core';
+import { Connection, GlobalInfo, Org, User } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
 describe('force:user:permset:assign', () => {
@@ -23,8 +23,9 @@ describe('force:user:permset:assign', () => {
     } else {
       stubMethod($$.SANDBOX, User.prototype, 'assignPermissionSets').resolves();
     }
-
-    stubMethod($$.SANDBOX, Aliases, 'fetch').withArgs('testAlias').resolves('testUser1@test.com');
+    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
+      aliases: { resolveUsername: (arg: string) => (arg === 'testAlias' ? 'testAlias' : 'testUser2@test.com') },
+    });
   }
 
   test

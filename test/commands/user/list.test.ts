@@ -6,7 +6,7 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, Connection, Org } from '@salesforce/core';
+import { Connection, GlobalInfo, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
 const user1 = 'defaultusername@test.com';
@@ -39,7 +39,7 @@ const expected = [
 describe('force:user:list', () => {
   beforeEach(async () => {
     stubMethod($$.SANDBOX, Org, 'create').resolves(Org.prototype);
-    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
+    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
       {
         getUsername: () => user1,
@@ -70,7 +70,9 @@ describe('force:user:list', () => {
     ]);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(user1);
-    stubMethod($$.SANDBOX, Aliases.prototype, 'getKeysByValue').withArgs(user1).returns(['testAlias']);
+    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
+      aliases: { get: (arg: string) => (arg === user1 ? 'testAlias' : undefined) },
+    });
     stubMethod($$.SANDBOX, Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
