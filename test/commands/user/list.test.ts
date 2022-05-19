@@ -73,7 +73,6 @@ describe('force:user:list', () => {
     stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
       aliases: { get: (arg: string) => (arg === user1 ? 'testAlias' : undefined) },
     });
-    // stubMethod($$.SANDBOX, Aliases.prototype, 'getKeysByValue').withArgs(user1).returns(['testAlias']);
     stubMethod($$.SANDBOX, Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
