@@ -2,10 +2,6 @@
   "extends": "@salesforce/dev-config/tsconfig-test",
   "include": ["./**/*.ts"],
   "compilerOptions": {
-    "skipLibCheck": true,
-    "baseUrl": "..",
-    "paths": {
-      "@salesforce/core": ["node_modules/@salesforce/core"]
-    }
+    "skipLibCheck": true
   }
 }
