@@ -713,7 +713,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.0.8", "@oclif/core@^1.2.1", "@oclif/core@^1.3.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.5.2", "@oclif/core@^1.6.4", "@oclif/core@^1.7.0":
+"@oclif/core@^1.0.8", "@oclif/core@^1.2.1", "@oclif/core@^1.3.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.6.4", "@oclif/core@^1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.7.0.tgz#3b763b53eafa9afbb13cf7cdfeac0f8ddd8ab1af"
   integrity sha512-I4q4qgtnNG7ef4sBDrJhwADdi7RExQV7LnflnXaWZZDiUoqF9AdOjC4jjx40MK0rRrCehCUtPNZBcr3WmxuS4Q==
@@ -1060,15 +1060,15 @@
     chalk "^2.4.2"
     cli-ux "^4.9.3"
 
-"@salesforce/command@^5.0.5":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.0.5.tgz#b6965b6cee4299166eeb9b089faff43a363b4a94"
-  integrity sha512-zutR54SbdBZNzb2UVKdfe7/3sPMi5v8gPaSWvTSRjaOmRI476EE5xosKc0X1Svm39QKobho04Rkqn8r+r78lgA==
+"@salesforce/command@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.1.2.tgz#934fa36679d8160512c4402705d0b8947a8b9d47"
+  integrity sha512-WbZlR1v/DYkO9Px5nBEexNrRK+aV9apC4rywyW92FTGrrNL9k6vjrf38JI18UuKuePFXzkQHUaz1/f99sC1bWA==
   dependencies:
-    "@oclif/core" "^1.5.2"
+    "@oclif/core" "^1.7.0"
     "@oclif/plugin-help" "^5.1.11"
     "@oclif/test" "^2.1.0"
-    "@salesforce/core" "^3.7.9"
+    "@salesforce/core" "^3.15.3"
     "@salesforce/kit" "^1.5.34"
     "@salesforce/ts-types" "^1.5.20"
     chalk "^2.4.2"
@@ -1097,10 +1097,10 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.13.1", "@salesforce/core@^3.7.9":
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.13.1.tgz#0a4e5844f3d4ae1c559fe0dab5e449e564239ce0"
-  integrity sha512-UBLBkJBxHv4PoU4Ke6NTyk/pEPxqs2u0h9Pkwhwns0Ao6MWENWKobj5qZfVItoBXWADWEbRxa/ahb0X/9y07Cw==
+"@salesforce/core@^3.15.3", "@salesforce/core@^3.18.2":
+  version "3.18.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.18.2.tgz#2e11dce0ecdc3028e6f8e69f673d6ee293ba2e9e"
+  integrity sha512-dbNZYHWLgV5ejP6F0dnQk2DPO3W3Q1deta/1S2N1bvJzb925lUxJdI4klKw/K2YwPbiUulhJE8phMkSGWR41NQ==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.5.34"
@@ -1109,6 +1109,7 @@
     "@types/graceful-fs" "^4.1.5"
     "@types/mkdirp" "^1.0.2"
     "@types/semver" "^7.3.9"
+    ajv "^8.11.0"
     archiver "^5.3.0"
     change-case "^4.1.2"
     debug "^3.2.7"
@@ -1116,8 +1117,7 @@
     form-data "^4.0.0"
     graceful-fs "^4.2.9"
     js2xmlparser "^4.0.1"
-    jsen "0.6.6"
-    jsforce "2.0.0-beta.7"
+    jsforce "2.0.0-beta.9"
     jsonwebtoken "8.5.1"
     mkdirp "1.0.4"
     ts-retry-promise "^0.6.0"
@@ -4796,20 +4796,15 @@ jsdoc-type-pratt-parser@^1.0.4:
   resolved "https://registry.yarnpkg.com/jsdoc-type-pratt-parser/-/jsdoc-type-pratt-parser-1.2.0.tgz#3482a3833b74a88c95a6ba7253f0c0de3b77b9f5"
   integrity sha512-4STjeF14jp4bqha44nKMY1OUI6d2/g6uclHWUCZ7B4DoLzaB5bmpTkQrpqU+vSVzMD0LsKAOskcnI3I3VfIpmg==
 
-jsen@0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/jsen/-/jsen-0.6.6.tgz#0240c18cf11350ac021456f48a7eb13bd67e0420"
-  integrity sha1-AkDBjPETUKwCFFb0in6xO9Z+BCA=
-
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
 
-jsforce@2.0.0-beta.7:
-  version "2.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-2.0.0-beta.7.tgz#5d594b1b280f1ee37992b75220b4c7701a1e536c"
-  integrity sha512-aiJRbf6v0eQSJLpAg4aEB/yXsQwV9WM3ewT2v/WTLmeeZQ4ZtwlcJhQCTwW4tKX/S8U+t5nL+Iluz8jFSZFqnA==
+jsforce@2.0.0-beta.9:
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-2.0.0-beta.9.tgz#692f205151551a601cb17fc6b891ecbb230eff58"
+  integrity sha512-DsmjBiLaAL4ECmpNjwcMuYoA2o7v42cnokmTvNtnsOoABb7goIZp/PIXRHhmN44HJxNw2RpEpjMv0rJNOkrAtg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@babel/runtime-corejs3" "^7.12.5"
@@ -4821,6 +4816,7 @@ jsforce@2.0.0-beta.7:
     csv-parse "^4.8.2"
     csv-stringify "^5.3.4"
     faye "^1.4.0"
+    form-data "^4.0.0"
     fs-extra "^8.1.0"
     https-proxy-agent "^5.0.0"
     inquirer "^7.0.0"
