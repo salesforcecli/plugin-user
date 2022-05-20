@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/salesforcecli/plugin-user/compare/v2.0.0...v2.0.1) (2022-05-20)
+
+### Bug Fixes
+
+- add prompt to examples ([e7c563a](https://github.com/salesforcecli/plugin-user/commit/e7c563ae3a32a646088435208ccbff97ed84150a))
+- add prompt to examples ([ae80423](https://github.com/salesforcecli/plugin-user/commit/ae804238876e34b0a47451dd5e727b4bc83f72d9))
+- add prompt to examples ([d6d2946](https://github.com/salesforcecli/plugin-user/commit/d6d29469ec5ecf9b1b4f22160c26f8098e151a3b))
+- add prompt to examples ([6d1d8ae](https://github.com/salesforcecli/plugin-user/commit/6d1d8ae846354ea26c55ac8560df6ff74afb1574))
+- add prompt to examples ([8c37a50](https://github.com/salesforcecli/plugin-user/commit/8c37a50b4662e049116c6db91a3fc9e9e4055715))
+- add prompt to examples, and fix bad doc link ([df02ee9](https://github.com/salesforcecli/plugin-user/commit/df02ee9412ff4d2ac956c9bd3969447ad69db0ab))
+
 ## [2.0.0](https://github.com/salesforcecli/plugin-user/compare/v1.7.1...v2.0.0) (2022-05-19)
 
 ### Features
