@@ -102,45 +102,43 @@ create a user for a scratch org
 ```
 USAGE
   $ sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion
-  <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+    <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -a, --setalias=setalias                                                           set an alias for the created
+FLAGS
+  -a, --setalias=<value>                                                            set an alias for the created
                                                                                     username to reference within the CLI
-
-  -f, --definitionfile=definitionfile                                               file path to a user definition
-
+  -f, --definitionfile=<value>                                                      file path to a user definition
   -s, --setuniqueusername                                                           force the username, if specified in
                                                                                     the definition file or at the
                                                                                     command line, to be unique by
                                                                                     appending the org ID
-
-  -u, --targetusername=targetusername                                               username or alias for the target
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  -v, --targetdevhubusername=targetdevhubusername                                   username or alias for the dev hub
+  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
                                                                                     org; overrides default dev hub org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
 DESCRIPTION
+  create a user for a scratch org
+
   Create a user for a scratch org, optionally setting an alias for use by the CLI, assigning permission sets (e.g.,
   permsets=ps1,ps2), generating a password (e.g., generatepassword=true), and setting User sObject fields.
 
 EXAMPLES
-  sfdx force:user:create
-  sfdx force:user:create -a testuser1 -f config/project-user-def.json profileName='Chatter Free User'
-  sfdx force:user:create username=testuser1@my.org email=me@my.org permsets=DreamHouse
-  sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true
+  $ sfdx force:user:create
+
+  $ sfdx force:user:create -a testuser1 -f config/project-user-def.json profileName='Chatter Free User'
+
+  $ sfdx force:user:create username=testuser1@my.org email=me@my.org permsets=DreamHouse
+
+  $ sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true
 ```
 
-_See code: [src/commands/force/user/create.ts](https://github.com/salesforcecli/plugin-user/blob/v1.7.0/src/commands/force/user/create.ts)_
+_See code: [src/commands/force/user/create.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.0/src/commands/force/user/create.ts)_
 
 ## `sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -149,32 +147,31 @@ displays information about a user of a scratch org
 ```
 USAGE
   $ sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -u, --targetusername=targetusername                                               username or alias for the target
+FLAGS
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  -v, --targetdevhubusername=targetdevhubusername                                   username or alias for the dev hub
+  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
                                                                                     org; overrides default dev hub org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
 DESCRIPTION
+  displays information about a user of a scratch org
+
   Output includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable.
 
 EXAMPLES
-  sfdx force:user:display
-  sfdx force:user:display -u me@my.org --json
+  $ sfdx force:user:display
+
+  $ sfdx force:user:display -u me@my.org --json
 ```
 
-_See code: [src/commands/force/user/display.ts](https://github.com/salesforcecli/plugin-user/blob/v1.7.0/src/commands/force/user/display.ts)_
+_See code: [src/commands/force/user/display.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.0/src/commands/force/user/display.ts)_
 
 ## `sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -183,33 +180,33 @@ list all authenticated users of an org
 ```
 USAGE
   $ sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -u, --targetusername=targetusername                                               username or alias for the target
+FLAGS
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  -v, --targetdevhubusername=targetdevhubusername                                   username or alias for the dev hub
+  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
                                                                                     org; overrides default dev hub org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
 DESCRIPTION
+  list all authenticated users of an org
+
   The original scratch org admin is marked with "(A)"
 
 EXAMPLES
-  sfdx force:user:list
-  sfdx force:user:list -u me@my.org --json
-  sfdx force:user:list --json > tmp/MyUserList.json
+  $ sfdx force:user:list
+
+  $ sfdx force:user:list -u me@my.org --json
+
+  $ sfdx force:user:list --json > tmp/MyUserList.json
 ```
 
-_See code: [src/commands/force/user/list.ts](https://github.com/salesforcecli/plugin-user/blob/v1.7.0/src/commands/force/user/list.ts)_
+_See code: [src/commands/force/user/list.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.0/src/commands/force/user/list.ts)_
 
 ## `sfdx force:user:password:generate [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -217,36 +214,31 @@ generate a password for scratch org users
 
 ```
 USAGE
-  $ sfdx force:user:password:generate [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>]
-  [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx force:user:password:generate [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>] [--apiversion
+    <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -c, --complexity=complexity                                                       [default: 5] level of password
+FLAGS
+  -c, --complexity=<value>                                                          [default: 5] level of password
                                                                                     complexity or strength; the higher
                                                                                     the value, the stronger the password
-
-  -l, --length=length                                                               [default: 13] number of characters
+  -l, --length=<value>                                                              [default: 13] number of characters
                                                                                     in the generated password; valid
                                                                                     values are between 8 and 1000
-
-  -o, --onbehalfof=onbehalfof                                                       comma-separated list of usernames or
+  -o, --onbehalfof=<value>                                                          comma-separated list of usernames or
                                                                                     aliases to assign the password to
-
-  -u, --targetusername=targetusername                                               username or alias for the target
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  -v, --targetdevhubusername=targetdevhubusername                                   username or alias for the dev hub
+  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
                                                                                     org; overrides default dev hub org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
 DESCRIPTION
+  generate a password for scratch org users
+
   Generates and sets a random password for one or more scratch org users. Targets the usernames listed with the
   --onbehalfof parameter or the --targetusername parameter. Defaults to the defaultusername.
 
@@ -257,23 +249,32 @@ DESCRIPTION
   types of characters used in the generated password:
 
   0 - lower case letters only
+
   1 - lower case letters and numbers only
+
   2 - lower case letters and symbols only
+
   3 - lower and upper case letters and numbers only
+
   4 - lower and upper case letters and symbols only
+
   5 - lower and upper case letters and numbers and symbols only
 
   To see a password that was previously generated, run "sfdx force:user:display".
 
 EXAMPLES
-  sfdx force:user:password:generate
-  sfdx force:user:password:generate -l 12
-  sfdx force:user:password:generate -c 3
-  sfdx force:user:password:generate -u me@my.org --json
-  sfdx force:user:password:generate -o "user1@my.org,user2@my.org,user3@my.org"
+  $ sfdx force:user:password:generate
+
+  $ sfdx force:user:password:generate -l 12
+
+  $ sfdx force:user:password:generate -c 3
+
+  $ sfdx force:user:password:generate -u me@my.org --json
+
+  $ sfdx force:user:password:generate -o "user1@my.org,user2@my.org,user3@my.org"
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/v1.7.0/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.0/src/commands/force/user/password/generate.ts)_
 
 ## `sfdx force:user:permset:assign -n <array> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -282,38 +283,37 @@ assign a permission set to one or more users of an org
 ```
 USAGE
   $ sfdx force:user:permset:assign -n <array> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -n, --permsetname=permsetname                                                     (required) comma-separated list of
+FLAGS
+  -n, --permsetname=<value>                                                         (required) comma-separated list of
                                                                                     permission sets to assign
-
-  -o, --onbehalfof=onbehalfof                                                       comma-separated list of usernames or
+  -o, --onbehalfof=<value>                                                          comma-separated list of usernames or
                                                                                     aliases to assign the permission set
                                                                                     to
-
-  -u, --targetusername=targetusername                                               username or alias for the target
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
 DESCRIPTION
+  assign a permission set to one or more users of an org
+
   To specify an alias for the -u or -o parameter, use the username alias you set with the "alias:set" CLI command, not
   the User.Alias value of the org user.
 
 EXAMPLES
-  sfdx force:user:permset:assign -n "DreamHouse, LargeDreamHouse"
-  sfdx force:user:permset:assign -n DreamHouse -u me@my.org
-  sfdx force:user:permset:assign -n DreamHouse -o "user1@my.org,user2,user3"
+  $ sfdx force:user:permset:assign -n "DreamHouse, LargeDreamHouse"
+
+  $ sfdx force:user:permset:assign -n DreamHouse -u me@my.org
+
+  $ sfdx force:user:permset:assign -n DreamHouse -o "user1@my.org,user2,user3"
 ```
 
-_See code: [src/commands/force/user/permset/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v1.7.0/src/commands/force/user/permset/assign.ts)_
+_See code: [src/commands/force/user/permset/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.0/src/commands/force/user/permset/assign.ts)_
 
 ## `sfdx force:user:permsetlicense:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -321,34 +321,34 @@ assign a permission set license to one or more users of an org
 
 ```
 USAGE
-  $ sfdx force:user:permsetlicense:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json]
-  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx force:user:permsetlicense:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -n, --name=name                                                                   (required) the name of the
+FLAGS
+  -n, --name=<value>                                                                (required) the name of the
                                                                                     permission set license to assign
-
-  -o, --onbehalfof=onbehalfof                                                       comma-separated list of usernames or
+  -o, --onbehalfof=<value>                                                          comma-separated list of usernames or
                                                                                     aliases to assign the permission set
                                                                                     license to
-
-  -u, --targetusername=targetusername                                               username or alias for the target
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  assign a permission set license to one or more users of an org
+
 EXAMPLES
-  sfdx force:user:permsetlicense:assign -n DreamHouse
-  sfdx force:user:permsetlicense:assign -n DreamHouse -u me@my.org
-  sfdx force:user:permsetlicense:assign -n DreamHouse -o "user1@my.org,user2,user3"
+  $ sfdx force:user:permsetlicense:assign -n DreamHouse
+
+  $ sfdx force:user:permsetlicense:assign -n DreamHouse -u me@my.org
+
+  $ sfdx force:user:permsetlicense:assign -n DreamHouse -o "user1@my.org,user2,user3"
 ```
 
-_See code: [src/commands/force/user/permsetlicense/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v1.7.0/src/commands/force/user/permsetlicense/assign.ts)_
+_See code: [src/commands/force/user/permsetlicense/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.0/src/commands/force/user/permsetlicense/assign.ts)_
 
 <!-- commandsstop -->

@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
+import { Connection, GlobalInfo, Messages, Org, SfError, User } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
@@ -54,7 +54,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
       for (const aliasOrUsername of aliasOrUsernames) {
         // Attempt to convert any aliases to usernames.  Not found alias will be **assumed** to be a username
-        const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
+        const username = (await GlobalInfo.getInstance()).aliases.resolveUsername(aliasOrUsername);
         const user: User = await User.create({ org });
         // get userId of whomever the permset will be assigned to via query to avoid AuthInfo if remote user
         const queryResult = await connection.singleRecordQuery<{ Id: string }>(
@@ -69,7 +69,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
               value: permsetName,
             });
           } catch (e) {
-            const err = e as SfdxError;
+            const err = e as SfError;
             this.failures.push({
               name: aliasOrUsername,
               message: err.message,
@@ -79,12 +79,13 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       }
     } catch (e) {
       if (e instanceof Error || typeof e === 'string') {
-        throw SfdxError.wrap(e);
+        throw SfError.wrap(e);
       }
       throw e;
     }
 
     this.print();
+    this.setExitCode();
 
     return {
       successes: this.successes,
@@ -93,28 +94,29 @@ export class UserPermsetAssignCommand extends SfdxCommand {
   }
 
   private print(): void {
-    if (this.successes.length > 0) {
+    if (this.failures.length > 0 && this.successes.length > 0) {
+      this.ux.styledHeader('Partial Success');
       this.ux.styledHeader('Permsets Assigned');
-      this.ux.table(this.successes, {
-        columns: [
-          { key: 'name', label: 'Username' },
-          { key: 'value', label: 'Permission Set Assignment' },
-        ],
-      });
-    }
-
-    if (this.failures.length > 0) {
-      if (this.successes.length > 0) {
-        this.ux.log('');
-      }
-
+      this.ux.table(this.successes, { name: { header: 'Username' }, value: { header: 'Permission Set Assignment' } });
+      this.ux.log('');
       this.ux.styledHeader('Failures');
-      this.ux.table(this.failures, {
-        columns: [
-          { key: 'name', label: 'Username' },
-          { key: 'message', label: 'Error Message' },
-        ],
-      });
+      this.ux.table(this.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
+    } else if (this.successes.length > 0) {
+      this.ux.styledHeader('Permsets Assigned');
+      this.ux.table(this.successes, { name: { header: 'Username' }, value: { header: 'Permission Set Assignment' } });
+    } else if (this.failures.length > 0) {
+      this.ux.styledHeader('Failures');
+      this.ux.table(this.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
+    }
+  }
+
+  private setExitCode(): void {
+    if (this.failures.length && this.successes.length) {
+      process.exitCode = 68;
+    } else if (this.failures.length) {
+      process.exitCode = 1;
+    } else if (this.successes.length) {
+      process.exitCode = 0;
     }
   }
 }

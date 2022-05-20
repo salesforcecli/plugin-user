@@ -6,14 +6,15 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, Connection, Org } from '@salesforce/core';
+import { Connection, GlobalInfo, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
 const username = 'defaultusername@test.com';
 
 describe('force:user:display', () => {
   async function prepareStubs(queries = false) {
-    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').callsFake(() => Connection.prototype);
+    stubMethod($$.SANDBOX, Org, 'create').resolves(Org.prototype);
+    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(username);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
     if (queries) {
@@ -52,10 +53,9 @@ describe('force:user:display', () => {
       ]);
     }
 
-    const alias = await Aliases.create(Aliases.getDefaultOptions());
-    stubMethod($$.SANDBOX, Aliases, 'create').resolves(alias);
-
-    stubMethod($$.SANDBOX, alias, 'getContents').returns({ orgs: { testAlias: 'defaultusername@test.com' } });
+    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
+      aliases: { get: () => 'testAlias' },
+    });
   }
 
   test
@@ -117,6 +117,9 @@ describe('force:user:display', () => {
 
   test
     .stdout()
+    .do(async () => {
+      await prepareStubs();
+    })
     .command([
       'force:user:display',
       '--json',

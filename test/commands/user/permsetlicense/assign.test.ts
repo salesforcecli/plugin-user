@@ -6,7 +6,7 @@
  */
 import * as Sinon from 'sinon';
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, AuthInfo, Connection, Org } from '@salesforce/core';
+import { AuthInfo, Connection, GlobalInfo, Org } from '@salesforce/core';
 import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
 
@@ -28,8 +28,10 @@ describe('force:user:permsetlicense:assign', () => {
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(defaultUsername);
+    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
+      aliases: { resolveUsername: (arg: string) => (arg === username1 ? 'testAlias' : username2) },
+    });
 
-    stubMethod($$.SANDBOX, Aliases, 'fetch').withArgs(username1).resolves('testAlias');
     stubMethod($$.SANDBOX, Connection.prototype, 'singleRecordQuery')
       // matcher for all user queries
       .withArgs(Sinon.match((arg: string) => arg.startsWith('select Id from User')))

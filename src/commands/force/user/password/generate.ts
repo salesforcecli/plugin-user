@@ -6,8 +6,8 @@
  */
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Aliases, AuthInfo, Connection, Messages, Org, SfdxError, User } from '@salesforce/core';
-import { PasswordConditions } from '@salesforce/core/lib/user';
+import { AuthInfo, Connection, GlobalInfo, Messages, Org, SfError, User } from '@salesforce/core';
+import { PasswordConditions } from '@salesforce/core/lib/org/user';
 import { asNumber } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -21,7 +21,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
-  public static readonly requiresDevhubUsername = true;
+  public static readonly supportsDevhubUsername = true;
   public static readonly flagsConfig: FlagsConfig = {
     onbehalfof: flags.array({
       char: 'o',
@@ -59,7 +59,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       try {
         // Convert any aliases to usernames
         // fetch will return undefined if there's no Alias for that name
-        const username = (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
+        const username = (await GlobalInfo.getInstance()).aliases.resolveUsername(aliasOrUsername);
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });
@@ -83,7 +83,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
 
         await authInfo.save();
       } catch (e) {
-        const err = e as SfdxError;
+        const err = e as SfError;
         if (
           err.message.includes('Cannot set password for self') ||
           err.message.includes('The requested Resource does not exist')
@@ -93,15 +93,15 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
           const connection: Connection = await Connection.create({ authInfo });
           const org = await Org.create({ connection });
           if (parseInt(await org.retrieveMaxApiVersion(), 10) >= 51) {
-            throw new SfdxError(
+            throw new SfError(
               messages.getMessage('noSelfSetError'),
-              'noSelfSetError',
+              'noSelfSetErrorError',
               messages.getMessage('noSelfSetErrorActions').split(os.EOL)
             );
           }
-          throw new SfdxError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetError');
+          throw new SfError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetErrorError');
         }
-        throw SfdxError.wrap(err);
+        throw SfError.wrap(err);
       }
     }
 
@@ -118,10 +118,8 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
     } else {
       this.ux.log(messages.getMessage('successMultiple', [os.EOL]));
       const columnData = {
-        columns: [
-          { key: 'username', label: 'USERNAME' },
-          { key: 'password', label: 'PASSWORD' },
-        ],
+        username: { header: 'USERNAME' },
+        password: { header: 'PASSWORD' },
       };
       this.ux.table(this.passwordData, columnData);
     }

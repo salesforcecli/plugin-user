@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/salesforcecli/plugin-user/compare/v1.7.1...v2.0.0) (2022-05-19)
+
+### Features
+
+- deprecation warning ([aa45f66](https://github.com/salesforcecli/plugin-user/commit/aa45f6689dd786d284f6c8651f1a219d46dd1d95))
+
+### Bug Fixes
+
+- (user:create) set exit code for partial success ([7ebc4b9](https://github.com/salesforcecli/plugin-user/commit/7ebc4b99a9e2b0aec970ac4387a0ed5d562ff7d1))
+- (user:permset:assign) partial success ([88ad93d](https://github.com/salesforcecli/plugin-user/commit/88ad93ddf1c68a220b7fb721fe88db802d21244e))
+- (user:permset:assign) set exit code in command ([b7cde57](https://github.com/salesforcecli/plugin-user/commit/b7cde57a657679312d2bbd4b9e62f8347a54687e))
+- (user:psl:assign) add partial success header ([94ed72d](https://github.com/salesforcecli/plugin-user/commit/94ed72db89c7dbbb464f78f42dc28b9bacaa226d))
+- (user:psl:assign) catch err if failed to get AssigneeId ([e6075f7](https://github.com/salesforcecli/plugin-user/commit/e6075f7ecceb7fac5988c35af8716db5771adf5c))
+- bump deps ([5a5bee5](https://github.com/salesforcecli/plugin-user/commit/5a5bee58b21920dd5e7d4f14da94eceb88f2de33))
+- make devhub flag optional ([db6d654](https://github.com/salesforcecli/plugin-user/commit/db6d65487a755194f68eb3f85fa3ccc9ee3ae029))
+- parking orbit plugin-user ([d500413](https://github.com/salesforcecli/plugin-user/commit/d5004138a1092ba5b2c9cfafdc1147eb0715c361))
+
 ### [1.7.1](https://github.com/salesforcecli/plugin-user/compare/v1.7.0...v1.7.1) (2022-02-02)
 
 ## [1.7.0](https://github.com/salesforcecli/plugin-user/compare/v1.6.0...v1.7.0) (2021-12-01)

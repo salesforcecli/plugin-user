@@ -6,27 +6,22 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Aliases, AuthInfo, Connection, Org, User, AuthInfoConfig, Messages } from '@salesforce/core';
+import { AuthInfo, Connection, Org, User, Messages, GlobalInfo } from '@salesforce/core';
 import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
-import { SecureBuffer } from '@salesforce/core/lib/secureBuffer';
+import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 describe('force:user:password:generate', () => {
   let authInfoStub: StubbedType<AuthInfo>;
-  let authInfoConfigStub: StubbedType<AuthInfoConfig>;
   const testData = new MockTestOrgData();
-  let queryStub;
+  let queryStub: sinon.SinonStub;
 
   async function prepareStubs(throws = false, generatePassword = true) {
     const authFields = await testData.getConfig();
     authInfoStub = stubInterface<AuthInfo>($$.SANDBOX, { getFields: () => authFields });
-    authInfoConfigStub = stubInterface<AuthInfoConfig>($$.SANDBOX, {
-      getContents: () => authFields,
-    });
-    stubMethod($$.SANDBOX, AuthInfoConfig, 'create').callsFake(async () => authInfoConfigStub);
     stubMethod($$.SANDBOX, AuthInfo, 'create').callsFake(async () => authInfoStub);
     stubMethod($$.SANDBOX, Connection, 'create').callsFake(async () => Connection.prototype);
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
@@ -48,7 +43,9 @@ describe('force:user:password:generate', () => {
     } else {
       stubMethod($$.SANDBOX, User.prototype, 'assignPassword').resolves();
     }
-    stubMethod($$.SANDBOX, Aliases, 'fetch').withArgs('testUser1@test.com').resolves('testAlias');
+    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
+      aliases: { resolveUsername: (arg: string) => (arg === 'testUser1@test.com' ? 'testAlias' : arg) },
+    });
   }
 
   test

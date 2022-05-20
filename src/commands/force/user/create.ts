@@ -5,16 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as os from 'os';
+import * as fse from 'fs-extra';
 import {
-  Aliases,
   AuthInfo,
   Connection,
   DefaultUserFields,
-  fs,
+  GlobalInfo,
   Logger,
   Messages,
   REQUIRED_FIELDS,
-  SfdxError,
+  SfError,
   User,
   UserFields,
 } from '@salesforce/core';
@@ -112,7 +112,7 @@ export class UserCreateCommand extends SfdxCommand {
           value: permsetArray.join(','),
         });
       } catch (error) {
-        const err = error as SfdxError;
+        const err = error as SfError;
         this.failures.push({
           name: 'Permission Set Assignment',
           message: err.message,
@@ -134,7 +134,7 @@ export class UserCreateCommand extends SfdxCommand {
           });
         });
       } catch (error) {
-        const err = error as SfdxError;
+        const err = error as SfError;
         this.failures.push({
           name: 'Password Assignment',
           message: err.message,
@@ -144,13 +144,14 @@ export class UserCreateCommand extends SfdxCommand {
 
     // Set the alias if specified
     if (this.flags.setalias && typeof this.flags.setalias === 'string') {
-      const alias: Aliases = await Aliases.create(Aliases.getDefaultOptions());
-      alias.set(this.flags.setalias, fields.username);
-      await alias.write();
+      const globalInfo = await GlobalInfo.getInstance();
+      globalInfo.aliases.set(this.flags.setalias, fields.username);
+      await globalInfo.write();
     }
 
     fields.id = this.authInfo.getFields().userId;
     this.print(fields);
+    this.setExitCode();
 
     const { permsets, ...fieldsWithoutPermsets } = fields;
     return {
@@ -171,11 +172,11 @@ export class UserCreateCommand extends SfdxCommand {
       const profile = await conn.singleRecordQuery<{ Name: string }>(
         `SELECT name FROM profile WHERE id='${fields.profileId}'`
       );
-      throw SfdxError.create('@salesforce/plugin-user', 'create', 'licenseLimitExceeded', [profile.Name]);
+      throw new SfError(messages.getMessage('licenseLimitExceeded', [profile.Name]), 'licenseLimitExceeded');
     } else if (errMessage.includes('DUPLICATE_USERNAME')) {
-      throw SfdxError.create('@salesforce/plugin-user', 'create', 'duplicateUsername', [fields.username]);
+      throw new SfError(messages.getMessage('duplicateUsername', [fields.username]), 'duplicateUsername');
     } else {
-      throw SfdxError.wrap(errMessage);
+      throw SfError.wrap(errMessage);
     }
   }
 
@@ -190,7 +191,7 @@ export class UserCreateCommand extends SfdxCommand {
     // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
     if (this.flags.definitionfile && typeof this.flags.definitionfile === 'string') {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-      const content = (await fs.readJson(this.flags.definitionfile)) as UserFields;
+      const content = (await fse.readJson(this.flags.definitionfile)) as UserFields;
       Object.keys(content).forEach((key) => {
         // cast entries to lowercase to standardize
         defaultFields[this.lowerFirstLetter(key)] = content[key] as keyof typeof REQUIRED_FIELDS;
@@ -246,14 +247,19 @@ export class UserCreateCommand extends SfdxCommand {
       this.ux.log(userCreatedSuccessMsg);
       this.ux.log('');
       this.ux.styledHeader('Failures');
-      this.ux.table(this.failures, {
-        columns: [
-          { key: 'name', label: 'Action' },
-          { key: 'message', label: 'Error Message' },
-        ],
-      });
+      this.ux.table(this.failures, { name: { header: 'Action' }, message: { header: 'Error Message' } });
     } else {
       this.ux.log(userCreatedSuccessMsg);
+    }
+  }
+
+  private setExitCode(): void {
+    if (this.failures.length && this.successes.length) {
+      process.exitCode = 68;
+    } else if (this.failures.length) {
+      process.exitCode = 1;
+    } else if (this.successes.length) {
+      process.exitCode = 0;
     }
   }
 }
