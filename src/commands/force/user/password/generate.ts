@@ -48,6 +48,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
   private passwordData: PasswordData[] = [];
 
   public async run(): Promise<PasswordData[] | PasswordData> {
+    this.ux.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
     this.usernames = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
 
     const passwordCondition: PasswordConditions = {

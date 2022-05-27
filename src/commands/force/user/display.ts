@@ -30,11 +30,9 @@ export class UserDisplayCommand extends SfdxCommand {
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly requiresUsername = true;
   public static readonly supportsDevhubUsername = true;
-  public static readonly deprecated = {
-    messageOverride: 'The --targetdevhubusername flag is deprecated and will be removed in v57 or later.',
-  };
 
   public async run(): Promise<UserDisplayResult> {
+    this.ux.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
     this.logger = await Logger.child(this.constructor.name);
     if (sfdc.matchesAccessToken(this.flags.targetusername as string)) {
       throw new SfError(messages.getMessage('accessTokenError'), 'accessTokenErrorError', [

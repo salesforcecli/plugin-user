@@ -36,6 +36,7 @@ export class UserListCommand extends SfdxCommand {
   private conn: Connection;
 
   public async run(): Promise<AuthList[]> {
+    this.ux.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
     this.conn = this.org.getConnection();
     // parallelize 2 org queries and 2 fs operations
     const [userInfos, profileInfos, userAuthData, aliases] = await Promise.all([
