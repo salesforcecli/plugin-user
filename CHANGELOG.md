@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/salesforcecli/plugin-user/compare/v2.0.1...v2.0.2) (2022-05-27)
+
+### Bug Fixes
+
+- add deprecation warning ([#332](https://github.com/salesforcecli/plugin-user/issues/332)) ([e23d1b1](https://github.com/salesforcecli/plugin-user/commit/e23d1b1600850c86674f775e8ce96174aa42198f))
+
 ### [2.0.1](https://github.com/salesforcecli/plugin-user/compare/v2.0.0...v2.0.1) (2022-05-20)
 
 ### Bug Fixes
