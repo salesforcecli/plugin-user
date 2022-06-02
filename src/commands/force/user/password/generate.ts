@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { AuthInfo, Connection, GlobalInfo, Messages, Org, SfError, User } from '@salesforce/core';
+import { AuthInfo, Connection, StateAggregator, Messages, Org, SfError, User } from '@salesforce/core';
 import { PasswordConditions } from '@salesforce/core/lib/org/user';
 import { asNumber } from '@salesforce/ts-types';
 Messages.importMessagesDirectory(__dirname);
@@ -60,7 +60,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       try {
         // Convert any aliases to usernames
         // fetch will return undefined if there's no Alias for that name
-        const username = (await GlobalInfo.getInstance()).aliases.resolveUsername(aliasOrUsername);
+        const username = (await StateAggregator.getInstance()).aliases.resolveUsername(aliasOrUsername);
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });

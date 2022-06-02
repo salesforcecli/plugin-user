@@ -6,7 +6,7 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Connection, GlobalInfo, Org } from '@salesforce/core';
+import { Connection, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
 const user1 = 'defaultusername@test.com';
@@ -70,9 +70,7 @@ describe('force:user:list', () => {
     ]);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(user1);
-    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
-      aliases: { get: (arg: string) => (arg === user1 ? 'testAlias' : undefined) },
-    });
+    $$.stubAliases({ testAlias: user1 });
     stubMethod($$.SANDBOX, Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
