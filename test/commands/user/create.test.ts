@@ -19,7 +19,7 @@ const originalUserId = '0052D0000043PawWWR';
 const newUserId = '0052D0000044PawWWR';
 
 describe('force:user:create', () => {
-  it.skip('will properly merge fields regardless of capitalization', async () => {
+  it('will properly merge fields regardless of capitalization', async () => {
     // notice the varied capitalization
     stubMethod($$.SANDBOX, fse, 'readJson').resolves({
       id: originalUserId,
