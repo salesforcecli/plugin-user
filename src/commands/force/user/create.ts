@@ -10,7 +10,7 @@ import {
   AuthInfo,
   Connection,
   DefaultUserFields,
-  GlobalInfo,
+  StateAggregator,
   Logger,
   Messages,
   REQUIRED_FIELDS,
@@ -144,9 +144,9 @@ export class UserCreateCommand extends SfdxCommand {
 
     // Set the alias if specified
     if (this.flags.setalias && typeof this.flags.setalias === 'string') {
-      const globalInfo = await GlobalInfo.getInstance();
-      globalInfo.aliases.set(this.flags.setalias, fields.username);
-      await globalInfo.write();
+      const stateAggregator = await StateAggregator.getInstance();
+      stateAggregator.aliases.set(this.flags.setalias, fields.username);
+      await stateAggregator.aliases.write();
     }
 
     fields.id = this.authInfo.getFields().userId;

@@ -9,7 +9,7 @@
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
 import * as fse from 'fs-extra';
-import { AuthInfo, Connection, DefaultUserFields, GlobalInfo, Logger, Org, User, UserFields } from '@salesforce/core';
+import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User, UserFields } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { Config } from '@oclif/core';
 import UserCreateCommand from '../../../src/commands/force/user/create';
@@ -118,9 +118,8 @@ describe('force:user:create', () => {
       stubMethod($$.SANDBOX, Logger.prototype, 'debug');
       stubMethod($$.SANDBOX, fse, 'readJson').resolves(readsFile);
     }
-    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
-      aliases: { resolveUsername: () => 'testAlias' },
-    });
+
+    $$.stubAliases({ testAlias: '1605130295132_test-j6asqt5qoprs@example.com' });
   }
   test
     .do(async () => {

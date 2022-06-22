@@ -6,7 +6,7 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Connection, GlobalInfo, Org } from '@salesforce/core';
+import { Connection, Org } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 
 const username = 'defaultusername@test.com';
@@ -53,9 +53,7 @@ describe('force:user:display', () => {
       ]);
     }
 
-    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
-      aliases: { get: () => 'testAlias' },
-    });
+    $$.stubAliases({ testAlias: 'defaultusername@test.com' });
   }
 
   test
