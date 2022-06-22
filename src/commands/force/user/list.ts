@@ -6,7 +6,7 @@
  */
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, GlobalInfo } from '@salesforce/core';
+import { Messages, Connection, StateAggregator } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
@@ -43,7 +43,7 @@ export class UserListCommand extends SfdxCommand {
       this.buildUserInfos(),
       this.buildProfileInfos(),
       this.org.readUserAuthFiles(),
-      (await GlobalInfo.getInstance()).aliases,
+      (await StateAggregator.getInstance()).aliases,
     ]);
 
     const authList: AuthList[] = userAuthData.map((authData) => {

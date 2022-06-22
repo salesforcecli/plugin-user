@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { SfdxCommand } from '@salesforce/command';
-import { AuthFields, AuthInfo, Connection, Logger, Messages, SfError, sfdc, GlobalInfo } from '@salesforce/core';
+import { AuthFields, AuthInfo, Connection, Logger, Messages, SfError, sfdc, StateAggregator } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -85,8 +85,8 @@ export class UserDisplayCommand extends SfdxCommand {
       username,
     };
 
-    const globalInfo = await GlobalInfo.getInstance();
-    const alias = globalInfo.aliases.get(username);
+    const stateAggregator = await StateAggregator.getInstance();
+    const alias = stateAggregator.aliases.get(username);
     if (alias) {
       result.alias = alias;
     }

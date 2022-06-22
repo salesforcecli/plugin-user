@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { GlobalInfo, Messages, SfError } from '@salesforce/core';
+import { StateAggregator, Messages, SfError } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -54,7 +54,6 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     const usernamesOrAliases = (this.flags.onbehalfof as string[]) ?? [this.org.getUsername()];
     this.logger.debug(`will assign permset to users: ${usernamesOrAliases.join(', ')}`);
     const pslName = this.flags.name as string;
-
     const conn = this.org.getConnection();
     try {
       this.pslId = (
@@ -95,7 +94,7 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
     usernameOrAlias: string;
   }): Promise<SuccessMsg | FailureMsg> {
     // Convert any aliases to usernames
-    const resolvedUsername = (await GlobalInfo.getInstance()).aliases.resolveUsername(usernameOrAlias);
+    const resolvedUsername = (await StateAggregator.getInstance()).aliases.resolveUsername(usernameOrAlias);
 
     try {
       const AssigneeId = (

@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
-import { Connection, GlobalInfo, Messages, Org, SfError, User } from '@salesforce/core';
+import { Connection, StateAggregator, Messages, Org, SfError, User } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
@@ -54,7 +54,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
 
       for (const aliasOrUsername of aliasOrUsernames) {
         // Attempt to convert any aliases to usernames.  Not found alias will be **assumed** to be a username
-        const username = (await GlobalInfo.getInstance()).aliases.resolveUsername(aliasOrUsername);
+        const username = (await StateAggregator.getInstance()).aliases.resolveUsername(aliasOrUsername);
         const user: User = await User.create({ org });
         // get userId of whomever the permset will be assigned to via query to avoid AuthInfo if remote user
         const queryResult = await connection.singleRecordQuery<{ Id: string }>(

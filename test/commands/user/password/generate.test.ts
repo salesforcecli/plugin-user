@@ -6,7 +6,7 @@
  */
 
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { AuthInfo, Connection, Org, User, Messages, GlobalInfo } from '@salesforce/core';
+import { AuthInfo, Connection, Org, User, Messages } from '@salesforce/core';
 import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
 import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer';
@@ -43,9 +43,8 @@ describe('force:user:password:generate', () => {
     } else {
       stubMethod($$.SANDBOX, User.prototype, 'assignPassword').resolves();
     }
-    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
-      aliases: { resolveUsername: (arg: string) => (arg === 'testUser1@test.com' ? 'testAlias' : arg) },
-    });
+
+    $$.stubAliases({ testAlias: 'testUser1@test.com' });
   }
 
   test
@@ -55,10 +54,9 @@ describe('force:user:password:generate', () => {
     .stdout()
     .command(['force:user:password:generate', '--json', '--onbehalfof', 'testUser1@test.com, testUser2@test.com'])
     .it('should generate a new password for the user', (ctx) => {
-      // testUser1@test.com is aliased to testUser
       const expected = [
         {
-          username: 'testAlias',
+          username: 'testUser1@test.com',
           password: 'abc',
         },
         {

@@ -4,9 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as Sinon from 'sinon';
 import { $$, expect, test } from '@salesforce/command/lib/test';
-import { AuthInfo, Connection, GlobalInfo, Org } from '@salesforce/core';
+import { AuthInfo, Connection, Org } from '@salesforce/core';
 import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
 
@@ -28,16 +27,15 @@ describe('force:user:permsetlicense:assign', () => {
     stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(defaultUsername);
-    stubMethod($$.SANDBOX, GlobalInfo, 'getInstance').resolves({
-      aliases: { resolveUsername: (arg: string) => (arg === username1 ? 'testAlias' : username2) },
-    });
+
+    $$.stubAliases({ testAlias: username1 });
 
     stubMethod($$.SANDBOX, Connection.prototype, 'singleRecordQuery')
       // matcher for all user queries
-      .withArgs(Sinon.match((arg: string) => arg.startsWith('select Id from User')))
-      .resolves({
-        Id: '0051234567890123',
-      })
+      .withArgs(`select Id from User where Username = '${username1}'`)
+      .resolves({ Id: '0051234567890123' })
+      .withArgs(`select Id from User where Username = '${username2}'`)
+      .resolves({ Id: '0051234567890123' })
       .withArgs(`select Id from PermissionSetLicense where DeveloperName = '${goodPSL}' or MasterLabel = '${goodPSL}'`)
       .resolves({
         Id: '0PL46000000gHHsGAM',
@@ -68,10 +66,9 @@ describe('force:user:permsetlicense:assign', () => {
       goodPSL,
     ])
     .it('should assign the one permset to both users', (ctx) => {
-      // testUser1@test.com is aliased to testUser
       const expected = [
         {
-          name: 'testAlias',
+          name: username1,
           value: goodPSL,
         },
         {
@@ -79,6 +76,7 @@ describe('force:user:permsetlicense:assign', () => {
           value: goodPSL,
         },
       ];
+
       const result = JSON.parse(ctx.stdout).result;
       expect(result.failures).to.deep.equal([]);
       expect(result.successes).to.deep.equal(expected);
