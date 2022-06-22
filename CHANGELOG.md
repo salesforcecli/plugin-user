@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/salesforcecli/plugin-user/compare/v2.0.2...v2.1.0) (2022-06-22)
+
+### Features
+
+- use StateAggregator ([8020f53](https://github.com/salesforcecli/plugin-user/commit/8020f53a075c77f355bcd39c4e49f8268ffa7eb1))
+
 ### [2.0.2](https://github.com/salesforcecli/plugin-user/compare/v2.0.1...v2.0.2) (2022-05-27)
 
 ### Bug Fixes
