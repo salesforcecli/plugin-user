@@ -180,10 +180,6 @@ export class UserCreateCommand extends SfdxCommand {
     }
   }
 
-  private lowerFirstLetter(word: string): string {
-    return word[0].toLowerCase() + word.substr(1);
-  }
-
   private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
     // username can be overridden both in the file or varargs, save it to check if it was changed somewhere
     const defaultUsername = defaultFields.username;
@@ -194,7 +190,7 @@ export class UserCreateCommand extends SfdxCommand {
       const content = (await fse.readJson(this.flags.definitionfile)) as UserFields;
       Object.keys(content).forEach((key) => {
         // cast entries to lowercase to standardize
-        defaultFields[this.lowerFirstLetter(key)] = content[key] as keyof typeof REQUIRED_FIELDS;
+        defaultFields[lowerFirstLetter(key)] = content[key] as keyof typeof REQUIRED_FIELDS;
       });
     }
 
@@ -208,7 +204,7 @@ export class UserCreateCommand extends SfdxCommand {
           defaultFields['profileName'] = this.varargs[key];
         } else {
           // all other varargs are left "as is"
-          defaultFields[this.lowerFirstLetter(key)] = this.varargs[key];
+          defaultFields[lowerFirstLetter(key)] = this.varargs[key];
         }
       });
     }
@@ -271,3 +267,5 @@ export interface UserCreateOutput {
   permissionSetAssignments: string[];
   fields: Record<string, unknown>;
 }
+
+const lowerFirstLetter = (word: string): string => word[0].toLowerCase() + word.substr(1);

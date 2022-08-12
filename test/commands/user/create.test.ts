@@ -69,20 +69,18 @@ describe('force:user:create', () => {
     stubMethod($$.SANDBOX, Org, 'create').resolves(Org.prototype);
     stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
     stubMethod($$.SANDBOX, DefaultUserFields, 'create').resolves({
-      getFields: (): UserFields => {
-        return {
-          id: originalUserId,
-          username: '1605130295132_test-j6asqt5qoprs@example.com',
-          alias: 'testAlias',
-          email: username,
-          emailEncodingKey: 'UTF-8',
-          languageLocaleKey: 'en_US',
-          localeSidKey: 'en_US',
-          profileId: '00e2D000000bNexWWR',
-          lastName: 'User',
-          timeZoneSidKey: 'America/Los_Angeles',
-        };
-      },
+      getFields: (): UserFields => ({
+        id: originalUserId,
+        username: '1605130295132_test-j6asqt5qoprs@example.com',
+        alias: 'testAlias',
+        email: username,
+        emailEncodingKey: 'UTF-8',
+        languageLocaleKey: 'en_US',
+        localeSidKey: 'en_US',
+        profileId: '00e2D000000bNexWWR',
+        lastName: 'User',
+        timeZoneSidKey: 'America/Los_Angeles',
+      }),
     });
 
     stubMethod($$.SANDBOX, User, 'create').callsFake(() => User.prototype);

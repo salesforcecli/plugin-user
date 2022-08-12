@@ -162,6 +162,4 @@ export class UserPermsetLicenseAssignCommand extends SfdxCommand {
   }
 }
 
-const isSuccess = (input: SuccessMsg | FailureMsg): input is SuccessMsg => {
-  return (input as SuccessMsg).value !== undefined;
-};
+const isSuccess = (input: SuccessMsg | FailureMsg): input is SuccessMsg => (input as SuccessMsg).value !== undefined;
