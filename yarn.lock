@@ -1285,13 +1285,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/jsforce@^1.9.29":
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.9.43.tgz#407907aac838b1828133958ef326ce649d03138f"
-  integrity sha512-9xTZYPI/WiSEaQxiBZLBZndRqzme2/QYfLARrajTVQ6RMPR0IGgGy/SiKmIEMYoLk0UESHynJPWscNtDGfuKOw==
-  dependencies:
-    "@types/node" "*"
-
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
