@@ -1,15 +1,15 @@
 {
   "name": "@salesforce/plugin-user",
   "description": "Commands to interact with Users and Permission Sets",
-  "version": "2.1.0",
+  "version": "2.1.7",
   "author": "Salesforce",
   "main": "lib/index.js",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^1.7.0",
-    "@salesforce/command": "^5.1.2",
-    "@salesforce/core": "^3.19.4",
-    "@salesforce/kit": "^1.5.38",
+    "@oclif/core": "^1.16.4",
+    "@salesforce/command": "^5.2.8",
+    "@salesforce/core": "^3.30.8",
+    "@salesforce/kit": "^1.6.1",
     "tslib": "^2"
   },
   "devDependencies": {
@@ -19,7 +19,7 @@
     "@salesforce/dev-scripts": "^3.0.0",
     "@salesforce/plugin-command-reference": "^1.3.0",
     "@salesforce/prettier-config": "^0.0.2",
-    "@salesforce/ts-sinon": "1.3.21",
+    "@salesforce/ts-sinon": "1.4.0",
     "@types/jsforce": "^1.9.29",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
@@ -43,7 +43,7 @@
     "shx": "0.3.4",
     "sinon": "10.0.0",
     "ts-node": "^10.0.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.8.3"
   },
   "config": {
     "commitizen": {
