@@ -43,13 +43,11 @@ describe('force:user:permsetlicense:assign', () => {
       .withArgs(`select Id from PermissionSetLicense where DeveloperName = '${badPSL}' or MasterLabel = '${badPSL}'`)
       .throws();
 
-    stubMethod($$.SANDBOX, Connection.prototype, 'sobject').callsFake(() => {
-      return {
+    stubMethod($$.SANDBOX, Connection.prototype, 'sobject').callsFake(() => ({
         create() {
           return Promise.resolve({ success: true });
         },
-      };
-    });
+      }));
   }
 
   test

@@ -43,29 +43,25 @@ describe('force:user:list', () => {
     stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
       {
         getUsername: () => user1,
-        getFields: () => {
-          return {
+        getFields: () => ({
             username: user1,
             userProfileName: 'profileName',
             userId: '1234567890',
             instanceUrl: 'instanceURL',
             loginUrl: 'login.test.com',
             accessToken: 'accessToken',
-          };
-        },
+          }),
       },
       {
         getUsername: () => user2,
-        getFields: () => {
-          return {
+        getFields: () => ({
             username: user2,
             userProfileName: 'profileName',
             userId: '1234567890',
             instanceUrl: 'instanceURL',
             loginUrl: 'login.test.com',
             accessToken: 'accessToken',
-          };
-        },
+          }),
       },
     ]);
     stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');

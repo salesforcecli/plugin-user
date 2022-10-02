@@ -92,7 +92,7 @@ describe('force:user:password:generate', () => {
     });
 
   test
-    .do(async () => await prepareStubs(true))
+    .do(async () => prepareStubs(true))
 
     .stdout()
     .command(['force:user:password:generate', '--json'])
