@@ -19,11 +19,18 @@ describe('PermissionSetLicense tests', () => {
       project: {
         sourceDir: path.join('test', 'df17AppBuilding'),
       },
-      setupCommands: [
-        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
-        'sfdx force:source:push',
+      devhubAuthStrategy: 'AUTO',
+      scratchOrgs: [
+        {
+          executable: 'sfdx',
+          duration: 1,
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
+        },
       ],
     });
+
+    execCmd('force:source:push', { cli: 'sfdx' });
   });
 
   it('assigns a psl to default user', () => {
@@ -55,7 +62,7 @@ describe('PermissionSetLicense tests', () => {
   describe('multiple PSL via onBehalfOf', () => {
     it('assigns a psl to multiple users via onBehalfOf', async () => {
       const anotherPSL = 'SurveyCreatorPsl';
-      const originalUsername = session.setup[0].result.username as string;
+      const originalUsername = session.orgs.get('default').username;
 
       expect(originalUsername).to.be.a('string');
       // create a second user
@@ -82,7 +89,7 @@ describe('PermissionSetLicense tests', () => {
     it('assigns a psl to multiple users via onBehalfOf (partial success)', async () => {
       // sales console user can't be assigned to a platform license
       const anotherPSL = 'SalesConsoleUser';
-      const originalUsername = session.setup[0].result.username as string;
+      const originalUsername = session.orgs.get('default').username;
 
       const secondUsername = execCmd<UserCreateOutput>(
         `force:user:create --json -f ${path.join('config', 'chatterUser.json')}`,

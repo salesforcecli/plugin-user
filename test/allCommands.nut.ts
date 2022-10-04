@@ -26,12 +26,18 @@ describe('verifies all commands run successfully ', () => {
       project: {
         sourceDir: path.join('test', 'df17AppBuilding'),
       },
-      // create org and push source to get a permset
-      setupCommands: [
-        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
-        'sfdx force:source:push',
+      devhubAuthStrategy: 'AUTO',
+      scratchOrgs: [
+        {
+          executable: 'sfdx',
+          duration: 1,
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
+        },
       ],
     });
+
+    execCmd('force:source:push', { cli: 'sfdx' });
   });
 
   it('user display', () => {
