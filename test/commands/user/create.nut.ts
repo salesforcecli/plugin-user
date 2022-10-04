@@ -21,12 +21,18 @@ describe('creates a user from a file and verifies', () => {
       project: {
         sourceDir: path.join('test', 'df17AppBuilding'),
       },
-      // create org and push source to get a permset
-      setupCommands: [
-        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
-        'sfdx force:source:push',
+      devhubAuthStrategy: 'AUTO',
+      scratchOrgs: [
+        {
+          executable: 'sfdx',
+          duration: 1,
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
+        },
       ],
     });
+
+    execCmd('force:source:push', { cli: 'sfdx' });
   });
 
   it('creates a user with setuniqueusername from username on commandline', () => {
@@ -69,7 +75,7 @@ describe('creates a user from a file and verifies', () => {
   });
   it('verifies the permission set assignment in the org', async () => {
     const connection = await Connection.create({
-      authInfo: await AuthInfo.create({ username: session.setup[0].result.username }),
+      authInfo: await AuthInfo.create({ username: session.orgs.get('default').username }),
     });
     const queryResult = await connection.query<{ Id: string; PermissionSet: { Name: string } }>(
       `select PermissionSet.Name from PermissionSetAssignment where AssigneeId = '${createdUserId}'`
