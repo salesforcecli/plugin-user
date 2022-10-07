@@ -20,13 +20,11 @@ describe('force:user:display', () => {
     if (queries) {
       stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
         {
-          getFields: () => {
-            return {
-              username: 'defaultusername@test.com',
-              instanceUrl: 'instanceURL',
-              loginUrl: 'login.test.com',
-            };
-          },
+          getFields: () => ({
+            username: 'defaultusername@test.com',
+            instanceUrl: 'instanceURL',
+            loginUrl: 'login.test.com',
+          }),
         },
       ]);
       stubMethod($$.SANDBOX, Connection.prototype, 'query')
@@ -39,16 +37,14 @@ describe('force:user:display', () => {
     } else {
       stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
         {
-          getFields: () => {
-            return {
-              username: 'defaultusername@test.com',
-              userProfileName: 'profileName',
-              userId: '1234567890',
-              instanceUrl: 'instanceURL',
-              loginUrl: 'login.test.com',
-              password: '-a098u234/1!@#',
-            };
-          },
+          getFields: () => ({
+            username: 'defaultusername@test.com',
+            userProfileName: 'profileName',
+            userId: '1234567890',
+            instanceUrl: 'instanceURL',
+            loginUrl: 'login.test.com',
+            password: '-a098u234/1!@#',
+          }),
         },
       ]);
     }

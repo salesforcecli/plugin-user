@@ -56,6 +56,8 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
       complexity: asNumber(this.flags.complexity, 5),
     };
 
+    // sequentially to avoid auth file collisions until configFile if safer
+    /* eslint-disable no-await-in-loop */
     for (const aliasOrUsername of this.usernames) {
       try {
         // Convert any aliases to usernames
@@ -105,6 +107,7 @@ export class UserPasswordGenerateCommand extends SfdxCommand {
         throw SfError.wrap(err);
       }
     }
+    /* eslint-enable no-await-in-loop */
 
     this.print();
 

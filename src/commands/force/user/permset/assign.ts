@@ -52,6 +52,8 @@ export class UserPermsetAssignCommand extends SfdxCommand {
       const connection: Connection = this.org.getConnection();
       const org = await Org.create({ connection });
 
+      // sequentially to avoid auth file collisions until configFile if safer
+      /* eslint-disable no-await-in-loop */
       for (const aliasOrUsername of aliasOrUsernames) {
         // Attempt to convert any aliases to usernames.  Not found alias will be **assumed** to be a username
         const username = (await StateAggregator.getInstance()).aliases.resolveUsername(aliasOrUsername);
@@ -77,6 +79,7 @@ export class UserPermsetAssignCommand extends SfdxCommand {
           }
         }
       }
+      /* eslint-enable no-await-in-loop */
     } catch (e) {
       if (e instanceof Error || typeof e === 'string') {
         throw SfError.wrap(e);
