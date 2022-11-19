@@ -14,6 +14,10 @@ yarn-error.log
 # compile source
 lib
 
+# build tools  cache
+.wireit
+.eslintcache
+
 # test artifacts
 *xunit.xml
 *checkstyle.xml
