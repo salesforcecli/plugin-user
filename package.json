@@ -93,7 +93,7 @@
   "repository": "salesforcecli/plugin-user",
   "scripts": {
     "build": "wireit",
-    "clean": "wireit",
+    "clean": "sf-clean",
     "clean-all": "sf-clean all",
     "clean:lib": "shx rm -rf lib && shx rm -rf coverage && shx rm -rf .nyc_output && shx rm -f oclif.manifest.json",
     "compile": "wireit",
@@ -118,9 +118,6 @@
         "compile",
         "lint"
       ]
-    },
-    "clean": {
-      "command": "sf-clean"
     },
     "compile": {
       "command": "tsc --build --pretty ",
@@ -154,8 +151,8 @@
       "command": "tsc -p ./test --pretty",
       "files": [
         "test/**/*.ts",
-        "!*.nut.ts",
-        "tsconfig.json"
+        "tsconfig.json",
+        "test/tsconfig.json"
       ],
       "output": []
     },
