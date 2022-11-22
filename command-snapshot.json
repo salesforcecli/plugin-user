@@ -11,17 +11,20 @@
       "setuniqueusername",
       "targetdevhubusername",
       "targetusername"
-    ]
+    ],
+    "alias": []
   },
   {
     "command": "force:user:display",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["apiversion", "json", "loglevel", "targetdevhubusername", "targetusername"]
+    "flags": ["apiversion", "json", "loglevel", "targetdevhubusername", "targetusername"],
+    "alias": []
   },
   {
     "command": "force:user:list",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["apiversion", "json", "loglevel", "targetdevhubusername", "targetusername"]
+    "flags": ["apiversion", "json", "loglevel", "targetdevhubusername", "targetusername"],
+    "alias": []
   },
   {
     "command": "force:user:password:generate",
@@ -35,16 +38,19 @@
       "onbehalfof",
       "targetdevhubusername",
       "targetusername"
-    ]
+    ],
+    "alias": []
   },
   {
     "command": "force:user:permset:assign",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["apiversion", "json", "loglevel", "onbehalfof", "permsetname", "targetusername"]
+    "flags": ["apiversion", "json", "loglevel", "onbehalfof", "permsetname", "targetusername"],
+    "alias": []
   },
   {
     "command": "force:user:permsetlicense:assign",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["apiversion", "json", "loglevel", "name", "onbehalfof", "targetusername"]
+    "flags": ["apiversion", "json", "loglevel", "name", "onbehalfof", "targetusername"],
+    "alias": []
   }
 ]
