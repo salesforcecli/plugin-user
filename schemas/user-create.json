@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/UserCreateOutput",
+  "definitions": {
+    "UserCreateOutput": {
+      "type": "object",
+      "properties": {
+        "orgId": {
+          "type": "string"
+        },
+        "permissionSetAssignments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {}
+        }
+      },
+      "required": ["orgId", "permissionSetAssignments", "fields"],
+      "additionalProperties": false
+    }
+  }
+}

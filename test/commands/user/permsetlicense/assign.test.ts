@@ -4,33 +4,47 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { $$, expect, test } from '@salesforce/command/lib/test';
-import { AuthInfo, Connection, Org } from '@salesforce/core';
-import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
-import { MockTestOrgData } from '@salesforce/core/lib/testSetup';
+import { Connection } from '@salesforce/core';
+// import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { Config } from '@oclif/core';
+import { expect } from 'chai';
+import { UserPermSetLicenseAssignCommand } from '../../../../src/commands/user/permsetlicense/assign';
+import { PSLResult } from '../../../../src/baseCommands/user/permsetlicense/assign';
 
-describe('force:user:permsetlicense:assign', () => {
-  let authInfoStub: StubbedType<AuthInfo>;
-  const testData = new MockTestOrgData();
+describe('user:permsetlicense:assign', () => {
+  const $$ = new TestContext();
+
+  class UserPermSetLicenseAssignCommandTest extends UserPermSetLicenseAssignCommand {
+    public constructor(argv: string[], config: Config) {
+      super(argv, config);
+    }
+
+    public async run(): Promise<PSLResult> {
+      return super.run();
+    }
+  }
+
+  const testOrg = new MockTestOrgData();
+  testOrg.username = 'defaultusername@test.com';
+  const devHub = new MockTestOrgData();
+  devHub.username = 'mydevhub.org';
+  devHub.devHubUsername = 'mydevhub.org';
+  devHub.isDevHub = true;
 
   const goodPSL = 'existingPSL';
   const badPSL = 'nonExistingPSL';
 
-  const defaultUsername = 'defaultusername@test.com';
   const username1 = 'testUser1@test.com';
   const username2 = 'testUser2@test.com';
-  async function prepareStubs() {
-    const authFields = await testData.getConfig();
-    authInfoStub = stubInterface<AuthInfo>($$.SANDBOX, { getFields: () => authFields });
 
-    stubMethod($$.SANDBOX, AuthInfo, 'create').callsFake(async () => authInfoStub);
-    stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
-    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
-    stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(defaultUsername);
+  async function prepareStubs() {
+    await $$.stubAuths(testOrg, devHub);
+    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': testOrg.username });
 
     $$.stubAliases({ testAlias: username1 });
 
-    stubMethod($$.SANDBOX, Connection.prototype, 'singleRecordQuery')
+    $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery')
       // matcher for all user queries
       .withArgs(`select Id from User where Username = '${username1}'`)
       .resolves({ Id: '0051234567890123' })
@@ -43,52 +57,46 @@ describe('force:user:permsetlicense:assign', () => {
       .withArgs(`select Id from PermissionSetLicense where DeveloperName = '${badPSL}' or MasterLabel = '${badPSL}'`)
       .throws();
 
-    stubMethod($$.SANDBOX, Connection.prototype, 'sobject').callsFake(() => ({
+    $$.SANDBOX.stub(Connection.prototype, 'sobject').callsFake(() => ({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       create() {
         return Promise.resolve({ success: true });
       },
     }));
   }
 
-  test
-    .do(async () => {
-      await prepareStubs();
-    })
-    .stdout()
-    .command([
-      'force:user:permsetlicense:assign',
-      '--json',
-      '--onbehalfof',
-      [username1, username2].join(','),
-      '--name',
-      goodPSL,
-    ])
-    .it('should assign the one permset to both users', (ctx) => {
-      const expected = [
-        {
-          name: username1,
-          value: goodPSL,
-        },
-        {
-          name: username2,
-          value: goodPSL,
-        },
-      ];
+  it('should assign the one permset to both users', async () => {
+    await prepareStubs();
+    const expected = [
+      {
+        name: username1,
+        value: goodPSL,
+      },
+      {
+        name: username2,
+        value: goodPSL,
+      },
+    ];
+    const userPermSetLicenseAssignCommand = new UserPermSetLicenseAssignCommandTest(
+      ['--json', '--onbehalfof', [username1, username2].join(','), '--name', goodPSL],
+      {} as Config
+    );
+    const result = await userPermSetLicenseAssignCommand.run();
+    expect(result.failures).to.deep.equal([]);
+    expect(result.successes).to.deep.equal(expected);
+  });
 
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result.failures).to.deep.equal([]);
-      expect(result.successes).to.deep.equal(expected);
-    });
-
-  test
-    .do(async () => {
-      await prepareStubs();
-    })
-    .stdout()
-    .command(['force:user:permsetlicense:assign', '--json', '--name', badPSL])
-    .it('should fail with the correct error message when no PSL exists', (ctx) => {
-      const result = JSON.parse(ctx.stdout);
-      expect(result.message).to.equal('PermissionSetLicense not found');
-      expect(result.status).to.equal(1);
-    });
+  it('should fail with the correct error message when no PSL exists', async () => {
+    await prepareStubs();
+    const userPermSetLicenseAssignCommand = new UserPermSetLicenseAssignCommandTest(
+      ['--json', '--name', badPSL],
+      {} as Config
+    );
+    try {
+      await userPermSetLicenseAssignCommand.run();
+    } catch (e) {
+      expect(e.message).to.equal('PermissionSetLicense not found');
+    }
+  });
 });

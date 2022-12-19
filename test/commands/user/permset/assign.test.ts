@@ -5,79 +5,100 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { $$, expect, test } from '@salesforce/command/lib/test';
-import { Connection, Org, User } from '@salesforce/core';
-import { stubMethod } from '@salesforce/ts-sinon';
+import { Connection, User } from '@salesforce/core';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { expect } from 'chai';
+import { Config } from '@oclif/core';
+import { UserPermSetAssignCommand } from '../../../../src/commands/user/permset/assign';
+import { PermsetAssignResult } from '../../../../src/baseCommands/user/permset/assign';
 
-describe('force:user:permset:assign', () => {
+describe('user:permset:assign', () => {
+  const $$ = new TestContext();
+
+  class UserPermSetAssignCommandTest extends UserPermSetAssignCommand {
+    public constructor(argv: string[], config: Config) {
+      super(argv, config);
+    }
+
+    public async run(): Promise<PermsetAssignResult> {
+      return super.run();
+    }
+  }
+
+  const testOrg = new MockTestOrgData();
+  testOrg.username = 'defaultusername@test.com';
+  const devHub = new MockTestOrgData();
+  devHub.username = 'mydevhub.org';
+  devHub.devHubUsername = 'mydevhub.org';
+  devHub.isDevHub = true;
+
   async function prepareStubs(throws = false) {
-    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
-    stubMethod($$.SANDBOX, Connection.prototype, 'query').resolves({ records: [{ Id: 1234567890 }] });
-    stubMethod($$.SANDBOX, Org, 'create').callsFake(async () => Org.prototype);
-    stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns('defaultusername@test.com');
-    stubMethod($$.SANDBOX, User, 'create').callsFake(async () => User.prototype);
+    await $$.stubAuths(testOrg, devHub);
+    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': testOrg.username });
+
+    $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'query').resolves({
+      records: [{ Id: '1234567890' }],
+      done: true,
+      totalSize: 1,
+    });
+
     if (throws) {
-      stubMethod($$.SANDBOX, User.prototype, 'assignPermissionSets').throws(
+      $$.SANDBOX.stub(User.prototype, 'assignPermissionSets').throws(
         new Error('Permission set "abc" not found in target org. Do you need to push source?')
       );
     } else {
-      stubMethod($$.SANDBOX, User.prototype, 'assignPermissionSets').resolves();
+      $$.SANDBOX.stub(User.prototype, 'assignPermissionSets').resolves();
     }
     $$.stubAliases({ testAlias: 'testUser2@test.com' });
   }
 
-  test
-    .do(async () => {
-      await prepareStubs();
-    })
-    .stdout()
-    .command([
-      'force:user:permset:assign',
-      '--json',
-      '--onbehalfof',
-      'testAlias, testUser2@test.com',
-      '--permsetname',
-      'DreamHouse, LargeDreamHouse',
-    ])
-    .it('should assign both permsets to both users', (ctx) => {
-      // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          name: 'testAlias',
-          value: 'DreamHouse',
-        },
-        {
-          name: 'testAlias',
-          value: 'LargeDreamHouse',
-        },
-        {
-          name: 'testUser2@test.com',
-          value: 'DreamHouse',
-        },
-        {
-          name: 'testUser2@test.com',
-          value: 'LargeDreamHouse',
-        },
-      ];
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result.successes).to.deep.equal(expected);
-    });
-
-  test
-    .do(async () => {
-      await prepareStubs(true);
-    })
-    .stdout()
-    .command(['force:user:permset:assign', '--json', '--permsetname', 'PERM2'])
-    .it('should fail with the correct error message', (ctx) => {
-      // testUser1@test.com is aliased to testUser
-      const expected = [
-        {
-          name: 'defaultusername@test.com',
-          message: 'Permission set "abc" not found in target org. Do you need to push source?',
-        },
-      ];
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result.failures).to.deep.equal(expected);
-    });
+  it('should assign both permsets to both users', async () => {
+    await prepareStubs();
+    // testUser1@test.com is aliased to testUser
+    const expected = [
+      {
+        name: 'testAlias',
+        value: 'DreamHouse',
+      },
+      {
+        name: 'testAlias',
+        value: 'LargeDreamHouse',
+      },
+      {
+        name: 'testUser2@test.com',
+        value: 'DreamHouse',
+      },
+      {
+        name: 'testUser2@test.com',
+        value: 'LargeDreamHouse',
+      },
+    ];
+    const userPermSetAssign = new UserPermSetAssignCommandTest(
+      [
+        '--json',
+        '--on-behalf-of',
+        'testAlias',
+        'testUser2@test.com',
+        '--perm-set-name',
+        'DreamHouse',
+        'LargeDreamHouse',
+      ],
+      {} as Config
+    );
+    const result = await userPermSetAssign.run();
+    expect(result.successes).to.deep.equal(expected);
+  });
+  it('should fail with the correct error message', async () => {
+    await prepareStubs(true);
+    // testUser1@test.com is aliased to testUser
+    const expected = [
+      {
+        name: 'defaultusername@test.com',
+        message: 'Permission set "abc" not found in target org. Do you need to push source?',
+      },
+    ];
+    const userPermSetAssign = new UserPermSetAssignCommandTest(['--json', '--permsetname', 'PERM2'], {} as Config);
+    const result = await userPermSetAssign.run();
+    expect(result.failures).to.deep.equal(expected);
+  });
 });

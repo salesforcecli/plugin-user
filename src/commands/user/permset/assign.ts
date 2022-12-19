@@ -6,42 +6,38 @@
  */
 
 import { Messages, Org } from '@salesforce/core';
-import { Flags, arrayWithDeprecation, loglevel, orgApiVersionFlagWithDeprecations } from '@salesforce/sf-plugins-core';
+import { Flags } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import { PermsetAssignResult, UserPermSetAssignBaseCommand } from '../../../../baseCommands/user/permset/assign';
+import { PermsetAssignResult, UserPermSetAssignBaseCommand } from '../../../baseCommands/user/permset/assign';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
 
-export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
-  public static readonly hidden = true;
+export class UserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
+  public static readonly aliases = ['org:assign:permset'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
-    'perm-set-name': arrayWithDeprecation({
+    'perm-set-name': Flags.string({
       aliases: ['permsetname', 'name'],
       char: 'n',
       description: messages.getMessage('flags.permsetName'),
       required: true,
+      multiple: true,
     }),
-    'on-behalf-of': arrayWithDeprecation({
-      char: 'o',
+    'on-behalf-of': Flags.string({
+      char: 'b',
       description: messages.getMessage('flags.onBehalfOf'),
       aliases: ['onbehalfof'],
+      multiple: true,
     }),
-    'target-org': Flags.requiredOrg({
-      char: 'u',
-      summary: messages.getMessage('flags.target-org.summary'),
-      aliases: ['targetusername'],
-      required: true,
-    }),
-    'api-version': orgApiVersionFlagWithDeprecations,
-    loglevel,
+    'target-org': Flags.requiredOrg({ summary: messages.getMessage('flags.target-org.summary'), required: true }),
+    'api-version': Flags.orgApiVersion(),
   };
 
   public async run(): Promise<PermsetAssignResult> {
-    const { flags } = await this.parse(ForceUserPermSetAssignCommand);
+    const { flags } = await this.parse(UserPermSetAssignCommand);
     this.aliasOrUsernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
     this.permSetNames = flags['perm-set-name'];
     this.connection = flags['target-org'].getConnection(flags['api-version']);

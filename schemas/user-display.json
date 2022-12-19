@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/UserDisplayResult",
+  "definitions": {
+    "UserDisplayResult": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "profileName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "orgId": {
+          "type": "string"
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "instanceUrl": {
+          "type": "string"
+        },
+        "loginUrl": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["username", "profileName", "id", "orgId"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -6,9 +6,16 @@
  */
 
 import * as os from 'os';
-import { SfdxCommand } from '@salesforce/command';
-import { AuthFields, AuthInfo, Connection, Logger, Messages, SfError, sfdc, StateAggregator } from '@salesforce/core';
-import { getString } from '@salesforce/ts-types';
+import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
+import { ensureString, getString } from '@salesforce/ts-types';
+import {
+  Flags,
+  loglevel,
+  orgApiVersionFlagWithDeprecations,
+  requiredHubFlagWithDeprecations,
+  requiredOrgFlagWithDeprecations,
+  SfCommand,
+} from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
@@ -18,43 +25,49 @@ export type UserDisplayResult = {
   profileName: string;
   id: string;
   orgId: string;
-  accessToken: string;
-  instanceUrl: string;
-  loginUrl: string;
+  accessToken?: string;
+  instanceUrl?: string;
+  loginUrl?: string;
   alias?: string;
   password?: string;
 };
 
-export class UserDisplayCommand extends SfdxCommand {
+export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
+  public static readonly aliases = ['force:user:display', 'org:display:user'];
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
-  public static readonly requiresUsername = true;
-  public static readonly supportsDevhubUsername = true;
+  public static readonly flags = {
+    'target-dev-hub': { ...requiredHubFlagWithDeprecations, required: false },
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
+    verbose: Flags.boolean(),
+  };
+
+  private logger: Logger;
 
   public async run(): Promise<UserDisplayResult> {
-    this.ux.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
+    const { flags } = await this.parse(UserDisplayCommand);
+    this.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
     this.logger = await Logger.child(this.constructor.name);
-    if (sfdc.matchesAccessToken(this.flags.targetusername as string)) {
-      throw new SfError(messages.getMessage('accessTokenError'), 'accessTokenErrorError', [
-        messages.getMessage('accessTokenAction'),
-      ]);
-    }
-    const username: string = this.org.getUsername();
-    const userAuthDataArray: AuthInfo[] = await this.org.readUserAuthFiles();
-    // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
-    const userAuthData: AuthFields = userAuthDataArray
-      .find((uat) => uat.getFields().username === username)
-      .getFields(true);
-    const conn: Connection = this.org.getConnection();
 
-    let profileName: string = userAuthData.userProfileName;
-    let userId: string = userAuthData.userId;
+    const username = ensureString(flags['target-org'].getUsername());
+    const userAuthDataArray = await flags['target-org'].readUserAuthFiles();
+    // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
+    const userAuthData: AuthFields | undefined = userAuthDataArray
+      .find((uat) => uat.getFields().username === username)
+      ?.getFields(true);
+    const conn: Connection = flags['target-org'].getConnection(flags['api-version']);
+
+    let profileName = userAuthData?.userProfileName;
+    let userId = userAuthData?.userId;
 
     try {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
         const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
-        profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name');
+        profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
       }
     } catch (err) {
       profileName = 'unknown';
@@ -66,7 +79,7 @@ export class UserDisplayCommand extends SfdxCommand {
     try {
       if (!userId) {
         const USER_QUERY = `SELECT id FROM User WHERE username='${username}'`;
-        userId = getString(await conn.query(USER_QUERY), 'records[0].Id');
+        userId = getString(await conn.query(USER_QUERY), 'records[0].Id') as string;
       }
     } catch (err) {
       userId = 'unknown';
@@ -76,11 +89,11 @@ export class UserDisplayCommand extends SfdxCommand {
     }
 
     const result: UserDisplayResult = {
-      accessToken: conn.accessToken,
+      accessToken: conn.accessToken as string,
       id: userId,
-      instanceUrl: userAuthData.instanceUrl,
-      loginUrl: userAuthData.loginUrl,
-      orgId: this.org.getOrgId(),
+      instanceUrl: userAuthData?.instanceUrl,
+      loginUrl: userAuthData?.loginUrl,
+      orgId: flags['target-org'].getOrgId(),
       profileName,
       username,
     };
@@ -91,12 +104,12 @@ export class UserDisplayCommand extends SfdxCommand {
       result.alias = alias;
     }
 
-    if (userAuthData.password) {
+    if (userAuthData?.password) {
       result.password = userAuthData.password;
     }
 
-    this.ux.warn(messages.getMessage('securityWarning'));
-    this.ux.log('');
+    this.warn(messages.getMessage('securityWarning'));
+    this.log('');
     this.print(result);
 
     return result;
@@ -107,20 +120,20 @@ export class UserDisplayCommand extends SfdxCommand {
       key: { header: 'key' },
       label: { header: 'label' },
     };
-
-    const tableRow = [];
+    type TT = { key: string; label: string };
+    const tableRow: TT[] = [];
     // to get proper capitalization and spacing, enter the rows
-    tableRow.push({ key: 'Username', label: result.username });
+    tableRow.push({ key: 'Username', label: result.username ?? 'unknown' });
     tableRow.push({ key: 'Profile Name', label: result.profileName });
     tableRow.push({ key: 'Id', label: result.id });
     tableRow.push({ key: 'Org Id', label: result.orgId });
-    tableRow.push({ key: 'Access Token', label: result.accessToken });
-    tableRow.push({ key: 'Instance Url', label: result.instanceUrl });
-    tableRow.push({ key: 'Login Url', label: result.loginUrl });
+    tableRow.push({ key: 'Access Token', label: result.accessToken ?? '' });
+    tableRow.push({ key: 'Instance Url', label: result.instanceUrl ?? '' });
+    tableRow.push({ key: 'Login Url', label: result.loginUrl ?? '' });
     if (result.alias) tableRow.push({ key: 'Alias', label: result.alias });
     if (result.password) tableRow.push({ key: 'Password', label: result.password });
 
-    this.ux.styledHeader('User Description');
-    this.ux.table(tableRow, columns);
+    this.styledHeader('User Description');
+    this.table(tableRow, columns);
   }
 }

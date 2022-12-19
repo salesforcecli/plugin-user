@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/UserList",
+  "definitions": {
+    "UserList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AuthList"
+      }
+    },
+    "AuthList": {
+      "type": "object",
+      "properties": {
+        "defaultMarker": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "profileName": {
+          "type": "string"
+        },
+        "orgId": {
+          "type": "string"
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "instanceUrl": {
+          "type": "string"
+        },
+        "loginUrl": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

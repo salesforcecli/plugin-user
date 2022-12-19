@@ -5,13 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as os from 'os';
-import { SfdxCommand } from '@salesforce/command';
-import { Messages, Connection, StateAggregator } from '@salesforce/core';
+import { Connection, Messages, Org, StateAggregator } from '@salesforce/core';
+import {
+  Flags,
+  loglevel,
+  orgApiVersionFlagWithDeprecations,
+  requiredOrgFlagWithDeprecations,
+  SfCommand,
+} from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
 
-export type AuthList = {
+export type AuthList = Partial<{
   defaultMarker: string;
   alias: string;
   username: string;
@@ -21,23 +27,35 @@ export type AuthList = {
   instanceUrl: string;
   loginUrl: string;
   userId: string;
-};
+}>;
+
+export type UserList = AuthList[];
 
 type UserInfo = { Username: string; ProfileId: string; Id: string };
 type UserInfoMap = Record<string, UserInfo>;
 type ProfileInfo = { Id: string; Name: string };
 type ProfileInfoMap = Record<string, string>;
 
-export class UserListCommand extends SfdxCommand {
+export class UserListCommand extends SfCommand<UserList> {
+  public static readonly aliases = ['force:user:list', 'org:list:users'];
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
-  public static readonly requiresUsername = true;
-  public static readonly supportsDevhubUsername = true;
-  private conn: Connection;
+  public static readonly flags = {
+    'target-dev-hub': Flags.optionalOrg({ char: 'v', summary: messages.getMessage('flags.target-hub.summary') }),
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
+  };
 
-  public async run(): Promise<AuthList[]> {
-    this.ux.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
-    this.conn = this.org.getConnection();
+  private conn: Connection;
+  private org: Org;
+
+  public async run(): Promise<UserList> {
+    const { flags } = await this.parse(UserListCommand);
+    this.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
+    this.org = flags['target-org'];
+    this.conn = flags['target-org'].getConnection(flags['api-version']);
     // parallelize 2 org queries and 2 fs operations
     const [userInfos, profileInfos, userAuthData, aliases] = await Promise.all([
       this.buildUserInfos(),
@@ -46,16 +64,18 @@ export class UserListCommand extends SfdxCommand {
       (await StateAggregator.getInstance()).aliases,
     ]);
 
-    const authList: AuthList[] = userAuthData.map((authData) => {
+    const authList: UserList = userAuthData.map((authData) => {
       const username = authData.getUsername();
-      // if they passed in a alias and it maps to something we have an Alias.
+      // if they passed in an alias and it maps to something we have an Alias.
       const alias = aliases.get(username);
+      const userInfo = userInfos[username];
+      const profileName = userInfo && profileInfos[userInfo.ProfileId];
       return {
-        defaultMarker: this.org.getUsername() === username ? '(A)' : '',
-        alias: alias || '',
+        defaultMarker: flags['target-org']?.getUsername() === username ? '(A)' : '',
+        alias: alias ?? '',
         username,
-        profileName: profileInfos[userInfos[username].ProfileId],
-        orgId: this.org.getOrgId(),
+        profileName,
+        orgId: flags['target-org']?.getOrgId(),
         accessToken: authData.getFields().accessToken,
         instanceUrl: authData.getFields().instanceUrl,
         loginUrl: authData.getFields().loginUrl,
@@ -71,8 +91,8 @@ export class UserListCommand extends SfdxCommand {
       userId: { header: 'User Id' },
     };
 
-    this.ux.styledHeader(`Users in org ${this.org.getOrgId()}`);
-    this.ux.table(authList, columns);
+    this.styledHeader(`Users in org ${flags['target-org']?.getOrgId()}`);
+    this.table(authList, columns);
 
     return authList;
   }
@@ -92,6 +112,7 @@ export class UserListCommand extends SfdxCommand {
         return userInfo;
       }, {});
     }
+    return {};
   }
 
   /**
@@ -109,5 +130,6 @@ export class UserListCommand extends SfdxCommand {
         return profileInfo;
       }, {});
     }
+    return {};
   }
 }

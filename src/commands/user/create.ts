@@ -5,68 +5,88 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as os from 'os';
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import {
   AuthInfo,
   Connection,
   DefaultUserFields,
-  StateAggregator,
   Logger,
   Messages,
   REQUIRED_FIELDS,
   SfError,
+  StateAggregator,
   User,
   UserFields,
 } from '@salesforce/core';
-import { omit, mapKeys, toBoolean } from '@salesforce/kit';
-import { getString, Dictionary, isArray } from '@salesforce/ts-types';
-import { flags, FlagsConfig, SfdxCommand } from '@salesforce/command';
+import { mapKeys, omit, parseJson, toBoolean } from '@salesforce/kit';
+import { Dictionary, ensureString, getString, isArray } from '@salesforce/ts-types';
+import {
+  Flags,
+  loglevel,
+  orgApiVersionFlagWithDeprecations,
+  parseVarArgs,
+  requiredHubFlagWithDeprecations,
+  requiredOrgFlagWithDeprecations,
+  SfCommand,
+} from '@salesforce/sf-plugins-core';
+import { Interfaces } from '@oclif/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'create');
 
-interface SuccessMsg {
+type SuccessMsg = {
   name: string;
   value: string;
-}
+};
 
-interface FailureMsg {
+type FailureMsg = {
   name: string;
   message: string;
-}
+};
 
-const permsetsStringToArray = (fieldsPermsets: string | string[]): string[] => {
+const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {
   if (!fieldsPermsets) return [];
-  return isArray<string>(fieldsPermsets)
+  return isArray(fieldsPermsets)
     ? fieldsPermsets
     : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
 };
 
-export class UserCreateCommand extends SfdxCommand {
+export class UserCreateCommand extends SfCommand<UserCreateOutput> {
+  public static strict = false;
+  public static readonly aliases = ['force:user:create', 'org:create:user'];
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
-  public static readonly requiresUsername = true;
-  public static readonly requiresDevhubUsername = true;
-  public static readonly varargs = true;
-  public static readonly flagsConfig: FlagsConfig = {
-    setalias: flags.string({
+  public static readonly flags = {
+    'set-alias': Flags.string({
       char: 'a',
-      description: messages.getMessage('flags.alias'),
+      summary: messages.getMessage('flags.alias.summary'),
+      aliases: ['setalias'],
     }),
-    definitionfile: flags.string({
+    'definition-file': Flags.string({
       char: 'f',
-      description: messages.getMessage('flags.definitionfile'),
+      summary: messages.getMessage('flags.definitionfile.summary'),
+      aliases: ['definitionfile'],
     }),
-    setuniqueusername: flags.boolean({
+    'set-unique-username': Flags.boolean({
       char: 's',
-      description: messages.getMessage('flags.setuniqueusername'),
+      summary: messages.getMessage('flags.setuniqueusername.summary'),
+      aliases: ['setuniqueusername'],
     }),
+    'target-dev-hub': requiredHubFlagWithDeprecations,
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
   };
 
-  private user: User;
+  private targetOrgUser: User;
   private successes: SuccessMsg[] = [];
   private failures: FailureMsg[] = [];
-  private authInfo: AuthInfo;
+  private newUserAuthInfo: AuthInfo;
+  private logger: Logger;
+  private flags: Interfaces.InferredFlags<typeof UserCreateCommand.flags>;
+  // eslint-disable-next-line sf-plugin/no-deprecated-properties
+  private varargs: Record<string, unknown>;
 
   /**
    * removes fields that cause errors in salesforce APIs within sfdx-core's createUser method
@@ -79,17 +99,20 @@ export class UserCreateCommand extends SfdxCommand {
   }
 
   public async run(): Promise<UserCreateOutput> {
+    const { flags, argv } = await this.parse(UserCreateCommand);
+    this.varargs = parseVarArgs({}, argv);
+    this.flags = flags as Interfaces.InferredFlags<typeof UserCreateCommand.flags>;
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
-      templateUser: this.org.getUsername(),
+      templateUser: this.flags['target-org'].getUsername() ?? '',
     });
-    this.user = await User.create({ org: this.org });
+    this.targetOrgUser = await User.create({ org: this.flags['target-org'] });
 
     // merge defaults with provided values with cli > file > defaults
     const fields = await this.aggregateFields(defaultUserFields.getFields());
 
     try {
-      this.authInfo = await this.user.createUser(UserCreateCommand.stripInvalidAPIFields(fields));
+      this.newUserAuthInfo = await this.targetOrgUser.createUser(UserCreateCommand.stripInvalidAPIFields(fields));
     } catch (e) {
       if (!(e instanceof Error)) {
         throw e;
@@ -97,7 +120,7 @@ export class UserCreateCommand extends SfdxCommand {
       await this.catchCreateUser(e, fields);
     }
 
-    if (fields.profileName) await this.authInfo.save({ userProfileName: fields.profileName });
+    if (fields.profileName) await this.newUserAuthInfo.save({ userProfileName: fields.profileName });
 
     // Assign permission sets to the created user
     if (fields.permsets) {
@@ -106,7 +129,10 @@ export class UserCreateCommand extends SfdxCommand {
         // it will either be a comma separated string, or an array, force it into an array
         const permsetArray = permsetsStringToArray(fields.permsets);
 
-        await this.user.assignPermissionSets(this.authInfo.getFields().userId, permsetArray);
+        await this.targetOrgUser.assignPermissionSets(
+          ensureString(this.newUserAuthInfo.getFields().userId),
+          permsetArray
+        );
         this.successes.push({
           name: 'Permission Set Assignment',
           value: permsetArray.join(','),
@@ -124,10 +150,10 @@ export class UserCreateCommand extends SfdxCommand {
     if (fields.generatePassword) {
       try {
         const password = User.generatePasswordUtf8();
-        await this.user.assignPassword(this.authInfo, password);
+        await this.targetOrgUser.assignPassword(this.newUserAuthInfo, password);
         password.value((pass: Buffer) => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          this.authInfo.save({ password: pass.toString('utf-8') });
+          this.newUserAuthInfo.save({ password: pass.toString('utf-8') });
           this.successes.push({
             name: 'Password Assignment',
             value: pass.toString(),
@@ -143,19 +169,19 @@ export class UserCreateCommand extends SfdxCommand {
     }
 
     // Set the alias if specified
-    if (this.flags.setalias && typeof this.flags.setalias === 'string') {
+    if (this.flags['set-alias']) {
       const stateAggregator = await StateAggregator.getInstance();
-      stateAggregator.aliases.set(this.flags.setalias, fields.username);
+      stateAggregator.aliases.set(this.flags['set-alias'], fields.username);
       await stateAggregator.aliases.write();
     }
 
-    fields.id = this.authInfo.getFields().userId;
+    fields.id = ensureString(this.newUserAuthInfo.getFields().userId);
     this.print(fields);
     this.setExitCode();
 
     const { permsets, ...fieldsWithoutPermsets } = fields;
     return {
-      orgId: this.org.getOrgId(),
+      orgId: this.flags['target-org'].getOrgId(),
       permissionSetAssignments: permsetsStringToArray(permsets),
       fields: { ...mapKeys(fieldsWithoutPermsets, (value, key) => key.toLowerCase()) },
     };
@@ -164,8 +190,8 @@ export class UserCreateCommand extends SfdxCommand {
   private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
     // For Gacks, the error message is on response.body[0].message but for handled errors
     // the error message is on response.body.Errors[0].description.
-    const errMessage = getString(respBody, 'message') || 'Unknown Error';
-    const conn: Connection = this.org.getConnection();
+    const errMessage = getString(respBody, 'message') ?? 'Unknown Error';
+    const conn: Connection = this.flags['target-org'].getConnection(this.flags['api-version']);
 
     // Provide a more user friendly error message for certain server errors.
     if (errMessage.includes('LICENSE_LIMIT_EXCEEDED')) {
@@ -184,10 +210,10 @@ export class UserCreateCommand extends SfdxCommand {
     // username can be overridden both in the file or varargs, save it to check if it was changed somewhere
     const defaultUsername = defaultFields.username;
 
-    // start with the default fields, then add the fields from the file, then (possibly overwritting) add the fields from the cli varargs param
-    if (this.flags.definitionfile && typeof this.flags.definitionfile === 'string') {
+    // start with the default fields, then add the fields from the file, then (possibly overwriting) add the fields from the cli varargs param
+    if (this.flags['definition-file']) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-      const content = (await fse.readJson(this.flags.definitionfile)) as UserFields;
+      const content = parseJson(await fs.promises.readFile(this.flags['definition-file'], 'utf-8')) as UserFields;
       Object.keys(content).forEach((key) => {
         // cast entries to lowercase to standardize
         defaultFields[lowerFirstLetter(key)] = content[key] as keyof typeof REQUIRED_FIELDS;
@@ -209,17 +235,17 @@ export class UserCreateCommand extends SfdxCommand {
       });
     }
 
-    // check if "username" was passed along with "setuniqueusername" flag, if so append org id
-    if (this.flags.setuniqueusername && defaultFields.username !== defaultUsername) {
-      defaultFields.username = `${defaultFields.username}.${this.org.getOrgId().toLowerCase()}`;
+    // check if "username" was passed along with "set-unique-username" flag, if so append org id
+    if (this.flags['set-unique-username'] && defaultFields.username !== defaultUsername) {
+      defaultFields.username = `${defaultFields.username}.${this.flags['target-org'].getOrgId().toLowerCase()}`;
     }
 
     // check if "profileName" was passed, this needs to become a profileId before calling User.create
     if (defaultFields['profileName']) {
       const name = (defaultFields['profileName'] ?? 'Standard User') as string;
       this.logger.debug(`Querying org for profile name [${name}]`);
-      const profile = await this.org
-        .getConnection()
+      const profile = await this.flags['target-org']
+        .getConnection(this.flags['api-version'])
         .singleRecordQuery<{ Id: string }>(`SELECT id FROM profile WHERE name='${name}'`);
       defaultFields.profileId = profile.Id;
     }
@@ -231,7 +257,7 @@ export class UserCreateCommand extends SfdxCommand {
     const userCreatedSuccessMsg = messages.getMessage('success', [
       fields.username,
       fields.id,
-      this.org.getOrgId(),
+      this.flags['target-org'].getOrgId(),
       os.EOL,
       fields.username,
     ]);
@@ -239,13 +265,13 @@ export class UserCreateCommand extends SfdxCommand {
     // we initialize to be an empty array to be able to push onto it
     // so we need to check that the size is greater than 0 to know we had a failure
     if (this.failures.length > 0) {
-      this.ux.styledHeader('Partial Success');
-      this.ux.log(userCreatedSuccessMsg);
-      this.ux.log('');
-      this.ux.styledHeader('Failures');
-      this.ux.table(this.failures, { name: { header: 'Action' }, message: { header: 'Error Message' } });
+      this.styledHeader('Partial Success');
+      this.log(userCreatedSuccessMsg);
+      this.log('');
+      this.styledHeader('Failures');
+      this.table(this.failures, { name: { header: 'Action' }, message: { header: 'Error Message' } });
     } else {
-      this.ux.log(userCreatedSuccessMsg);
+      this.log(userCreatedSuccessMsg);
     }
   }
 

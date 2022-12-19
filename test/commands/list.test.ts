@@ -5,9 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { $$, expect, test } from '@salesforce/command/lib/test';
 import { Connection, Org } from '@salesforce/core';
-import { stubMethod } from '@salesforce/ts-sinon';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { Config } from '@oclif/core';
+import { expect } from 'chai';
+import { UserListCommand } from '../../src/commands/user/list';
 
 const user1 = 'defaultusername@test.com';
 const user2 = 'otherUser@test.com';
@@ -36,11 +38,40 @@ const expected = [
   },
 ];
 
-describe('force:user:list', () => {
+describe('user:list', () => {
+  const $$ = new TestContext();
+
+  const user1Org = new MockTestOrgData();
+  user1Org.username = user1;
+  user1Org.orgId = 'abc123';
+  user1Org.aliases = ['testAlias'];
+  user1Org.accessToken = 'accessToken';
+  user1Org.instanceUrl = 'instanceURL';
+  user1Org.loginUrl = 'login.test.com';
+  user1Org.userId = '0052D0000043PbGQAU';
+
+  const user2Org = new MockTestOrgData();
+  user2Org.username = user2;
+  user2Org.orgId = 'abc123';
+  user2Org.aliases = [];
+  user2Org.accessToken = 'accessToken';
+  user2Org.instanceUrl = 'instanceURL';
+  user2Org.loginUrl = 'login.test.com';
+  user2Org.userId = '0052D0000043PcBQAU';
+
+  const devHub = new MockTestOrgData();
+  devHub.username = 'mydevhub.org';
+  devHub.devHubUsername = 'mydevhub.org';
+  devHub.isDevHub = true;
+
   beforeEach(async () => {
-    stubMethod($$.SANDBOX, Org, 'create').resolves(Org.prototype);
-    stubMethod($$.SANDBOX, Org.prototype, 'getConnection').returns(Connection.prototype);
-    stubMethod($$.SANDBOX, Org.prototype, 'readUserAuthFiles').returns([
+    await $$.stubAuths(user1Org, devHub);
+    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': user1Org.username });
+    $$.stubAliases({ testAlias: user1 });
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    $$.SANDBOX.stub(Org.prototype, 'readUserAuthFiles').returns([
       {
         getUsername: () => user1,
         getFields: () => ({
@@ -64,10 +95,7 @@ describe('force:user:list', () => {
         }),
       },
     ]);
-    stubMethod($$.SANDBOX, Org.prototype, 'getOrgId').returns('abc123');
-    stubMethod($$.SANDBOX, Org.prototype, 'getUsername').returns(user1);
-    $$.stubAliases({ testAlias: user1 });
-    stubMethod($$.SANDBOX, Connection.prototype, 'query')
+    $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'query')
       .withArgs('SELECT username, profileid, id FROM User')
       .resolves({
         records: [
@@ -87,6 +115,8 @@ describe('force:user:list', () => {
             Id: '0052D0000043PbGQAU',
           },
         ],
+        done: true,
+        totalSize: 3,
       })
       .withArgs('SELECT id, name FROM Profile')
       .resolves({
@@ -100,22 +130,26 @@ describe('force:user:list', () => {
             Name: 'Analytics Cloud Integration User',
           },
         ],
+        done: true,
+        totalSize: 2,
       });
   });
 
-  test
-    .stdout()
-    .command(['force:user:list', '--json', '--targetusername', 'testUser', '--targetdevhubusername', 'devhub@test.com'])
-    .it('should display the correct information invoked with an alias', (ctx) => {
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result).to.deep.equal(expected);
-    });
+  it('should display the correct information invoked with an alias', async () => {
+    const listComm = new UserListCommand(
+      ['--json', '--target-org', 'testAlias', '--target-dev-hub', devHub.username],
+      {} as Config
+    );
+    const result = await listComm.run();
+    expect(result).to.deep.equal(expected);
+  });
 
-  test
-    .stdout()
-    .command(['force:user:list', '--json', '--targetusername', user1, '--targetdevhubusername', 'devhub@test.com'])
-    .it('should display the correct information invoked by name', (ctx) => {
-      const result = JSON.parse(ctx.stdout).result;
-      expect(result).to.deep.equal(expected);
-    });
+  it('should display the correct information invoked by name', async () => {
+    const listComm = new UserListCommand(
+      ['--json', '--target-org', user1, '--target-dev-hub', devHub.username],
+      {} as Config
+    );
+    const result = await listComm.run();
+    expect(result).to.deep.equal(expected);
+  });
 });

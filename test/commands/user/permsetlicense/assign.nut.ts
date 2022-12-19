@@ -7,8 +7,8 @@
 import * as path from 'path';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { PSLResult } from '../../../../src/commands/force/user/permsetlicense/assign';
-import { UserCreateOutput } from '../../../../src/commands/force/user/create';
+import { PSLResult } from '../../../../src/baseCommands/user/permsetlicense/assign';
+import { UserCreateOutput } from '../../../../src/commands/user/create';
 
 describe('PermissionSetLicense tests', () => {
   const testPSL = 'IdentityConnect';
@@ -30,20 +30,20 @@ describe('PermissionSetLicense tests', () => {
       ],
     });
 
-    execCmd('force:source:push', { cli: 'sfdx' });
+    execCmd('source:push', { cli: 'sfdx' });
   });
 
   it('assigns a psl to default user', () => {
-    const commandResult = execCmd<PSLResult>(`force:user:permsetlicense:assign -n ${testPSL} --json`, {
+    const commandResult = execCmd<PSLResult>(`user:permsetlicense:assign -n ${testPSL} --json`, {
       ensureExitCode: 0,
-    }).jsonOutput.result;
-    expect(commandResult.failures).to.be.an('array').with.length(0);
-    expect(commandResult.successes.every((success) => success.value === testPSL)).to.be.true;
+    }).jsonOutput?.result;
+    expect(commandResult?.failures).to.be.an('array').with.length(0);
+    expect(commandResult?.successes.every((success) => success.value === testPSL)).to.be.true;
     expect(commandResult).to.not.have.property('warnings');
   });
 
   it('assigns a psl to default user successfully if already assigned', () => {
-    const commandResult = execCmd<PSLResult>(`force:user:permsetlicense:assign -n ${testPSL} --json`, {
+    const commandResult = execCmd<PSLResult>(`user:permsetlicense:assign -n ${testPSL} --json`, {
       ensureExitCode: 0,
     }).jsonOutput as { status: number; result: PSLResult; warnings: string[] };
     expect(commandResult.result.failures).to.be.an('array').with.length(0);
@@ -54,7 +54,7 @@ describe('PermissionSetLicense tests', () => {
 
   it('fails for non-existing psl', () => {
     const badPSL = 'badPSL';
-    execCmd<PSLResult>(`force:user:permsetlicense:assign -n ${badPSL} --json`, {
+    execCmd<PSLResult>(`user:permsetlicense:assign -n ${badPSL} --json`, {
       ensureExitCode: 1,
     });
   });
@@ -62,25 +62,25 @@ describe('PermissionSetLicense tests', () => {
   describe('multiple PSL via onBehalfOf', () => {
     it('assigns a psl to multiple users via onBehalfOf', async () => {
       const anotherPSL = 'SurveyCreatorPsl';
-      const originalUsername = session.orgs.get('default').username;
+      const originalUsername = session.orgs.get('default')?.username;
 
       expect(originalUsername).to.be.a('string');
       // create a second user
       const secondUsername = execCmd<UserCreateOutput>(
-        `force:user:create --json -a Other -f ${path.join('config', 'fullUser.json')}`,
+        `user:create --json -a Other -f ${path.join('config', 'fullUser.json')}`,
         {
           ensureExitCode: 0,
         }
-      ).jsonOutput.result.fields.username as string;
+      ).jsonOutput?.result.fields.username as string;
       expect(secondUsername).to.be.a('string');
       const commandResult = execCmd<PSLResult>(
-        `force:user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},Other --json`,
+        `user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},Other --json`,
         {
           ensureExitCode: 0,
         }
-      ).jsonOutput.result;
-      expect(commandResult.failures).to.deep.equal([]);
-      expect(commandResult.successes).to.deep.equal([
+      ).jsonOutput?.result;
+      expect(commandResult?.failures).to.deep.equal([]);
+      expect(commandResult?.successes).to.deep.equal([
         { value: anotherPSL, name: originalUsername },
         { value: anotherPSL, name: secondUsername },
       ]);
@@ -89,26 +89,26 @@ describe('PermissionSetLicense tests', () => {
     it('assigns a psl to multiple users via onBehalfOf (partial success)', async () => {
       // sales console user can't be assigned to a platform license
       const anotherPSL = 'SalesConsoleUser';
-      const originalUsername = session.orgs.get('default').username;
+      const originalUsername = session.orgs.get('default')?.username;
 
       const secondUsername = execCmd<UserCreateOutput>(
-        `force:user:create --json -f ${path.join('config', 'chatterUser.json')}`,
+        `user:create --json -f ${path.join('config', 'chatterUser.json')}`,
         {
           ensureExitCode: 0,
         }
-      ).jsonOutput.result.fields.username as string;
+      ).jsonOutput?.result.fields.username as string;
 
       const commandResult = execCmd<PSLResult>(
-        `force:user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},${secondUsername} --json`,
+        `user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},${secondUsername} --json`,
         {
           ensureExitCode: 68,
         }
-      ).jsonOutput.result;
+      ).jsonOutput?.result;
 
-      expect(commandResult.failures).to.have.length(1);
-      expect(commandResult.failures[0].name).to.equal(secondUsername);
-      expect(commandResult.failures[0].message).to.include("user license doesn't support it");
-      expect(commandResult.successes).to.deep.equal([{ value: anotherPSL, name: originalUsername }]);
+      expect(commandResult?.failures).to.have.length(1);
+      expect(commandResult?.failures[0].name).to.equal(secondUsername);
+      expect(commandResult?.failures[0].message).to.include("user license doesn't support it");
+      expect(commandResult?.successes).to.deep.equal([{ value: anotherPSL, name: originalUsername }]);
     });
   });
 

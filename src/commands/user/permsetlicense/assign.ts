@@ -6,15 +6,15 @@
  */
 
 import { Messages } from '@salesforce/core';
-import { arrayWithDeprecation, Flags, loglevel, orgApiVersionFlagWithDeprecations } from '@salesforce/sf-plugins-core';
+import { arrayWithDeprecation, Flags } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import { PSLResult, UserPermSetLicenseAssignBaseCommand } from '../../../../baseCommands/user/permsetlicense/assign';
+import { PSLResult, UserPermSetLicenseAssignBaseCommand } from '../../../baseCommands/user/permsetlicense/assign';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
 
-export class ForceUserPermSetLicenseAssignCommand extends UserPermSetLicenseAssignBaseCommand {
-  public static readonly hidden = true;
+export class UserPermSetLicenseAssignCommand extends UserPermSetLicenseAssignBaseCommand {
+  public static readonly aliases = ['org:assign:permsetlicense'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -30,19 +30,14 @@ export class ForceUserPermSetLicenseAssignCommand extends UserPermSetLicenseAssi
       description: messages.getMessage('flags.onBehalfOf'),
       aliases: ['onbehalfof'],
     }),
-    'target-org': Flags.requiredOrg({
-      char: 'u',
-      summary: messages.getMessage('flags.target-org.summary'),
-      aliases: ['targetusername'],
-      required: true,
-    }),
-    'api-version': orgApiVersionFlagWithDeprecations,
-    loglevel,
+    'target-org': Flags.requiredOrg({ summary: messages.getMessage('flags.target-org.summary'), required: true }),
+    'api-version': Flags.orgApiVersion(),
   };
 
   public async run(): Promise<PSLResult> {
-    const { flags } = await this.parse(ForceUserPermSetLicenseAssignCommand);
-    this.usernamesOrAliases = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
+    const { flags } = await this.parse(UserPermSetLicenseAssignCommand);
+    const username = flags['target-org'].getUsername();
+    this.usernamesOrAliases = ensureArray(flags['on-behalf-of'] ?? username);
     this.pslName = flags.name;
     this.connection = flags['target-org'].getConnection(flags['api-version']);
     return this.assign();
