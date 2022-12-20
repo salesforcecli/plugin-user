@@ -32,7 +32,7 @@ describe('creates a user from a file and verifies', () => {
         },
       ],
     });
-    execCmd('source:push', { cli: 'sfdx' });
+    execCmd('force:source:push', { cli: 'sfdx', ensureExitCode: 0 });
   });
 
   it('creates a user with setuniqueusername from username on commandline', () => {
@@ -50,7 +50,7 @@ describe('creates a user from a file and verifies', () => {
     expect(usernameResult).matches(/.*\.00d[a-z|\d]{15}$/);
   });
 
-  it('creates a user with setuniqueusername from username on commandline', () => {
+  it('creates a user with setuniqueusername without username on commandline', () => {
     const output = execCmd<UserCreateOutput>(
       `user:create --json -f ${path.join('config', 'fileWithUsername.json')} --setuniqueusername`,
       {
@@ -65,9 +65,7 @@ describe('creates a user from a file and verifies', () => {
   it('creates a secondary user with password and permsets assigned', () => {
     const output = execCmd<UserCreateOutput>(
       `user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`,
-      {
-        ensureExitCode: 0,
-      }
+      { ensureExitCode: 0 }
     ).jsonOutput;
     expect(output?.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
     expect(output?.result.permissionSetAssignments).to.deep.equal(['VolunteeringApp']);
