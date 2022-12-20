@@ -29,7 +29,7 @@ describe('verifies all commands run successfully (no json)', () => {
       ],
     });
 
-    execCmd('source:push', { cli: 'sfdx' });
+    execCmd('force:source:push', { cli: 'sfdx', ensureExitCode: 0 });
   });
 
   it('user display', () => {

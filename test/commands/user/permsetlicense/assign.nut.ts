@@ -30,7 +30,7 @@ describe('PermissionSetLicense tests', () => {
       ],
     });
 
-    execCmd('source:push', { cli: 'sfdx' });
+    execCmd('force:source:push', { cli: 'sfdx', ensureExitCode: 0 });
   });
 
   it('assigns a psl to default user', () => {
