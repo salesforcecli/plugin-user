@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
+import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { PSLResult } from '../../../../src/baseCommands/user/permsetlicense/assign';
 import { UserCreateOutput } from '../../../../src/commands/user/create';
@@ -74,7 +74,7 @@ describe('PermissionSetLicense tests', () => {
       ).jsonOutput?.result.fields.username as string;
       expect(secondUsername).to.be.a('string');
       const commandResult = execCmd<PSLResult>(
-        `user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},Other --json`,
+        `user:permsetlicense:assign -n ${anotherPSL} -b ${originalUsername} Other --json`,
         {
           ensureExitCode: 0,
         }
@@ -99,7 +99,7 @@ describe('PermissionSetLicense tests', () => {
       ).jsonOutput?.result.fields.username as string;
 
       const commandResult = execCmd<PSLResult>(
-        `user:permsetlicense:assign -n ${anotherPSL} -o ${originalUsername},${secondUsername} --json`,
+        `user:permsetlicense:assign -n ${anotherPSL} -b ${originalUsername} ${secondUsername} --json`,
         {
           ensureExitCode: 68,
         }

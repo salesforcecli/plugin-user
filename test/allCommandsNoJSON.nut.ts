@@ -6,7 +6,7 @@
  */
 import * as path from 'path';
 
-import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
+import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
 // const projectPath = 'testProject_AllUserCommandsNoJSON';
 let session: TestSession;
@@ -59,15 +59,15 @@ describe('verifies all commands run successfully (no json)', () => {
   });
 
   it('generates new password for secondary user (onbehalfof)', () => {
-    execCmd('user:password:generate -o Other', { ensureExitCode: 0 });
+    execCmd('user:password:generate -b Other', { ensureExitCode: 0 });
   });
 
   it('assigns 2 permsets to the main user', () => {
-    execCmd('user:permset:assign -n PS2,PS3', { ensureExitCode: 0 });
+    execCmd('user:permset:assign -n PS2 PS3', { ensureExitCode: 0 });
   });
 
   it('assigns 2 permsets to the secondary user', () => {
-    execCmd('user:permset:assign -n PS2,PS3 -o Other', { ensureExitCode: 0 });
+    execCmd('user:permset:assign -n PS2 PS3 -b Other', { ensureExitCode: 0 });
   });
 
   after(async () => {
