@@ -6,8 +6,9 @@
  */
 import * as os from 'os';
 import { SfCommand } from '@salesforce/sf-plugins-core';
-import { AuthInfo, Connection, StateAggregator, Messages, Org, SfError, User } from '@salesforce/core';
+import { AuthInfo, Connection, Messages, Org, SfError, StateAggregator, User } from '@salesforce/core';
 import { PasswordConditions } from '@salesforce/core/lib/org/user';
+
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
@@ -27,9 +28,6 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
   protected complexity: number;
 
   public async generate(): Promise<GenerateResult> {
-    // const { flags } = await this.parse(UserPasswordGenerateCommand);
-    // this.usernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
-
     const passwordCondition: PasswordConditions = {
       length: this.length,
       complexity: this.complexity,
@@ -45,6 +43,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });
+        connection.setApiVersion(this.connection.getApiVersion());
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
         const password = User.generatePasswordUtf8(passwordCondition);
@@ -73,8 +72,8 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
           // we don't have access to the apiVersion from what happened in the try, so until v51 is r2, we have to check versions the hard way
           const authInfo: AuthInfo = await AuthInfo.create({ username: aliasOrUsername });
           const connection: Connection = await Connection.create({ authInfo });
-          const org = await Org.create({ connection });
-          if (parseInt(await org.retrieveMaxApiVersion(), 10) >= 51) {
+          connection.setApiVersion(this.connection.getApiVersion());
+          if (parseInt(connection.getApiVersion(), 10) >= 51) {
             throw messages.createError('noSelfSetError');
           }
           throw new SfError(messages.getMessage('noSelfSetErrorV50'), 'noSelfSetErrorError');
