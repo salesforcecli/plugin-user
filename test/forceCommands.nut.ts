@@ -21,7 +21,7 @@ let session: TestSession;
 
 let mainUserId;
 
-describe('verifies all commands run successfully ', () => {
+describe('verifies legacy force commands run successfully ', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
@@ -42,7 +42,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('user display', () => {
-    const output = execCmd<UserDisplayResult>('user:display --json', { ensureExitCode: 0 }).jsonOutput;
+    const output = execCmd<UserDisplayResult>('force:user:display --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output?.result).to.have.all.keys([
       'username',
       'accessToken',
@@ -60,7 +60,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('assigns a permset to the default user', () => {
-    const output = execCmd<PermsetAssignResult>('user:permset:assign -n VolunteeringApp --json', {
+    const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n VolunteeringApp --json', {
       ensureExitCode: 0,
     }).jsonOutput;
     expect(output?.result).to.have.all.keys(['successes', 'failures']);
@@ -70,7 +70,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('creates a secondary user', () => {
-    const output = execCmd<UserCreateOutput>('user:create --json -a Other', { ensureExitCode: 0 }).jsonOutput;
+    const output = execCmd<UserCreateOutput>('force:user:create --json -a Other', { ensureExitCode: 0 }).jsonOutput;
 
     expect(output?.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
     expect(output?.result.fields).to.have.all.keys(
@@ -89,9 +89,12 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('assigns permset to the secondary user', () => {
-    const output = execCmd<PermsetAssignResult>('user:permset:assign -n VolunteeringApp --json --onbehalfof Other', {
-      ensureExitCode: 0,
-    }).jsonOutput;
+    const output = execCmd<PermsetAssignResult>(
+      'force:user:permset:assign -n VolunteeringApp --json --onbehalfof Other',
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
     expect(output?.result).to.have.all.keys(['successes', 'failures']);
     expect(output?.result.successes).to.have.length(1);
     expect(output?.result.successes[0]).to.have.all.keys(['name', 'value']);
@@ -99,7 +102,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('lists the users', () => {
-    const result = execCmd<AuthList[]>('user:list --json', { ensureExitCode: 0 }).jsonOutput?.result;
+    const result = execCmd<AuthList[]>('force:user:list --json', { ensureExitCode: 0 }).jsonOutput?.result;
     expect(result).to.be.an('array').with.length(2);
     expect(result).each.have.all.keys([
       'defaultMarker',
@@ -114,13 +117,13 @@ describe('verifies all commands run successfully ', () => {
     ]);
   });
 
-  it('generates new passwords for main user', () => {
-    const output = execCmd('user:password:generate --json', { ensureExitCode: 0 }).jsonOutput;
+  it('generates new password for main user', () => {
+    const output = execCmd('force:user:password:generate --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
-  it('generates new passwords for main user testing default length and complexity', () => {
-    const output = execCmd<{ username: string; password: string }>('user:password:generate --json', {
+  it('generates new password for main user testing default length and complexity', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // testing default length
@@ -130,8 +133,8 @@ describe('verifies all commands run successfully ', () => {
     expect(complexity5Regex.test(output?.password ?? '')).to.be.true;
   });
 
-  it('generates new passwords for main user testing length 11 and complexity 5', () => {
-    const output = execCmd<{ username: string; password: string }>('user:password:generate --json -l 11 -c 3', {
+  it('generates new password for main user testing length 11 and complexity 5', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json -l 11 -c 3', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     expect(output?.password.length).to.equal(11);
@@ -140,14 +143,17 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('generates new password for secondary user (onbehalfof)', () => {
-    const output = execCmd('user:password:generate -b Other --json', { ensureExitCode: 0 }).jsonOutput;
+    const output = execCmd('force:user:password:generate -o Other --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
   it('generates new password for secondary user (onbehalfof) with length 12', () => {
-    const output = execCmd<{ username: string; password: string }>('user:password:generate -b Other --json -l 12', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
+    const output = execCmd<{ username: string; password: string }>(
+      'force:user:password:generate -o Other --json -l 12',
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput?.result;
 
     expect(output?.password.length).to.equal(12);
     const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[\\]_-])');
@@ -156,9 +162,12 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('generates new password for secondary user (onbehalfof) with complexity 3', () => {
-    const output = execCmd<{ username: string; password: string }>('user:password:generate -b Other --json -c 3', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
+    const output = execCmd<{ username: string; password: string }>(
+      'force:user:password:generate -o Other --json -c 3',
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput?.result;
     // testing default length
     expect(output?.password.length).to.equal(13);
     const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
@@ -166,15 +175,15 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('generates new password for secondary user (onbehalfof) with complexity 7 should thrown an error', () => {
-    const output = execCmd('user:password:generate -b Other --json -c 7', { ensureExitCode: 1 }).jsonOutput;
+    const output = execCmd('force:user:password:generate -o Other --json -c 7', { ensureExitCode: 1 }).jsonOutput;
     expect(output?.message).to.equal('Expected an integer less than or equal to 5 but received: 7');
   });
   it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
-    const output = execCmd('user:password:generate -b Other --json -l 7', { ensureExitCode: 1 }).jsonOutput;
+    const output = execCmd('force:user:password:generate -o Other --json -l 7', { ensureExitCode: 1 }).jsonOutput;
     expect(output?.message).to.equal('Expected an integer greater than or equal to 8 but received: 7');
   });
   it('assigns 2 permsets to the main user', () => {
-    const output = execCmd<PermsetAssignResult>('user:permset:assign -n PS2 -n PS3 --json', {
+    const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 --json', {
       ensureExitCode: 0,
     }).jsonOutput;
     expect(output?.result).to.have.all.keys(['successes', 'failures']);
@@ -184,7 +193,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('assigns 2 permsets to the secondary user', () => {
-    const output = execCmd<PermsetAssignResult>('user:permset:assign -n PS2 -n PS3 -b Other --json', {
+    const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 -o Other --json', {
       ensureExitCode: 0,
     }).jsonOutput;
     expect(output?.result).to.have.all.keys(['successes', 'failures']);
