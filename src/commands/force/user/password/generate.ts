@@ -14,6 +14,7 @@ import {
 import { Messages } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
 import { GenerateResult, UserPasswordGenerateBaseCommand } from '../../../../baseCommands/user/password/generate';
+
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
@@ -42,7 +43,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
       max: 5,
       default: 5,
     }),
-    'target-dev-hub': { ...requiredHubFlagWithDeprecations, required: false },
+    'target-dev-hub': { ...requiredHubFlagWithDeprecations, required: false, hidden: true },
     'target-org': Flags.requiredOrg({
       char: 'u',
       summary: messages.getMessage('flags.target-org.summary'),
@@ -55,7 +56,9 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
 
   public async run(): Promise<GenerateResult> {
     const { flags } = await this.parse(ForceUserPasswordGenerateCommand);
-    this.warn('The --target-dev-hub flag is deprecated and will be removed in v57 or later.');
+    if (flags['target-dev-hub']) {
+      this.warn('The --target-dev-hub flag is deprecated and will be removed in v57 or later.');
+    }
     this.usernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
     this.length = flags.length;
     this.complexity = flags.complexity;

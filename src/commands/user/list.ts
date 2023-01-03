@@ -42,7 +42,11 @@ export class UserListCommand extends SfCommand<UserList> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly flags = {
-    'target-dev-hub': Flags.optionalOrg({ char: 'v', summary: messages.getMessage('flags.target-hub.summary') }),
+    'target-dev-hub': Flags.optionalOrg({
+      char: 'v',
+      summary: messages.getMessage('flags.target-hub.summary'),
+      hidden: true,
+    }),
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
@@ -53,7 +57,9 @@ export class UserListCommand extends SfCommand<UserList> {
 
   public async run(): Promise<UserList> {
     const { flags } = await this.parse(UserListCommand);
-    this.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
+    if (flags['target-dev-hub']) {
+      this.warn('The --target-dev-hub flag is deprecated and will be removed in v57 or later.');
+    }
     this.org = flags['target-org'];
     this.conn = flags['target-org'].getConnection(flags['api-version']);
     // parallelize 2 org queries and 2 fs operations

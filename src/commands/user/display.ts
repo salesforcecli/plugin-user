@@ -38,7 +38,7 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessage('examples').split(os.EOL);
   public static readonly flags = {
-    'target-dev-hub': { ...requiredHubFlagWithDeprecations, required: false },
+    'target-dev-hub': { ...requiredHubFlagWithDeprecations, required: false, hidden: true },
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
@@ -49,7 +49,9 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
 
   public async run(): Promise<UserDisplayResult> {
     const { flags } = await this.parse(UserDisplayCommand);
-    this.warn('The --targetdevhubusername flag is deprecated and will be removed in v57 or later.');
+    if (flags['target-dev-hub']) {
+      this.warn('The --target-dev-hub flag is deprecated and will be removed in v57 or later.');
+    }
     this.logger = await Logger.child(this.constructor.name);
 
     const username = ensureString(flags['target-org'].getUsername());
