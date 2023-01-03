@@ -49,7 +49,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
         const password = User.generatePasswordUtf8(passwordCondition);
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
-        const result: { Id: string } = await connection.singleRecordQuery(
+        const result= await connection.singleRecordQuery<: { Id: string } >(
           `SELECT Id FROM User WHERE Username='${username}'`
         );
 
