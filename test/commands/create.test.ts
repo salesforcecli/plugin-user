@@ -8,7 +8,7 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
 
 import * as fs from 'fs';
-import { AuthInfo, Connection, DefaultUserFields, Logger, User, Org } from '@salesforce/core';
+import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@salesforce/core';
 import { Config } from '@oclif/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
@@ -128,12 +128,9 @@ describe('user:create', () => {
     }
 
     if (readsFile) {
-      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'query').resolves({
-        records: [{ Id: '12345678' }],
-        done: true,
-        totalSize: 1,
-      });
+      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery').resolves({ Id: '12345678' });
       $$.SANDBOX.stub(Logger.prototype, 'debug');
+      $$.SANDBOX.stub(fs.promises, 'readFile').resolves(JSON.stringify(readsFile));
     }
   }
 
@@ -174,279 +171,162 @@ describe('user:create', () => {
     expect(result).to.deep.equal(expected);
   });
 
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({}, {permsets: ['perm1', 'perm2']});
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //     '--definitionfile',
-  //     'tempfile.json',
-  //     'profilename=profileFromArgs',
-  //     'username=user@cliArgs.com',
-  //   ])
-  //   .it('will handle a merge multiple permsets and profilenames from args and file (permsets from file)', (ctx) => {
-  //     const expected = {
-  //       orgId: 'abc123',
-  //       permissionSetAssignments: ['perm1', 'perm2'],
-  //       fields: {
-  //         alias: 'testAlias',
-  //         email: 'defaultusername@test.com',
-  //         emailencodingkey: 'UTF-8',
-  //         id: newUserId,
-  //         languagelocalekey: 'en_US',
-  //         lastname: 'User',
-  //         localesidkey: 'en_US',
-  //         profileid: '12345678',
-  //         profilename: 'profileFromArgs',
-  //         timezonesidkey: 'America/Los_Angeles',
-  //         username: 'user@cliArgs.com',
-  //       },
-  //     };
-  //     const result = JSON.parse(ctx.stdout).result;
-  //     expect(result).to.deep.equal(expected);
-  //   });
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({}, false);
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //   ])
-  //   .it('default create creates user exactly from DefaultUserFields', (ctx) => {
-  //     const expected = {
-  //       orgId: 'abc123',
-  //       permissionSetAssignments: [],
-  //       fields: {
-  //         alias: 'testAlias',
-  //         email: username,
-  //         emailencodingkey: 'UTF-8',
-  //         id: newUserId,
-  //         languagelocalekey: 'en_US',
-  //         lastname: 'User',
-  //         localesidkey: 'en_US',
-  //         profileid: '00e2D000000bNexWWR',
-  //         timezonesidkey: 'America/Los_Angeles',
-  //         username: '1605130295132_test-j6asqt5qoprs@example.com',
-  //       },
-  //     };
-  //     const result = JSON.parse(ctx.stdout).result;
-  //     expect(result).to.deep.equal(expected);
-  //   });
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({}, {generatepassword: true, permsets: ['test1', 'test2']});
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--definitionfile',
-  //     'parent/child/file.json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //     'email=me@my.org',
-  //     'generatepassword=false',
-  //   ])
-  //   // we set generatepassword=false in the varargs, in the definitionfile we have generatepassword=true, so we SHOULD NOT generate a password
-  //   .it('will merge fields from the cli args, and the definitionfile correctly, preferring cli args', (ctx) => {
-  //     const expected = {
-  //       orgId: 'abc123',
-  //       permissionSetAssignments: ['test1', 'test2'],
-  //       fields: {
-  //         alias: 'testAlias',
-  //         email: 'me@my.org',
-  //         emailencodingkey: 'UTF-8',
-  //         id: newUserId,
-  //         languagelocalekey: 'en_US',
-  //         lastname: 'User',
-  //         localesidkey: 'en_US',
-  //         profileid: '00e2D000000bNexWWR',
-  //         generatepassword: false,
-  //         timezonesidkey: 'America/Los_Angeles',
-  //         username: '1605130295132_test-j6asqt5qoprs@example.com',
-  //       },
-  //     };
-  //     const result = JSON.parse(ctx.stdout).result;
-  //     expect(result).to.deep.equal(expected);
-  //   });
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({}, {generatepassword: true, profilename: 'System Administrator'});
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--definitionfile',
-  //     'parent/child/file.json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //     'email=me@my.org',
-  //     'generatepassword=false',
-  //     "profilename='Chatter Free User'",
-  //   ])
-  //   // we set generatepassword=false in the varargs, in the definitionfile we have generatepassword=true, so we SHOULD NOT generate a password
-  //   // we should override the profilename with 'Chatter Free User'
-  //   .it(
-  //     'will merge fields from the cli args, and the definitionfile correctly, preferring cli args, cli args > file > default',
-  //     (ctx) => {
-  //       const expected = {
-  //         orgId: 'abc123',
-  //         permissionSetAssignments: [],
-  //         fields: {
-  //           alias: 'testAlias',
-  //           email: 'me@my.org',
-  //           emailencodingkey: 'UTF-8',
-  //           id: newUserId,
-  //           languagelocalekey: 'en_US',
-  //           lastname: 'User',
-  //           localesidkey: 'en_US',
-  //           generatepassword: false,
-  //           profilename: "'Chatter Free User'",
-  //           // note the new profileid 12345678 -> Chatter Free User from var args
-  //           profileid: '12345678',
-  //           timezonesidkey: 'America/Los_Angeles',
-  //           username: '1605130295132_test-j6asqt5qoprs@example.com',
-  //         },
-  //       };
-  //       const result = JSON.parse(ctx.stdout).result;
-  //       expect(result).to.deep.equal(expected);
-  //     }
-  //   );
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({license: true}, false);
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //   ])
-  //   .it('will handle a failed `createUser` call with a licenseLimitExceeded error', (ctx) => {
-  //     const result = JSON.parse(ctx.stdout);
-  //     expect(result.status).to.equal(1);
-  //     expect(result.message).to.equal('There are no available user licenses for the user profile "testName".');
-  //     expect(result.name).to.equal('licenseLimitExceeded');
-  //   });
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({duplicate: true}, false);
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //   ])
-  //   .it('will handle a failed `createUser` call with a DuplicateUsername error', (ctx) => {
-  //     const result = JSON.parse(ctx.stdout);
-  //     expect(result.status).to.equal(1);
-  //     expect(result.name).to.equal('duplicateUsername');
-  //     expect(result.message).to.equal(
-  //       'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.'
-  //     );
-  //   });
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({}, false);
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //     'username=user@cliFlag.com',
-  //     '--setuniqueusername',
-  //   ])
-  //   .it('will append the org id to the passed username if the setuniqueusername is used', (ctx) => {
-  //     const expected = {
-  //       orgId: 'abc123',
-  //       permissionSetAssignments: [],
-  //       fields: {
-  //         alias: 'testAlias',
-  //         email: 'defaultusername@test.com',
-  //         emailencodingkey: 'UTF-8',
-  //         id: newUserId,
-  //         languagelocalekey: 'en_US',
-  //         lastname: 'User',
-  //         localesidkey: 'en_US',
-  //         profileid: '00e2D000000bNexWWR',
-  //         timezonesidkey: 'America/Los_Angeles',
-  //         username: 'user@cliFlag.com.abc123',
-  //       },
-  //     };
-  //     const result = JSON.parse(ctx.stdout).result;
-  //     expect(result).to.deep.equal(expected);
-  //   });
-  //
-  // test
-  //   .do(async () => {
-  //     await prepareStubs({}, false);
-  //   })
-  //   .stdout()
-  //   .command([
-  //     'user:create',
-  //     '--json',
-  //     '--targetusername',
-  //     'testUser1@test.com',
-  //     '--targetdevhubusername',
-  //     'devhub@test.com',
-  //     '--setuniqueusername',
-  //   ])
-  //   .it(
-  //     'will not append the org id to the username if the setuniqueusername is used but username was generated by the CLI',
-  //     (ctx) => {
-  //       const expected = {
-  //         orgId: 'abc123',
-  //         permissionSetAssignments: [],
-  //         fields: {
-  //           alias: 'testAlias',
-  //           email: 'defaultusername@test.com',
-  //           emailencodingkey: 'UTF-8',
-  //           id: newUserId,
-  //           languagelocalekey: 'en_US',
-  //           lastname: 'User',
-  //           localesidkey: 'en_US',
-  //           profileid: '00e2D000000bNexWWR',
-  //           timezonesidkey: 'America/Los_Angeles',
-  //           username: '1605130295132_test-j6asqt5qoprs@example.com',
-  //         },
-  //       };
-  //       const result = JSON.parse(ctx.stdout).result;
-  //       expect(result).to.deep.equal(expected);
-  //     }
-  //   );
+  it('default create creates user exactly from DefaultUserFields', async () => {
+    await prepareStubs({}, true);
+    const expected = {
+      orgId: testOrg.orgId,
+      permissionSetAssignments: [],
+      fields: {
+        alias: 'testAlias',
+        email: username,
+        emailencodingkey: 'UTF-8',
+        id: newUserId,
+        languagelocalekey: 'en_US',
+        lastname: 'User',
+        localesidkey: 'en_US',
+        profileid: '12345678',
+        profilename: 'profileFromArgs',
+        timezonesidkey: 'America/Los_Angeles',
+        username: '1605130295132_test-j6asqt5qoprs@example.com',
+      },
+    };
+    const createCommand = new UserCreateCommand(
+      ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com'],
+      {} as Config
+    );
+    const result = await createCommand.run();
+    expect(result).to.deep.equal(expected);
+  });
+
+  it('will merge fields from the cli args, and the definitionfile correctly, preferring cli args', async () => {
+    await prepareStubs({}, { generatepassword: true, permsets: ['test1', 'test2'] });
+    const expected = {
+      orgId: testOrg.orgId,
+      permissionSetAssignments: ['test1', 'test2'],
+      fields: {
+        alias: 'testAlias',
+        email: 'me@my.org',
+        emailencodingkey: 'UTF-8',
+        id: newUserId,
+        languagelocalekey: 'en_US',
+        lastname: 'User',
+        localesidkey: 'en_US',
+        profileid: '12345678',
+        profilename: 'profileFromArgs',
+        generatepassword: false,
+        timezonesidkey: 'America/Los_Angeles',
+        username: '1605130295132_test-j6asqt5qoprs@example.com',
+      },
+    };
+    const createCommand = new UserCreateCommand(
+      [
+        '--json',
+        '--target-org',
+        testOrg.username,
+        '--target-dev-hub',
+        'devhub@test.com',
+        '--definition-file',
+        'parent/child/file.json',
+        'email=me@my.org',
+        'generatepassword=false',
+      ],
+      {} as Config
+    );
+    const result = await createCommand.run();
+    expect(result).to.deep.equal(expected);
+  });
+
+  it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
+    await prepareStubs({ license: true }, false);
+    const createCommand = new UserCreateCommand(
+      ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com'],
+      {} as Config
+    );
+    try {
+      await createCommand.run();
+      expect.fail('should have thrown an error');
+    } catch (e) {
+      expect(e.message).to.equal('There are no available user licenses for the user profile "testName".');
+      expect(e.name).to.equal('licenseLimitExceeded');
+    }
+  });
+
+  it('will handle a failed `createUser` call with a DuplicateUsername error', async () => {
+    await prepareStubs({ duplicate: true }, true);
+    const createCommand = new UserCreateCommand(
+      ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com'],
+      {} as Config
+    );
+    try {
+      await createCommand.run();
+      expect.fail('should have thrown an error');
+    } catch (e) {
+      expect(e.name).to.equal('duplicateUsername');
+      expect(e.message).to.equal(
+        'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.'
+      );
+    }
+  });
+
+  it('will append the org id to the passed username if the setuniqueusername is used', async () => {
+    await prepareStubs({}, true);
+    const expected = {
+      orgId: testOrg.orgId,
+      permissionSetAssignments: [],
+      fields: {
+        alias: 'testAlias',
+        email: 'defaultusername@test.com',
+        emailencodingkey: 'UTF-8',
+        id: newUserId,
+        languagelocalekey: 'en_US',
+        lastname: 'User',
+        localesidkey: 'en_US',
+        profileid: '12345678',
+        profilename: 'profileFromArgs',
+        timezonesidkey: 'America/Los_Angeles',
+        username: `user@cliFlag.com.${testOrg.orgId}`,
+      },
+    };
+    const createCommand = new UserCreateCommand(
+      [
+        '--json',
+        '--target-org',
+        testOrg.username,
+        '--target-dev-hub',
+        'devhub@test.com',
+        'username=user@cliFlag.com',
+        '--setuniqueusername',
+      ],
+      {} as Config
+    );
+    const result = await createCommand.run();
+    expect(result).to.deep.equal(expected);
+  });
+
+  it('will not append the org id to the username if the setuniqueusername is used but username was generated by the CLI', async () => {
+    await prepareStubs({}, true);
+    const expected = {
+      orgId: testOrg.orgId,
+      permissionSetAssignments: [],
+      fields: {
+        alias: 'testAlias',
+        email: 'defaultusername@test.com',
+        emailencodingkey: 'UTF-8',
+        id: newUserId,
+        languagelocalekey: 'en_US',
+        lastname: 'User',
+        localesidkey: 'en_US',
+        profileid: '12345678',
+        profilename: 'profileFromArgs',
+        timezonesidkey: 'America/Los_Angeles',
+        username: '1605130295132_test-j6asqt5qoprs@example.com',
+      },
+    };
+    const createCommand = new UserCreateCommand(
+      ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com', '--setuniqueusername'],
+      {} as Config
+    );
+    const result = await createCommand.run();
+    expect(result).to.deep.equal(expected);
+  });
 });

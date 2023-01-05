@@ -47,19 +47,11 @@ describe('user:display', () => {
             } as AuthInfo,
           ])
       );
-      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'query')
+      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery')
         .withArgs(`SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`)
-        .resolves({
-          records: [{ Name: 'QueriedName' }],
-          done: true,
-          totalSize: 1,
-        })
+        .resolves({ Name: 'QueriedName' })
         .withArgs(`SELECT id FROM User WHERE username='${username}'`)
-        .resolves({
-          records: [{ Id: 'QueriedId' }],
-          done: true,
-          totalSize: 1,
-        });
+        .resolves({ Id: 'QueriedId' });
     } else {
       $$.SANDBOX.stub(Org.prototype, 'readUserAuthFiles').callsFake(
         (): Promise<AuthInfo[]> =>

@@ -69,7 +69,7 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
       // the user executing this command may not have access to the Profile sObject.
       if (!profileName) {
         const PROFILE_NAME_QUERY = `SELECT name FROM Profile WHERE Id IN (SELECT ProfileId FROM User WHERE username='${username}')`;
-        profileName = getString(await conn.query(PROFILE_NAME_QUERY), 'records[0].Name') as string;
+        profileName = (await conn.singleRecordQuery<{ Name: string }>(PROFILE_NAME_QUERY)).Name;
       }
     } catch (err) {
       profileName = 'unknown';
@@ -81,7 +81,7 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
     try {
       if (!userId) {
         const USER_QUERY = `SELECT id FROM User WHERE username='${username}'`;
-        userId = getString(await conn.query(USER_QUERY), 'records[0].Id') as string;
+        userId = (await conn.singleRecordQuery<{ Id: string }>(USER_QUERY)).Id;
       }
     } catch (err) {
       userId = 'unknown';
