@@ -1,3 +1,12 @@
+## [2.1.25](https://github.com/salesforcecli/plugin-user/compare/2.1.24...2.1.25) (2023-01-08)
+
+
+### Bug Fixes
+
+* **deps:** bump json5 from 1.0.1 to 1.0.2 ([30e0d40](https://github.com/salesforcecli/plugin-user/commit/30e0d403fea631f0216d4e73c268306a43f12cee))
+
+
+
 ## [2.1.24](https://github.com/salesforcecli/plugin-user/compare/2.1.23...2.1.24) (2023-01-01)
 
 
