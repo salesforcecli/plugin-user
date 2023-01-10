@@ -43,7 +43,14 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
       max: 5,
       default: 5,
     }),
-    'target-dev-hub': { ...requiredHubFlagWithDeprecations, required: false, hidden: true },
+    'target-dev-hub': {
+      ...requiredHubFlagWithDeprecations,
+      required: false,
+      hidden: true,
+      deprecated: {
+        message: messages.getMessage('flags.target-hub.deprecation'),
+      },
+    },
     'target-org': Flags.requiredOrg({
       char: 'u',
       summary: messages.getMessage('flags.target-org.summary'),
@@ -56,9 +63,6 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
 
   public async run(): Promise<GenerateResult> {
     const { flags } = await this.parse(ForceUserPasswordGenerateCommand);
-    if (flags['target-dev-hub']) {
-      this.warn('The --target-dev-hub flag is deprecated and will be removed in v57 or later.');
-    }
     this.usernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
     this.length = flags.length;
     this.complexity = flags.complexity;

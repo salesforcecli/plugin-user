@@ -15,3 +15,7 @@ The original scratch org admin is marked with "(A)"
 # flags.target-hub.summary
 
 Username or alias of the Dev Hub org.
+
+# flags.target-hub.deprecation
+
+The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.

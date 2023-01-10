@@ -4,11 +4,14 @@ generate a password for scratch org users
 
 # description
 
-Generates and sets a random password for one or more scratch org users. Targets the usernames listed with the --onbehalfof parameter or the --targetusername parameter. Defaults to the defaultusername.
+Generates and sets a random password for one or more scratch org users. Targets the usernames listed with the
+--onbehalfof parameter or the --targetusername parameter. Defaults to the defaultusername.
 
-If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub, --targetdevhubusername is required.
+If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub,
+--targetdevhubusername is required.
 
-To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the types of characters used in the generated password:
+To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the
+types of characters used in the generated password:
 
 0 - lower case letters only
 1 - lower case letters and numbers only
@@ -45,11 +48,14 @@ Create a scratch org with the enableSetPasswordInApi org security setting set to
 
 # noSelfSetError
 
-Starting in Spring '21, EnableSetPasswordInApi is a feature in your scratch org definition file and not a setting. This change is a result of the field Settings.securitySettings.passwordPolicies.enableSetPasswordInApi being deprecated in version 51.0 of the Metadata API.
+Starting in Spring '21, EnableSetPasswordInApi is a feature in your scratch org definition file and not a setting. This
+change is a result of the field Settings.securitySettings.passwordPolicies.enableSetPasswordInApi being deprecated in
+version 51.0 of the Metadata API.
 
 # noSelfSetError.actions
 
-- Update your scratch org definition file and remove enableSetPasswordInApi from the "securitySettings" setting. Then add EnableSetPasswordInApi as a feature. For example:
+- Update your scratch org definition file and remove enableSetPasswordInApi from the "securitySettings" setting. Then
+  add EnableSetPasswordInApi as a feature. For example:
 - "features": ["EnableSetPasswordInApi"]
 - Then try creating the scratch org again.
 
@@ -75,4 +81,9 @@ Scratch org alias or login user.
 
 # onBehalfOfMultipleError
 
-Found a comma-separated list of usernames or aliases for the --onbehalfof parameter. Either specify one per flag or separate by a space.
+Found a comma-separated list of usernames or aliases for the --onbehalfof parameter. Either specify one per flag or
+separate by a space.
+
+# flags.target-hub.deprecation
+
+The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.

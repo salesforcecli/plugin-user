@@ -46,6 +46,9 @@ export class UserListCommand extends SfCommand<UserList> {
       char: 'v',
       summary: messages.getMessage('flags.target-hub.summary'),
       hidden: true,
+      deprecated: {
+        message: messages.getMessage('flags.target-hub.deprecation'),
+      },
     }),
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
@@ -57,9 +60,6 @@ export class UserListCommand extends SfCommand<UserList> {
 
   public async run(): Promise<UserList> {
     const { flags } = await this.parse(UserListCommand);
-    if (flags['target-dev-hub']) {
-      this.warn('The --target-dev-hub flag is deprecated and will be removed in v57 or later.');
-    }
     this.org = flags['target-org'];
     this.conn = flags['target-org'].getConnection(flags['api-version']);
     // parallelize 2 org queries and 2 fs operations
