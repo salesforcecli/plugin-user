@@ -8,8 +8,8 @@ import {
   arrayWithDeprecation,
   Flags,
   loglevel,
+  optionalHubFlagWithDeprecations,
   orgApiVersionFlagWithDeprecations,
-  requiredHubFlagWithDeprecations,
 } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
@@ -45,8 +45,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
       default: 5,
     }),
     'target-dev-hub': {
-      ...requiredHubFlagWithDeprecations,
-      required: false,
+      ...optionalHubFlagWithDeprecations,
       hidden: true,
       deprecated: {
         message: messages.getMessage('flags.target-hub.deprecation'),

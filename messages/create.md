@@ -37,7 +37,7 @@ The username "%s" already exists in this or another Salesforce org. Usernames mu
 # success
 
 Successfully created user "%s" with ID %s for org %s.%s
-You can see more details about this user by running "<%= config.bin %> user:display -u %s".
+You can see more details about this user by running "%s user:display -u %s".
 
 # flags.target-hub.deprecation
 

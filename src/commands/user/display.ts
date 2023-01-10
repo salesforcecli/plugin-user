@@ -5,14 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as os from 'os';
 import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
 import { ensureString, getString } from '@salesforce/ts-types';
 import {
   Flags,
   loglevel,
+  optionalHubFlagWithDeprecations,
   orgApiVersionFlagWithDeprecations,
-  requiredHubFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
@@ -36,11 +35,10 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
   public static readonly aliases = ['force:user:display', 'org:display:user'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
-  public static readonly examples = messages.getMessage('examples').split(os.EOL);
+  public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
     'target-dev-hub': {
-      ...requiredHubFlagWithDeprecations,
-      required: false,
+      ...optionalHubFlagWithDeprecations,
       hidden: true,
       deprecated: {
         message: messages.getMessage('flags.target-hub.deprecation'),

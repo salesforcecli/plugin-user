@@ -25,7 +25,7 @@ import {
   loglevel,
   orgApiVersionFlagWithDeprecations,
   parseVarArgs,
-  requiredHubFlagWithDeprecations,
+  optionalHubFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
@@ -56,7 +56,7 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
   public static readonly aliases = ['force:user:create', 'org:create:user'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
-  public static readonly examples = messages.getMessage('examples').split(os.EOL);
+  public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
     'set-alias': Flags.string({
       char: 'a',
@@ -77,8 +77,7 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
       deprecateAliases: true,
     }),
     'target-dev-hub': {
-      ...requiredHubFlagWithDeprecations,
-      required: false,
+      ...optionalHubFlagWithDeprecations,
       hidden: true,
       deprecated: {
         message: messages.getMessage('flags.target-hub.deprecation'),
@@ -269,6 +268,7 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
       fields.id,
       this.flags['target-org'].getOrgId(),
       os.EOL,
+      this.config.bin,
       fields.username,
     ]);
 
