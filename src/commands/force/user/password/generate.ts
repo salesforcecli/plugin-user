@@ -25,6 +25,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
   public static readonly flags = {
     'on-behalf-of': arrayWithDeprecation({
       aliases: ['onbehalfof'],
+      deprecateAliases: true,
       char: 'o',
       description: messages.getMessage('flags.onBehalfOf'),
     }),
@@ -55,6 +56,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
       char: 'u',
       summary: messages.getMessage('flags.target-org.summary'),
       aliases: ['targetusername'],
+      deprecateAliases: true,
       required: true,
     }),
     'api-version': orgApiVersionFlagWithDeprecations,

@@ -21,6 +21,7 @@ export class UserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
   public static readonly flags = {
     'perm-set-name': Flags.string({
       aliases: ['permsetname', 'name'],
+      deprecateAliases: true,
       char: 'n',
       description: messages.getMessage('flags.permsetName'),
       required: true,
@@ -30,6 +31,7 @@ export class UserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
       char: 'b',
       description: messages.getMessage('flags.onBehalfOf'),
       aliases: ['onbehalfof'],
+      deprecateAliases: true,
       multiple: true,
     }),
     'target-org': Flags.requiredOrg({ summary: messages.getMessage('flags.target-org.summary'), required: true }),

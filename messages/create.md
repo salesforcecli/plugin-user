@@ -4,7 +4,8 @@ create a user for a scratch org
 
 # description
 
-Create a user for a scratch org, optionally setting an alias for use by the CLI, assigning permission sets (e.g., permsets=ps1,ps2), generating a password (e.g., generatepassword=true), and setting User sObject fields.,
+Create a user for a scratch org, optionally setting an alias for use by the CLI, assigning permission sets (e.g.,
+permsets=ps1,ps2), generating a password (e.g., generatepassword=true), and setting User sObject fields.,
 
 # examples
 
@@ -37,3 +38,7 @@ The username "%s" already exists in this or another Salesforce org. Usernames mu
 
 Successfully created user "%s" with ID %s for org %s.%s
 You can see more details about this user by running "<%= config.bin %> user:display -u %s".
+
+# flags.target-hub.deprecation
+
+The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.

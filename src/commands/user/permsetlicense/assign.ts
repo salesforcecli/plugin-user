@@ -29,6 +29,7 @@ export class UserPermSetLicenseAssignCommand extends UserPermSetLicenseAssignBas
       char: 'b',
       description: messages.getMessage('flags.onBehalfOf'),
       aliases: ['onbehalfof'],
+      deprecateAliases: true,
     }),
     'target-org': Flags.requiredOrg({ summary: messages.getMessage('flags.target-org.summary'), required: true }),
     'api-version': Flags.orgApiVersion(),
