@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$ref": "#/definitions/UserList",
+  "$ref": "#/definitions/ListUsers",
   "definitions": {
-    "UserList": {
+    "ListUsers": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/AuthList"

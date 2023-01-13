@@ -9,7 +9,7 @@ import { Connection, Org } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { Config } from '@oclif/core';
 import { expect } from 'chai';
-import { UserListCommand } from '../../src/commands/user/list';
+import { ListUsersCommand } from '../../src/commands/org/list/users';
 
 const user1 = 'defaultusername@test.com';
 const user2 = 'otherUser@test.com';
@@ -38,7 +38,7 @@ const expected = [
   },
 ];
 
-describe('user:list', () => {
+describe('org:list:users', () => {
   const $$ = new TestContext();
 
   const user1Org = new MockTestOrgData();
@@ -136,7 +136,7 @@ describe('user:list', () => {
   });
 
   it('should display the correct information invoked with an alias', async () => {
-    const listComm = new UserListCommand(
+    const listComm = new ListUsersCommand(
       ['--json', '--target-org', 'testAlias', '--target-dev-hub', devHub.username],
       {} as Config
     );
@@ -145,7 +145,7 @@ describe('user:list', () => {
   });
 
   it('should display the correct information invoked by name', async () => {
-    const listComm = new UserListCommand(
+    const listComm = new ListUsersCommand(
       ['--json', '--target-org', user1, '--target-dev-hub', devHub.username],
       {} as Config
     );

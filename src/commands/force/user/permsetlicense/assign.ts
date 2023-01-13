@@ -29,11 +29,13 @@ export class ForceUserPermSetLicenseAssignCommand extends UserPermSetLicenseAssi
       char: 'b',
       description: messages.getMessage('flags.onBehalfOf'),
       aliases: ['onbehalfof'],
+      deprecateAliases: true,
     }),
     'target-org': Flags.requiredOrg({
       char: 'u',
       summary: messages.getMessage('flags.target-org.summary'),
       aliases: ['targetusername'],
+      deprecateAliases: true,
       required: true,
     }),
     'api-version': orgApiVersionFlagWithDeprecations,

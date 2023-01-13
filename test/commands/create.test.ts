@@ -12,13 +12,13 @@ import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@sal
 import { Config } from '@oclif/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
-import UserCreateCommand from '../../src/commands/user/create';
+import CreateUserCommand from '../../src/commands/org/create/user';
 
 const username = 'defaultusername@test.com';
 const originalUserId = '0052D0000043PawWWR';
 const newUserId = '0052D0000044PawWWR';
 
-describe('user:create', () => {
+describe('org:create:user', () => {
   const $$ = new TestContext();
 
   const testOrg = new MockTestOrgData();
@@ -47,7 +47,7 @@ describe('user:create', () => {
       })
     );
 
-    const createCommand = new UserCreateCommand(['-f', 'userConfig.json'], {} as Config);
+    const createCommand = new CreateUserCommand(['-f', 'userConfig.json'], {} as Config);
 
     // @ts-ignore
     createCommand.flags = { 'definition-file': 'testing' };
@@ -155,7 +155,7 @@ describe('user:create', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       [
         '--json',
         '--target-org',
@@ -190,7 +190,7 @@ describe('user:create', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com'],
       {} as Config
     );
@@ -218,7 +218,7 @@ describe('user:create', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       [
         '--json',
         '--target-org',
@@ -238,7 +238,7 @@ describe('user:create', () => {
 
   it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
     await prepareStubs({ license: true }, false);
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com'],
       {} as Config
     );
@@ -253,7 +253,7 @@ describe('user:create', () => {
 
   it('will handle a failed `createUser` call with a DuplicateUsername error', async () => {
     await prepareStubs({ duplicate: true }, true);
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com'],
       {} as Config
     );
@@ -287,7 +287,7 @@ describe('user:create', () => {
         username: `user@cliFlag.com.${testOrg.orgId}`,
       },
     };
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       [
         '--json',
         '--target-org',
@@ -322,7 +322,7 @@ describe('user:create', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new UserCreateCommand(
+    const createCommand = new CreateUserCommand(
       ['--json', '--target-org', testOrg.username, '--target-dev-hub', 'devhub@test.com', '--setuniqueusername'],
       {} as Config
     );

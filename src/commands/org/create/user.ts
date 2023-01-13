@@ -51,9 +51,10 @@ const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): s
     : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
 };
 
-export class UserCreateCommand extends SfCommand<UserCreateOutput> {
+export class CreateUserCommand extends SfCommand<CreateUserOutput> {
   public static strict = false;
-  public static readonly aliases = ['force:user:create', 'org:create:user'];
+  public static readonly deprecateAliases = true;
+  public static readonly aliases = ['force:user:create'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -93,7 +94,7 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
   private failures: FailureMsg[] = [];
   private newUserAuthInfo: AuthInfo;
   private logger: Logger;
-  private flags: Interfaces.InferredFlags<typeof UserCreateCommand.flags>;
+  private flags: Interfaces.InferredFlags<typeof CreateUserCommand.flags>;
   // eslint-disable-next-line sf-plugin/no-deprecated-properties
   private varargs: Record<string, unknown>;
 
@@ -107,10 +108,10 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
     return omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName']);
   }
 
-  public async run(): Promise<UserCreateOutput> {
-    const { flags, argv } = await this.parse(UserCreateCommand);
+  public async run(): Promise<CreateUserOutput> {
+    const { flags, argv } = await this.parse(CreateUserCommand);
     this.varargs = parseVarArgs({}, argv);
-    this.flags = flags as Interfaces.InferredFlags<typeof UserCreateCommand.flags>;
+    this.flags = flags as Interfaces.InferredFlags<typeof CreateUserCommand.flags>;
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
       templateUser: this.flags['target-org'].getUsername() ?? '',
@@ -121,7 +122,7 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
     const fields = await this.aggregateFields(defaultUserFields.getFields());
 
     try {
-      this.newUserAuthInfo = await this.targetOrgUser.createUser(UserCreateCommand.stripInvalidAPIFields(fields));
+      this.newUserAuthInfo = await this.targetOrgUser.createUser(CreateUserCommand.stripInvalidAPIFields(fields));
     } catch (e) {
       if (!(e instanceof Error)) {
         throw e;
@@ -296,9 +297,9 @@ export class UserCreateCommand extends SfCommand<UserCreateOutput> {
   }
 }
 
-export default UserCreateCommand;
+export default CreateUserCommand;
 
-export interface UserCreateOutput {
+export interface CreateUserOutput {
   orgId: string;
   permissionSetAssignments: string[];
   fields: Record<string, unknown>;

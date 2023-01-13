@@ -28,15 +28,16 @@ export type AuthList = Partial<{
   userId: string;
 }>;
 
-export type UserList = AuthList[];
+export type ListUsers = AuthList[];
 
 type UserInfo = { Username: string; ProfileId: string; Id: string };
 type UserInfoMap = Record<string, UserInfo>;
 type ProfileInfo = { Id: string; Name: string };
 type ProfileInfoMap = Record<string, string>;
 
-export class UserListCommand extends SfCommand<UserList> {
-  public static readonly aliases = ['force:user:list', 'org:list:users'];
+export class ListUsersCommand extends SfCommand<ListUsers> {
+  // eslint-disable-next-line sf-plugin/encourage-alias-deprecation
+  public static readonly aliases = ['force:user:list'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -57,8 +58,8 @@ export class UserListCommand extends SfCommand<UserList> {
   private conn: Connection;
   private org: Org;
 
-  public async run(): Promise<UserList> {
-    const { flags } = await this.parse(UserListCommand);
+  public async run(): Promise<ListUsers> {
+    const { flags } = await this.parse(ListUsersCommand);
     this.org = flags['target-org'];
     this.conn = flags['target-org'].getConnection(flags['api-version']);
     // parallelize 2 org queries and 2 fs operations
@@ -69,9 +70,9 @@ export class UserListCommand extends SfCommand<UserList> {
       (await StateAggregator.getInstance()).aliases,
     ]);
 
-    const authList: UserList = userAuthData.map((authData) => {
+    const authList: ListUsers = userAuthData.map((authData) => {
       const username = authData.getUsername();
-      // if they passed in an alias and it maps to something we have an Alias.
+      // if they passed in an alias see if it maps to an Alias.
       const alias = aliases.get(username);
       const userInfo = userInfos[username];
       const profileName = userInfo && profileInfos[userInfo.ProfileId];

@@ -13,8 +13,7 @@ import { PSLResult, UserPermSetLicenseAssignBaseCommand } from '../../../baseCom
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
 
-export class UserPermSetLicenseAssignCommand extends UserPermSetLicenseAssignBaseCommand {
-  public static readonly aliases = ['org:assign:permsetlicense'];
+export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCommand {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -36,7 +35,7 @@ export class UserPermSetLicenseAssignCommand extends UserPermSetLicenseAssignBas
   };
 
   public async run(): Promise<PSLResult> {
-    const { flags } = await this.parse(UserPermSetLicenseAssignCommand);
+    const { flags } = await this.parse(AssignPermSetLicenseCommand);
     const username = flags['target-org'].getUsername();
     this.usernamesOrAliases = ensureArray(flags['on-behalf-of'] ?? username);
     this.pslName = flags.name;

@@ -13,8 +13,7 @@ import { PermsetAssignResult, UserPermSetAssignBaseCommand } from '../../../base
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
 
-export class UserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
-  public static readonly aliases = ['org:assign:permset'];
+export class AssignPermSetCommand extends UserPermSetAssignBaseCommand {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -39,7 +38,7 @@ export class UserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
   };
 
   public async run(): Promise<PermsetAssignResult> {
-    const { flags } = await this.parse(UserPermSetAssignCommand);
+    const { flags } = await this.parse(AssignPermSetCommand);
     this.aliasOrUsernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
     this.permSetNames = flags['perm-set-name'];
     this.connection = flags['target-org'].getConnection(flags['api-version']);

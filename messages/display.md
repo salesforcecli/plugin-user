@@ -23,3 +23,7 @@ the https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfd
 # flags.target-hub.deprecation
 
 The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.
+
+# flags.verbose.summary
+
+Display additional information

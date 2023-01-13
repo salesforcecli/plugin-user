@@ -9,13 +9,13 @@ import { Connection, User } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
 import { Config } from '@oclif/core';
-import { UserPermSetAssignCommand } from '../../../../src/commands/user/permset/assign';
-import { PermsetAssignResult } from '../../../../src/baseCommands/user/permset/assign';
+import { AssignPermSetCommand } from '../../../src/commands/org/assign/permset';
+import { PermsetAssignResult } from '../../../src/baseCommands/user/permset/assign';
 
-describe('user:permset:assign', () => {
+describe('org:assign:permset', () => {
   const $$ = new TestContext();
 
-  class UserPermSetAssignCommandTest extends UserPermSetAssignCommand {
+  class AssignPermSetCommandTest extends AssignPermSetCommand {
     public constructor(argv: string[], config: Config) {
       super(argv, config);
     }
@@ -73,7 +73,7 @@ describe('user:permset:assign', () => {
         value: 'LargeDreamHouse',
       },
     ];
-    const userPermSetAssign = new UserPermSetAssignCommandTest(
+    const userPermSetAssign = new AssignPermSetCommandTest(
       [
         '--json',
         '--on-behalf-of',
@@ -97,7 +97,7 @@ describe('user:permset:assign', () => {
         message: 'Permission set "abc" not found in target org. Do you need to push source?',
       },
     ];
-    const userPermSetAssign = new UserPermSetAssignCommandTest(['--json', '--permsetname', 'PERM2'], {} as Config);
+    const userPermSetAssign = new AssignPermSetCommandTest(['--json', '--permsetname', 'PERM2'], {} as Config);
     const result = await userPermSetAssign.run();
     expect(result.failures).to.deep.equal(expected);
   });

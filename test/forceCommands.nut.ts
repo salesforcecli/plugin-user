@@ -12,9 +12,9 @@ import * as chaiEach from 'chai-each';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
 import { PermsetAssignResult } from '../src/baseCommands/user/permset/assign';
-import { AuthList } from '../src/commands/user/list';
-import { UserCreateOutput } from '../src/commands/user/create';
-import { UserDisplayResult } from '../src/commands/user/display';
+import { AuthList } from '../src/commands/org/list/users';
+import { CreateUserOutput } from '../src/commands/org/create/user';
+import { DisplayUserResult } from '../src/commands/org/display/user';
 
 use(chaiEach);
 let session: TestSession;
@@ -42,7 +42,7 @@ describe('verifies legacy force commands run successfully ', () => {
   });
 
   it('user display', () => {
-    const output = execCmd<UserDisplayResult>('force:user:display --json', { ensureExitCode: 0 }).jsonOutput;
+    const output = execCmd<DisplayUserResult>('force:user:display --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output?.result).to.have.all.keys([
       'username',
       'accessToken',
@@ -70,7 +70,7 @@ describe('verifies legacy force commands run successfully ', () => {
   });
 
   it('creates a secondary user', () => {
-    const output = execCmd<UserCreateOutput>('force:user:create --json -a Other', { ensureExitCode: 0 }).jsonOutput;
+    const output = execCmd<CreateUserOutput>('force:user:create --json -a Other', { ensureExitCode: 0 }).jsonOutput;
 
     expect(output?.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
     expect(output?.result.fields).to.have.all.keys(

@@ -9,8 +9,8 @@ import * as path from 'path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
-import { UserCreateOutput } from '../../src/commands/user/create';
-import { AuthList } from '../../src/commands/user/list';
+import { CreateUserOutput } from '../../src/commands/org/create/user';
+import { AuthList } from '../../src/commands/org/list/users';
 
 let session: TestSession;
 
@@ -37,8 +37,8 @@ describe('creates a user from a file and verifies', () => {
 
   it('creates a user with setuniqueusername from username on commandline', () => {
     const testUsername = 'test@test.test';
-    const output = execCmd<UserCreateOutput>(
-      `user:create --json --setuniqueusername username=${testUsername} profileName="Chatter Free User"`,
+    const output = execCmd<CreateUserOutput>(
+      `org:create:user --json --setuniqueusername username=${testUsername} profileName="Chatter Free User"`,
       {
         ensureExitCode: 0,
       }
@@ -51,8 +51,8 @@ describe('creates a user from a file and verifies', () => {
   });
 
   it('creates a user with setuniqueusername without username on commandline', () => {
-    const output = execCmd<UserCreateOutput>(
-      `user:create --json -f ${path.join('config', 'fileWithUsername.json')} --setuniqueusername`,
+    const output = execCmd<CreateUserOutput>(
+      `org:create:user --json -f ${path.join('config', 'fileWithUsername.json')} --setuniqueusername`,
       {
         ensureExitCode: 0,
       }
@@ -63,8 +63,8 @@ describe('creates a user from a file and verifies', () => {
   });
 
   it('creates a secondary user with password and permsets assigned', () => {
-    const output = execCmd<UserCreateOutput>(
-      `user:create --json -a Other -f ${path.join('config', 'complexUser.json')}`,
+    const output = execCmd<CreateUserOutput>(
+      `org:create:user --json -a Other -f ${path.join('config', 'complexUser.json')}`,
       { ensureExitCode: 0 }
     ).jsonOutput;
     expect(output?.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
@@ -82,7 +82,7 @@ describe('creates a user from a file and verifies', () => {
     expect(queryResult.records.some((assignment) => assignment.PermissionSet.Name === 'VolunteeringApp'));
   });
   it('verifies the new user appears in list of users for the org', async () => {
-    const output = execCmd<AuthList[]>(`user:list --json -u ${session.orgs.get('default')?.username}`, {
+    const output = execCmd<AuthList[]>(`org:list:users --json -u ${session.orgs.get('default')?.username}`, {
       ensureExitCode: 0,
     }).jsonOutput;
     expect(output?.result.find((user) => user.userId === createdUserId)).to.be.ok;

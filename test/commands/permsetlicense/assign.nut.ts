@@ -7,8 +7,8 @@
 import * as path from 'path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { PSLResult } from '../../../../src/baseCommands/user/permsetlicense/assign';
-import { UserCreateOutput } from '../../../../src/commands/user/create';
+import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign';
+import { CreateUserOutput } from '../../../src/commands/org/create/user';
 
 describe('PermissionSetLicense tests', () => {
   const testPSL = 'IdentityConnect';
@@ -34,7 +34,7 @@ describe('PermissionSetLicense tests', () => {
   });
 
   it('assigns a psl to default user', () => {
-    const commandResult = execCmd<PSLResult>(`user:permsetlicense:assign -n ${testPSL} --json`, {
+    const commandResult = execCmd<PSLResult>(`org:assign:permsetlicense -n ${testPSL} --json`, {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     expect(commandResult?.failures).to.be.an('array').with.length(0);
@@ -43,7 +43,7 @@ describe('PermissionSetLicense tests', () => {
   });
 
   it('assigns a psl to default user successfully if already assigned', () => {
-    const commandResult = execCmd<PSLResult>(`user:permsetlicense:assign -n ${testPSL} --json`, {
+    const commandResult = execCmd<PSLResult>(`org:assign:permsetlicense -n ${testPSL} --json`, {
       ensureExitCode: 0,
     }).jsonOutput as { status: number; result: PSLResult; warnings: string[] };
     expect(commandResult.result.failures).to.be.an('array').with.length(0);
@@ -54,7 +54,7 @@ describe('PermissionSetLicense tests', () => {
 
   it('fails for non-existing psl', () => {
     const badPSL = 'badPSL';
-    execCmd<PSLResult>(`user:permsetlicense:assign -n ${badPSL} --json`, {
+    execCmd<PSLResult>(`org:assign:permsetlicense -n ${badPSL} --json`, {
       ensureExitCode: 1,
     });
   });
@@ -66,15 +66,15 @@ describe('PermissionSetLicense tests', () => {
 
       expect(originalUsername).to.be.a('string');
       // create a second user
-      const secondUsername = execCmd<UserCreateOutput>(
-        `user:create --json -a Other -f ${path.join('config', 'fullUser.json')}`,
+      const secondUsername = execCmd<CreateUserOutput>(
+        `org:create:user --json -a Other -f ${path.join('config', 'fullUser.json')}`,
         {
           ensureExitCode: 0,
         }
       ).jsonOutput?.result.fields.username as string;
       expect(secondUsername).to.be.a('string');
       const commandResult = execCmd<PSLResult>(
-        `user:permsetlicense:assign -n ${anotherPSL} -b ${originalUsername} Other --json`,
+        `org:assign:permsetlicense -n ${anotherPSL} -b ${originalUsername} Other --json`,
         {
           ensureExitCode: 0,
         }
@@ -91,15 +91,15 @@ describe('PermissionSetLicense tests', () => {
       const anotherPSL = 'SalesConsoleUser';
       const originalUsername = session.orgs.get('default')?.username;
 
-      const secondUsername = execCmd<UserCreateOutput>(
-        `user:create --json -f ${path.join('config', 'chatterUser.json')}`,
+      const secondUsername = execCmd<CreateUserOutput>(
+        `org:create:user --json -f ${path.join('config', 'chatterUser.json')}`,
         {
           ensureExitCode: 0,
         }
       ).jsonOutput?.result.fields.username as string;
 
       const commandResult = execCmd<PSLResult>(
-        `user:permsetlicense:assign -n ${anotherPSL} -b ${originalUsername} ${secondUsername} --json`,
+        `org:assign:permsetlicense -n ${anotherPSL} -b ${originalUsername} ${secondUsername} --json`,
         {
           ensureExitCode: 68,
         }

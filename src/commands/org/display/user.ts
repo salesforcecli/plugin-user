@@ -19,7 +19,7 @@ import {
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
-export type UserDisplayResult = {
+export type DisplayUserResult = {
   username: string;
   profileName: string;
   id: string;
@@ -31,8 +31,9 @@ export type UserDisplayResult = {
   password?: string;
 };
 
-export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
-  public static readonly aliases = ['force:user:display', 'org:display:user'];
+export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
+  public static readonly deprecateAliases = true;
+  public static readonly aliases = ['force:user:display'];
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -47,18 +48,18 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
-    verbose: Flags.boolean(),
+    verbose: Flags.boolean({ summary: messages.getMessage('flags.verbose.summary') }),
   };
 
   private logger: Logger;
 
-  public async run(): Promise<UserDisplayResult> {
-    const { flags } = await this.parse(UserDisplayCommand);
+  public async run(): Promise<DisplayUserResult> {
+    const { flags } = await this.parse(DisplayUserCommand);
     this.logger = await Logger.child(this.constructor.name);
 
     const username = ensureString(flags['target-org'].getUsername());
     const userAuthDataArray = await flags['target-org'].readUserAuthFiles();
-    // userAuthDataArray contains all of the Org's users AuthInfo, we just need the default or -u, which is in the username variable
+    // userAuthDataArray contains all the Org's users AuthInfo, we just need the default or -o, which is in the username variable
     const userAuthData: AuthFields | undefined = userAuthDataArray
       .find((uat) => uat.getFields().username === username)
       ?.getFields(true);
@@ -92,7 +93,7 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
       );
     }
 
-    const result: UserDisplayResult = {
+    const result: DisplayUserResult = {
       accessToken: conn.accessToken as string,
       id: userId,
       instanceUrl: userAuthData?.instanceUrl,
@@ -119,7 +120,7 @@ export class UserDisplayCommand extends SfCommand<UserDisplayResult> {
     return result;
   }
 
-  private print(result: UserDisplayResult): void {
+  private print(result: DisplayUserResult): void {
     const columns = {
       key: { header: 'key' },
       label: { header: 'label' },

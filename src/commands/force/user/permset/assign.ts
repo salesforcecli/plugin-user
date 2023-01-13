@@ -20,7 +20,8 @@ export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand 
   public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
     'perm-set-name': arrayWithDeprecation({
-      aliases: ['permsetname', 'name'],
+      aliases: ['permsetname'],
+      deprecateAliases: true,
       char: 'n',
       description: messages.getMessage('flags.permsetName'),
       required: true,
@@ -29,11 +30,13 @@ export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand 
       char: 'o',
       description: messages.getMessage('flags.onBehalfOf'),
       aliases: ['onbehalfof'],
+      deprecateAliases: true,
     }),
     'target-org': Flags.requiredOrg({
       char: 'u',
       summary: messages.getMessage('flags.target-org.summary'),
       aliases: ['targetusername'],
+      deprecateAliases: true,
       required: true,
     }),
     'api-version': orgApiVersionFlagWithDeprecations,

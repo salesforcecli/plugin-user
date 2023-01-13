@@ -17,13 +17,14 @@ export type PasswordData = {
   password: string;
 };
 
-export class UserPasswordGenerateCommand extends UserPasswordGenerateBaseCommand {
-  public static readonly aliases = ['org:generate:password'];
+export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
     'on-behalf-of': Flags.string({
+      aliases: ['onbehalfof'],
+      deprecateAliases: true,
       char: 'b',
       description: messages.getMessage('flags.onBehalfOf'),
       multiple: true,
@@ -54,7 +55,7 @@ export class UserPasswordGenerateCommand extends UserPasswordGenerateBaseCommand
   };
 
   public async run(): Promise<GenerateResult> {
-    const { flags } = await this.parse(UserPasswordGenerateCommand);
+    const { flags } = await this.parse(GenerateUserPasswordCommand);
     this.usernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
     this.length = flags.length;
     this.complexity = flags.complexity;

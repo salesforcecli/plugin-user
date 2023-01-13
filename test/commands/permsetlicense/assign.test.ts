@@ -5,17 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Connection } from '@salesforce/core';
-// import { StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { Config } from '@oclif/core';
 import { expect } from 'chai';
-import { UserPermSetLicenseAssignCommand } from '../../../../src/commands/user/permsetlicense/assign';
-import { PSLResult } from '../../../../src/baseCommands/user/permsetlicense/assign';
+import { AssignPermSetLicenseCommand } from '../../../src/commands/org/assign/permsetlicense';
+import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign';
 
-describe('user:permsetlicense:assign', () => {
+describe('org:assign:permsetlicense', () => {
   const $$ = new TestContext();
 
-  class UserPermSetLicenseAssignCommandTest extends UserPermSetLicenseAssignCommand {
+  class AssignPermSetLicenseCommandTest extends AssignPermSetLicenseCommand {
     public constructor(argv: string[], config: Config) {
       super(argv, config);
     }
@@ -78,7 +77,7 @@ describe('user:permsetlicense:assign', () => {
         value: goodPSL,
       },
     ];
-    const userPermSetLicenseAssignCommand = new UserPermSetLicenseAssignCommandTest(
+    const userPermSetLicenseAssignCommand = new AssignPermSetLicenseCommandTest(
       ['--json', '--onbehalfof', [username1, username2].join(','), '--name', goodPSL],
       {} as Config
     );
@@ -89,7 +88,7 @@ describe('user:permsetlicense:assign', () => {
 
   it('should fail with the correct error message when no PSL exists', async () => {
     await prepareStubs();
-    const userPermSetLicenseAssignCommand = new UserPermSetLicenseAssignCommandTest(
+    const userPermSetLicenseAssignCommand = new AssignPermSetLicenseCommandTest(
       ['--json', '--name', badPSL],
       {} as Config
     );

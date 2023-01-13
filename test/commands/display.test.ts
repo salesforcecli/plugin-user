@@ -9,11 +9,11 @@ import { AuthInfo, Connection, Org } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
 import { Config } from '@oclif/core';
-import { UserDisplayCommand } from '../../src/commands/user/display';
+import { DisplayUserCommand } from '../../src/commands/org/display/user';
 
 const username = 'defaultusername@test.com';
 
-describe('user:display', () => {
+describe('org:display:user', () => {
   const $$ = new TestContext();
 
   const testOrg = new MockTestOrgData();
@@ -85,7 +85,7 @@ describe('user:display', () => {
       profileName: 'profileName',
       username: 'defaultusername@test.com',
     };
-    const displayCommand = new UserDisplayCommand(
+    const displayCommand = new DisplayUserCommand(
       ['--json', '--target-org', defaultOrg.username, '--target-dev-hub', devHub.username],
       {} as Config
     );
@@ -106,7 +106,7 @@ describe('user:display', () => {
       profileName: 'QueriedName',
       username: defaultOrg.username,
     };
-    const displayCommand = new UserDisplayCommand(
+    const displayCommand = new DisplayUserCommand(
       ['--json', '--targetusername', 'defaultusername@test.com', '--targetdevhubusername', devHub.username],
       {} as Config
     );
