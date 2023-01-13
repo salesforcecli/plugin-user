@@ -5,10 +5,10 @@ generate a password for scratch org users
 # description
 
 Generates and sets a random password for one or more scratch org users. Targets the usernames listed with the
---onbehalfof parameter or the --targetusername parameter. Defaults to the defaultusername.
+--on-behalf-of parameter or the --target-org parameter. Defaults to the default target org.
 
 If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub,
---targetdevhubusername is required.
+--target-hub-org is required.
 
 To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the
 types of characters used in the generated password:
@@ -20,7 +20,7 @@ types of characters used in the generated password:
 4 - lower and upper case letters and symbols only
 5 - lower and upper case letters and numbers and symbols only
 
-To see a password that was previously generated, run "<%= config.bin %> user:display".
+To see a password that was previously generated, run "<%= config.bin %> org:display:user".
 
 # examples
 
@@ -73,7 +73,7 @@ Successfully set passwords:%s
 
 # viewWithCommand
 
-You can see the password again by running "sfdx user:display -u %s".
+You can see the password again by running "sfdx org:display:user -u %s".
 
 # flags.target-org.summary
 
@@ -81,7 +81,7 @@ Scratch org alias or login user.
 
 # onBehalfOfMultipleError
 
-Found a comma-separated list of usernames or aliases for the --onbehalfof parameter. Either specify one per flag or
+Found a comma-separated list of usernames or aliases for the --on-behalf-of parameter. Either specify one per flag or
 separate by a space.
 
 # flags.target-hub.deprecation
