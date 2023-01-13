@@ -25,9 +25,9 @@ For more information about user limits, defaults, and other considerations when 
 
   <%= config.bin %> <%= command.id %>
 
-- Create a user with alias "testuser1" using a user definition file. Set the "profileName" option to "Chatter Free User", which overrides the value in the defintion file if it also exists there:
+- Create a user with alias "testuser1" using a user definition file. Set the "profileName" option to "Chatter Free User", which overrides the value in the defintion file if it also exists there. Create the user for the scratch org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter Free User'
+  <%= config.bin %> <%= command.id %> --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter Free User' --target-org my-scratch
 
 - Create a user by specifying the username, email, and perm set assignment at the command line; command fails if the username already exists in Salesforce:
 

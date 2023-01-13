@@ -1,6 +1,6 @@
 # summary
 
-list all authenticated users of an org
+List all authenticated users of an org
 
 # description
 
@@ -18,4 +18,4 @@ Username or alias of the Dev Hub org.
 
 # flags.target-hub.deprecation
 
-The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.
+The --target-dev-hub flag is deprecated and is no longer used by this command. The flag will be removed in API version 57.0 or later.
