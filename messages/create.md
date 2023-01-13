@@ -1,30 +1,61 @@
 # summary
 
-create a user for a scratch org
+Create a user for a scratch org.
 
 # description
 
-Create a user for a scratch org, optionally setting an alias for use by the CLI, assigning permission sets (e.g.,
-permsets=ps1,ps2), generating a password (e.g., generatepassword=true), and setting User sObject fields.,
+A scratch org includes one administrator user by default. For testing purposes, however, you sometimes need to create additional users.
+
+The easiest way to create a user is to let this command assign default or generated characteristics to the new user. If you want to customize your new user, create a definition file and specify it with the --definition-file flag. In the file, you can include all the User sObject (SSalesforce object) fields and Salesforce DX-specific options, as described in "User Definition File for Customizing a Scratch Org User" (https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm). You can also specify these options on the command line.
+
+If you don't customize your new user, this command creates a user with the following default characteristics:
+
+    * The username is the existing administrator’s username prepended with a timestamp, such as 1505759162830_test-wvkpnfm5z113@example.com.
+    * The user’s profile is Standard User.
+    * The values of the required fields of the User sObject are the corresponding values of the administrator user.
+    * The user has no password.
+
+Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. When this command completes, it displays the new username and user ID. Run the "<%= config.bin %> user display" command to get more information about the new user.
+
+For more information about user limits, defaults, and other considerations when creating a new scratch org user, see https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
 
 # examples
 
-- <%= config.bin %> <%= command.id %>
-- <%= config.bin %> <%= command.id %> -a testuser1 -f config/project-user-def.json profileName='Chatter Free User'
-- <%= config.bin %> <%= command.id %> username=testuser1@my.org email=me@my.org permsets=DreamHouse
-- <%= config.bin %> <%= command.id %> -f config/project-user-def.json email=me@my.org generatepassword=true
+- Create a user for your default scratch org and let this command generate a username, user ID, and other characteristics:
+
+  <%= config.bin %> <%= command.id %>
+
+- Create a user with alias "testuser1" using a user definition file. Set the "profileName" option to "Chatter Free User", which overrides the value in the defintion file if it also exists there:
+
+  <%= config.bin %> <%= command.id %> --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter Free User'
+
+- Create a user by specifying the username, email, and perm set assignment at the command line; command fails if the username already exists in Salesforce:
+
+  <%= config.bin %> <%= command.id %> username=testuser1@my.org email=me@my.org permsets=DreamHouse
+
+- Create a user with a definition file, set the email value as specified (overriding any value in the definition file), and generate a password for the user. If the username in the definition file isn't unique, the command appends the org ID to make it unique:
+
+  <%= config.bin %> <%= command.id %> --definition-file config/project-user-def.json email=me@my.org generatepassword=true --set-unique-username
 
 # flags.alias.summary
 
-set an alias for the created username to reference within the CLI,
+Set an alias for the created username to reference in other CLI commands.
 
 # flags.definitionfile.summary
 
-file path to a user definition,
+File path to a user definition file for customizing the new user.
+
+# flags.definitionfile.description
+
+The user definition file uses JSON format and can include any Salesforce User sObject field and Salesforce DX-specific options. See https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm for more information.
 
 # flags.setuniqueusername.summary
 
-force the username, if specified in the definition file or at the command line, to be unique by appending the org ID
+Force the username, if specified in the definition file or at the command line, to be unique by appending the org ID.
+
+# flags.setuniqueusername.summary
+
+The new user’s username must be unique across all Salesforce orgs and in the form of an email address. If you let this command generate a username for you, it's guaranteed to be unique. If you specify an existing username in a definition file, the command fails. Set this flag to force the username to be unique; as a result, the username might be different than what you specify in the definition file.
 
 # licenseLimitExceeded
 
@@ -32,13 +63,13 @@ There are no available user licenses for the user profile "%s".
 
 # duplicateUsername
 
-The username "%s" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.
+The username "%s" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs. Try using the --set-unique-username flag to force a unique username by appending the org ID.
 
 # success
 
 Successfully created user "%s" with ID %s for org %s.%s
-You can see more details about this user by running "%s user:display -u %s".
+See more details about this user by running "%s user display -o %s".
 
 # flags.target-hub.deprecation
 
-The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.
+The --target-dev-hub flag is deprecated and is no longer used by this command. The flag will be removed in API version 57.0 or later.
