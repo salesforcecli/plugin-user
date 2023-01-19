@@ -8,7 +8,6 @@
 import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
 import { ensureString, getString } from '@salesforce/ts-types';
 import {
-  Flags,
   loglevel,
   optionalHubFlagWithDeprecations,
   orgApiVersionFlagWithDeprecations,
@@ -48,7 +47,6 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
-    verbose: Flags.boolean({ summary: messages.getMessage('flags.verbose.summary') }),
   };
 
   private logger: Logger;

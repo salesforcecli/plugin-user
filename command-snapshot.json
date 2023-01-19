@@ -56,7 +56,7 @@
   {
     "command": "org:display:user",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["api-version", "json", "loglevel", "target-dev-hub", "target-org", "verbose"],
+    "flags": ["api-version", "json", "loglevel", "target-dev-hub", "target-org"],
     "alias": ["force:user:display"]
   },
   {
