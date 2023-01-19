@@ -1,24 +1,32 @@
 # summary
 
-assign a permission set license to one or more users of an org
+Assign a permission set license to one or more users of a scratch org.
 
 # description
 
-assign a permission set license to one or more users of an org
+To specify an alias for the --target-org or --on-behalf-of flags, use the CLI username alias, such as the one you set with the "alias set" command. Don't use the value of the Alias field of the User Salesforce object for the org user.
 
 # examples
 
-<%= config.bin %> <%= command.id %> -n DreamHouse,
-<%= config.bin %> <%= command.id %> -n DreamHouse -u me@my.org,
-<%= config.bin %> <%= command.id %> -n DreamHouse -o "user1@my.org,user2,user3"
+- Assign the DreamHouse permission set license to original admin user of your default scratch org:
 
-# flags.onBehalfOf
+  <%= config.bin %> <%= command.id %> --name DreamHouse
 
-comma-separated list of usernames or aliases to assign the permission set license to
+- Assign the Dreamhouse permission set license to the original admin user of the scratch org with alias "my-scratch":
 
-# flags.name
+  <%= config.bin %> <%= command.id %> --name DreamHouse --target-org my-scratch
 
-the name of the permission set license to assign
+- Assign the Dreamhouse permission set license to the specified list of users of your default scratch org:
+
+  <%= config.bin %> <%= command.id %> --name DreamHouse --on-behalf-of "user1@my.org,user2,user3"
+
+# flags.onBehalfOf.summary
+
+Comma-separated list of usernames or aliases to assign the permission set license to.
+
+# flags.name.summary
+
+Name of the permission set license to assign.
 
 # duplicateValue
 

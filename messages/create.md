@@ -15,7 +15,7 @@ If you don't customize your new user, this command creates a user with the follo
     * The values of the required fields of the User sObject are the corresponding values of the administrator user.
     * The user has no password.
 
-Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. When this command completes, it displays the new username and user ID. Run the "<%= config.bin %> user display" command to get more information about the new user.
+Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. When this command completes, it displays the new username and user ID. Run the "<%= config.bin %> org user display" command to get more information about the new user.
 
 For more information about user limits, defaults, and other considerations when creating a new scratch org user, see https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
 
@@ -53,7 +53,7 @@ The user definition file uses JSON format and can include any Salesforce User sO
 
 Force the username, if specified in the definition file or at the command line, to be unique by appending the org ID.
 
-# flags.setuniqueusername.summary
+# flags.setuniqueusername.description
 
 The new user’s username must be unique across all Salesforce orgs and in the form of an email address. If you let this command generate a username for you, it's guaranteed to be unique. If you specify an existing username in a definition file, the command fails. Set this flag to force the username to be unique; as a result, the username might be different than what you specify in the definition file.
 
@@ -68,7 +68,7 @@ The username "%s" already exists in this or another Salesforce org. Usernames mu
 # success
 
 Successfully created user "%s" with ID %s for org %s.%s
-See more details about this user by running "%s user display -o %s".
+See more details about this user by running "%s org user display -o %s".
 
 # flags.target-hub.deprecation
 

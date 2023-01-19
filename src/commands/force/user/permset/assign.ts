@@ -22,12 +22,12 @@ export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand 
     'perm-set-name': arrayWithDeprecation({
       aliases: ['permsetname', 'name'],
       char: 'n',
-      description: messages.getMessage('flags.permsetName'),
+      summary: messages.getMessage('flags.permsetName.summary'),
       required: true,
     }),
     'on-behalf-of': arrayWithDeprecation({
       char: 'o',
-      description: messages.getMessage('flags.onBehalfOf'),
+      summary: messages.getMessage('flags.onBehalfOf.summary'),
       aliases: ['onbehalfof'],
     }),
     'target-org': Flags.requiredOrg({
