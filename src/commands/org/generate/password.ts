@@ -26,7 +26,7 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
       aliases: ['onbehalfof'],
       deprecateAliases: true,
       char: 'b',
-      description: messages.getMessage('flags.onBehalfOf'),
+      summary: messages.getMessage('flags.onBehalfOf.summary'),
       multiple: true,
       parse: (input): Promise<string> => {
         if (input.includes(',')) {
@@ -37,7 +37,7 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
     }),
     length: Flags.integer({
       char: 'l',
-      description: messages.getMessage('flags.length'),
+      summary: messages.getMessage('flags.length.summary'),
       min: 8,
       max: 1000,
       default: 13,
@@ -45,7 +45,7 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
     // the higher the value, the stronger the password
     complexity: Flags.integer({
       char: 'c',
-      description: messages.getMessage('flags.complexity'),
+      summary: messages.getMessage('flags.complexity.summary'),
       min: 0,
       max: 5,
       default: 5,

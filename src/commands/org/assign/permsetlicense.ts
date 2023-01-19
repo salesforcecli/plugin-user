@@ -20,13 +20,13 @@ export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCom
   public static readonly flags = {
     name: Flags.string({
       char: 'n',
-      description: messages.getMessage('flags.name'),
+      summary: messages.getMessage('flags.name.summary'),
       required: true,
       aliases: ['perm-set-license', 'psl'],
     }),
     'on-behalf-of': arrayWithDeprecation({
       char: 'b',
-      description: messages.getMessage('flags.onBehalfOf'),
+      summary: messages.getMessage('flags.onBehalfOf.summary'),
       aliases: ['onbehalfof'],
       deprecateAliases: true,
     }),

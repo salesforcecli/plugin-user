@@ -1,17 +1,12 @@
 # summary
 
-generate a password for scratch org users
+Generate a random password for scratch org users.
 
 # description
 
-Generates and sets a random password for one or more scratch org users. Targets the usernames listed with the
---on-behalf-of parameter or the --target-org parameter. Defaults to the default target org.
+By default, new scratch orgs contain one admin user with no password. Use the CLI to generate or change a password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
 
-If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub,
---target-hub-org is required.
-
-To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the
-types of characters used in the generated password:
+To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types of characters used in the generated password:
 
 0 - lower case letters only
 1 - lower case letters and numbers only
@@ -20,27 +15,37 @@ types of characters used in the generated password:
 4 - lower and upper case letters and symbols only
 5 - lower and upper case letters and numbers and symbols only
 
-To see a password that was previously generated, run "<%= config.bin %> org:display:user".
+To see a password that was previously generated, run "<%= config.bin %> org user display".
 
 # examples
 
-- <%= config.bin %> <%= command.id %>
-- <%= config.bin %> <%= command.id %> -l 12
-- <%= config.bin %> <%= command.id %> -c 3
-- <%= config.bin %> <%= command.id %> -u me@my.org --json
-- <%= config.bin %> <%= command.id %> -o "user1@my.org,user2@my.org,user3@my.org"
+- Generate a password for the original admin user of your default scratch org:
 
-# flags.onBehalfOf
+  <%= config.bin %> <%= command.id %>
 
-comma-separated list of usernames or aliases to assign the password to
+- Generate a password that contains 12 characters for the original admin user of the scratch org with alias "my-scratch":
 
-# flags.length
+  <%= config.bin %> <%= command.id %> --length 12 --target-org my-scratch
 
-number of characters in the generated password; valid values are between 8 and 1000
+- Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
 
-# flags.complexity
+  <%= config.bin %> <%= command.id %> --complexity 3
 
-level of password complexity or strength; the higher the value, the stronger the password
+- Generate a password for the specified users in the default scratch org:
+
+  <%= config.bin %> <%= command.id %> --on-behalf-of "user1@my.org,user2@my.org,user3@my.org"
+
+# flags.onBehalfOf.summary
+
+Comma-separated list of usernames or aliases to assign the password to.
+
+# flags.length.summary
+
+Number of characters in the generated password; valid values are between 8 and 100.
+
+# flags.complexity.summary
+
+Level of password complexity or strength; the higher the value, the stronger the password.
 
 # noSelfSetErrorV50
 
@@ -73,7 +78,7 @@ Successfully set passwords:%s
 
 # viewWithCommand
 
-You can see the password again by running "sfdx org:display:user -u %s".
+You can see the password again by running "sfdx user:display -u %s".
 
 # flags.target-org.summary
 
@@ -81,9 +86,9 @@ Scratch org alias or login user.
 
 # onBehalfOfMultipleError
 
-Found a comma-separated list of usernames or aliases for the --on-behalf-of parameter. Either specify one per flag or
+Found a comma-separated list of usernames or aliases for the --onbehalfof parameter. Either specify one per flag or
 separate by a space.
 
 # flags.target-hub.deprecation
 
-The --target-dev-hub flag is deprecated and is not being used in this command. The flag will be removed in v57 or later.
+The --target-dev-hub flag is deprecated and is no longer used by this command. The flag will be removed in API version 57.0 or later.

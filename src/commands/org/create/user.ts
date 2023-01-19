@@ -68,12 +68,14 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     'definition-file': Flags.string({
       char: 'f',
       summary: messages.getMessage('flags.definitionfile.summary'),
+      description: messages.getMessage('flags.definitionfile.description'),
       aliases: ['definitionfile'],
       deprecateAliases: true,
     }),
     'set-unique-username': Flags.boolean({
       char: 's',
       summary: messages.getMessage('flags.setuniqueusername.summary'),
+      description: messages.getMessage('flags.setuniqueusername.description'),
       aliases: ['setuniqueusername'],
       deprecateAliases: true,
     }),
