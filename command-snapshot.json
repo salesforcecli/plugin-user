@@ -29,7 +29,7 @@
   {
     "command": "org:assign:permset",
     "plugin": "@salesforce/plugin-user",
-    "flags": ["api-version", "json", "on-behalf-of", "perm-set-name", "target-org"],
+    "flags": ["api-version", "json", "name", "on-behalf-of", "target-org"],
     "alias": []
   },
   {

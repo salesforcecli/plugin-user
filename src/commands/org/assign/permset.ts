@@ -18,8 +18,8 @@ export class AssignPermSetCommand extends UserPermSetAssignBaseCommand {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
-    'perm-set-name': Flags.string({
-      aliases: ['permsetname', 'name'],
+    name: Flags.string({
+      aliases: ['permsetname'],
       deprecateAliases: true,
       char: 'n',
       summary: messages.getMessage('flags.permsetName.summary'),
@@ -40,7 +40,7 @@ export class AssignPermSetCommand extends UserPermSetAssignBaseCommand {
   public async run(): Promise<PermsetAssignResult> {
     const { flags } = await this.parse(AssignPermSetCommand);
     this.aliasOrUsernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
-    this.permSetNames = flags['perm-set-name'];
+    this.permSetNames = flags.name;
     this.connection = flags['target-org'].getConnection(flags['api-version']);
     this.org = await Org.create({ connection: this.connection });
     return this.assign();

@@ -74,15 +74,7 @@ describe('org:assign:permset', () => {
       },
     ];
     const userPermSetAssign = new AssignPermSetCommandTest(
-      [
-        '--json',
-        '--on-behalf-of',
-        'testAlias',
-        'testUser2@test.com',
-        '--perm-set-name',
-        'DreamHouse',
-        'LargeDreamHouse',
-      ],
+      ['--json', '--on-behalf-of', 'testAlias', 'testUser2@test.com', '--name', 'DreamHouse', 'LargeDreamHouse'],
       {} as Config
     );
     const result = await userPermSetAssign.run();
