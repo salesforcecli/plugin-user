@@ -263,7 +263,7 @@ describe('user:create', () => {
     } catch (e) {
       expect(e.name).to.equal('duplicateUsername');
       expect(e.message).to.equal(
-        'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs.'
+        'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs. Try using the --set-unique-username flag to force a unique username by appending the org ID.'
       );
     }
   });
