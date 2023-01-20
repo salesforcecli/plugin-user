@@ -6,7 +6,7 @@
  */
 import * as path from 'path';
 
-import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
+import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
 // const projectPath = 'testProject_AllUserCommandsNoJSON';
 let session: TestSession;
@@ -29,45 +29,45 @@ describe('verifies all commands run successfully (no json)', () => {
       ],
     });
 
-    execCmd('force:source:push', { cli: 'sfdx' });
+    execCmd('force:source:push', { cli: 'sfdx', ensureExitCode: 0 });
   });
 
   it('user display', () => {
-    execCmd('force:user:display', { ensureExitCode: 0 });
+    execCmd('org:display:user', { ensureExitCode: 0 });
   });
 
   it('assigns a permset to the default user', () => {
-    execCmd('force:user:permset:assign -n VolunteeringApp', { ensureExitCode: 0 });
+    execCmd('org:assign:permset -n VolunteeringApp', { ensureExitCode: 0 });
   });
 
   it('creates a secondary user', () => {
-    execCmd('force:user:create -a Other', { ensureExitCode: 0 });
+    execCmd('org:create:user -a Other', { ensureExitCode: 0 });
   });
 
   it('assigns permset to the secondary user', () => {
-    execCmd('force:user:permset:assign -n VolunteeringApp --onbehalfof Other', {
+    execCmd('org:assign:permset -n VolunteeringApp --onbehalfof Other', {
       ensureExitCode: 0,
     });
   });
 
   it('lists the users', () => {
-    execCmd('force:user:list', { ensureExitCode: 0 });
+    execCmd('org:list:users', { ensureExitCode: 0 });
   });
 
   it('generates new passwords for main user', () => {
-    execCmd('force:user:password:generate', { ensureExitCode: 0 });
+    execCmd('org:generate:password', { ensureExitCode: 0 });
   });
 
   it('generates new password for secondary user (onbehalfof)', () => {
-    execCmd('force:user:password:generate -o Other', { ensureExitCode: 0 });
+    execCmd('org:generate:password -b Other', { ensureExitCode: 0 });
   });
 
   it('assigns 2 permsets to the main user', () => {
-    execCmd('force:user:permset:assign -n PS2,PS3', { ensureExitCode: 0 });
+    execCmd('org:assign:permset -n PS2 PS3', { ensureExitCode: 0 });
   });
 
   it('assigns 2 permsets to the secondary user', () => {
-    execCmd('force:user:permset:assign -n PS2,PS3 -o Other', { ensureExitCode: 0 });
+    execCmd('org:assign:permset -n PS2 PS3 -b Other', { ensureExitCode: 0 });
   });
 
   after(async () => {

@@ -2,6 +2,7 @@
   "extends": "@salesforce/dev-config/tsconfig-test",
   "include": ["./**/*.ts"],
   "compilerOptions": {
+    "strictNullChecks": true,
     "skipLibCheck": true
   }
 }
