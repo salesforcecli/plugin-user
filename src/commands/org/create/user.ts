@@ -112,7 +112,7 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
 
   public async run(): Promise<CreateUserOutput> {
     const { flags, argv } = await this.parse(CreateUserCommand);
-    this.varargs = parseVarArgs({}, argv);
+    this.varargs = parseVarArgs({}, argv as string[]);
     this.flags = flags as Interfaces.InferredFlags<typeof CreateUserCommand.flags>;
     this.logger = await Logger.child(this.constructor.name);
     const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
