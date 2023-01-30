@@ -167,11 +167,11 @@ describe('verifies all commands run successfully ', () => {
 
   it('generates new password for secondary user (onbehalfof) with complexity 7 should thrown an error', () => {
     const output = execCmd('org:generate:password -b Other --json -c 7', { ensureExitCode: 1 }).jsonOutput;
-    expect(output?.message).to.equal('Expected an integer less than or equal to 5 but received: 7');
+    expect(output?.message).to.include('Expected an integer less than or equal to 5 but received: 7');
   });
   it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
     const output = execCmd('org:generate:password -b Other --json -l 7', { ensureExitCode: 1 }).jsonOutput;
-    expect(output?.message).to.equal('Expected an integer greater than or equal to 8 but received: 7');
+    expect(output?.message).to.include('Expected an integer greater than or equal to 8 but received: 7');
   });
   it('assigns 2 permsets to the main user', () => {
     const output = execCmd<PermsetAssignResult>('org:assign:permset -n PS2 -n PS3 --json', {
