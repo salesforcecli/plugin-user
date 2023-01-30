@@ -1,3 +1,12 @@
+# [2.3.0](https://github.com/salesforcecli/plugin-user/compare/2.2.1...2.3.0) (2023-01-30)
+
+
+### Features
+
+* use latest sf-plugins-core and oclif/core ([#523](https://github.com/salesforcecli/plugin-user/issues/523)) ([f3990aa](https://github.com/salesforcecli/plugin-user/commit/f3990aa29f38a88de4dab6f2ea74e7d2207f0b37))
+
+
+
 ## [2.2.1](https://github.com/salesforcecli/plugin-user/compare/2.2.0...2.2.1) (2023-01-22)
 
 
