@@ -78,16 +78,16 @@
         "external": true,
         "subtopics": {
           "user": {
-            "description": "commands that perform user-related admin tasks",
+            "description": "Perform user-related admin tasks.",
             "subtopics": {
               "permset": {
-                "description": "Use to interact with permission sets assigned to a user"
+                "description": "Interact with permission sets assigned to a user."
               },
               "permsetlicense": {
-                "description": "Use to interact with permission sets assigned to a user"
+                "description": "Interact with permission set licenses assigned to a user."
               },
               "password": {
-                "description": "Used to generate and set passwords for users"
+                "description": "Generate and set passwords for users."
               }
             }
           }
