@@ -706,7 +706,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.20.3", "@oclif/core@^1.20.4", "@oclif/core@^1.23.0":
+"@oclif/core@^1.20.3", "@oclif/core@^1.20.4":
   version "1.24.0"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.24.0.tgz#e94e2f3a1259ebb3cc867d04b12c5bfc31c21f50"
   integrity sha512-J41suyV4fLfLcRRySZdtgFYSjIlpYqD90SY01Fm4+ZJUMcfDh/eQAD4sogyYOsIT0bfEzYOyYCjmfHmgcoX5aA==
@@ -740,10 +740,10 @@
     widest-line "^3.1.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/core@^2.0.10", "@oclif/core@^2.0.3", "@oclif/core@^2.0.7", "@oclif/core@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.1.0.tgz#0dc60cdc70c9c260637ca36b748bffe27e9fcdc4"
-  integrity sha512-ixEPJHU/3BzX+4BnHg2jdb8twDWC0fkG9N6XhxbczjApX/M4XHqtoy+TU5qtHoJ7IjUn8nth964FFx9Kx0F3Cg==
+"@oclif/core@^2.0.10", "@oclif/core@^2.0.3", "@oclif/core@^2.0.7", "@oclif/core@^2.1.0", "@oclif/core@^2.1.6":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.1.7.tgz#d51d8758a195bb0d813d19a89b286756ddb0b51b"
+  integrity sha512-6QZvUmKHLqrESIW4mu8azE0sQ7I9LVC3iM9O4ipp53Pqe5pQhIyxv8tB/zvagmPxJXXiCbfPsBazeqjCcM3/tg==
   dependencies:
     "@types/cli-progress" "^3.11.0"
     ansi-escapes "^4.3.2"
@@ -751,9 +751,9 @@
     cardinal "^2.1.1"
     chalk "^4.1.2"
     clean-stack "^3.0.1"
-    cli-progress "^3.10.0"
+    cli-progress "^3.11.2"
     debug "^4.3.4"
-    ejs "^3.1.6"
+    ejs "^3.1.8"
     fs-extra "^9.1.0"
     get-package-type "^0.1.0"
     globby "^11.1.0"
@@ -834,18 +834,18 @@
     chalk "^4.1.0"
     tslib "^2.3.1"
 
-"@oclif/plugin-command-snapshot@^3.2.16":
-  version "3.2.16"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-3.2.16.tgz#82674570142675bdd41f7a94bbd05121e4f17d0c"
-  integrity sha512-iPva6GZLijNPzf5eGuxGBr9t7Axp39NIDe1B9HymySOC0iWB1PX19J/rwFriddplrBz3d7zzlhD/xqZ1KivBhA==
+"@oclif/plugin-command-snapshot@^3.3.6":
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-3.3.6.tgz#8c3175f6e1deb023f8ebcd9574fbae8797c0f79b"
+  integrity sha512-yXWmYRpjy5pv4pmfrsK/PXnwXxXR0DwwkuVYPZEiwMXwdKI7Pd/72Qde4JI9ldwBGxWduf/Md32dzdSPqr3wTQ==
   dependencies:
-    "@oclif/core" "^1.23.0"
+    "@oclif/core" "^2.1.6"
     chalk "^4.1.2"
     just-diff "^5.2.0"
     lodash "^4.17.21"
     semver "^7.3.8"
     ts-json-schema-generator "^1.2.0"
-    tslib "^2.4.1"
+    tslib "^2.5.0"
 
 "@oclif/plugin-help@3.2.18":
   version "3.2.18"
@@ -2376,6 +2376,13 @@ cli-progress@^3.10.0, cli-progress@^3.4.0:
   dependencies:
     string-width "^4.2.3"
 
+cli-progress@^3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/cli-progress/-/cli-progress-3.11.2.tgz#f8c89bd157e74f3f2c43bcfb3505670b4d48fc77"
+  integrity sha512-lCPoS6ncgX4+rJu5bS3F/iCz17kZ9MPZ6dpuTtI0KXKABkhyXIdYB3Inby1OpaGti3YlI3EeEkM9AuWpelJrVA==
+  dependencies:
+    string-width "^4.2.3"
+
 cli-spinners@^2.5.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-2.6.1.tgz#adc954ebe281c37a6319bfa401e6dd2488ffb70d"
@@ -2986,7 +2993,7 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-ejs@^3.1.6:
+ejs@^3.1.6, ejs@^3.1.8:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-3.1.8.tgz#758d32910c78047585c7ef1f92f9ee041c1c190b"
   integrity sha512-/sXZeMlhS0ArkfX2Aw780gJzXSMPnKjtspYZv+f3NiKLlubezAHDU5+9xz6gd3/NhG3txQCo6xlglmTS+oTGEQ==
