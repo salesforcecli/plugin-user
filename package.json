@@ -6,18 +6,18 @@
   "main": "lib/index.js",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^2.1.0",
-    "@salesforce/core": "^3.33.1",
-    "@salesforce/kit": "^1.8.5",
-    "@salesforce/sf-plugins-core": "^2.1.1",
-    "@salesforce/ts-types": "^1.7.2",
+    "@oclif/core": "^2.3.1",
+    "@salesforce/core": "^3.33.5",
+    "@salesforce/kit": "^1.9.0",
+    "@salesforce/sf-plugins-core": "^2.2.3",
+    "@salesforce/ts-types": "^1.7.3",
     "tslib": "^2"
   },
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^3.3.6",
     "@salesforce/cli-plugins-testkit": "^3.2.22",
     "@salesforce/dev-config": "^3.1.0",
-    "@salesforce/dev-scripts": "^3.1.1",
+    "@salesforce/dev-scripts": "^4.1.1",
     "@salesforce/plugin-command-reference": "^2.3.1",
     "@salesforce/prettier-config": "^0.0.2",
     "@salesforce/ts-sinon": "^1.4.4",
@@ -38,14 +38,14 @@
     "husky": "^7.0.4",
     "mocha": "^9.1.3",
     "nyc": "^15.1.0",
-    "oclif": "^3.6.2",
+    "oclif": "^3.7.0",
     "prettier": "^2.8.4",
     "pretty-quick": "^3.1.0",
     "shx": "0.3.4",
     "sinon": "10.0.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.9.5",
-    "wireit": "^0.9.3"
+    "wireit": "^0.9.5"
   },
   "config": {},
   "engines": {
@@ -117,23 +117,18 @@
   },
   "repository": "salesforcecli/plugin-user",
   "scripts": {
-    "build": "sf-build",
+    "build": "wireit",
     "clean": "sf-clean",
     "clean-all": "sf-clean all",
     "clean:lib": "shx rm -rf lib && shx rm -rf coverage && shx rm -rf .nyc_output && shx rm -f oclif.manifest.json",
-    "compile": "sf-compile",
+    "compile": "wireit",
     "docs": "sf-docs",
-    "format": "sf-format",
-    "lint": "sf-lint",
+    "format": "wireit",
+    "lint": "wireit",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "sf-prepack",
     "prepare": "sf-install",
-    "pretest": "sf-compile-test",
-    "test": "sf-test",
-    "test:command-reference": "wireit",
-    "test:compile": "wireit",
-    "test:deprecation-policy": "wireit",
-    "test:json-schema": "wireit",
+    "test": "wireit",
     "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --jobs 10",
     "test:only": "wireit",
     "version": "oclif readme"
@@ -162,7 +157,15 @@
       "clean": "if-file-deleted"
     },
     "format": {
-      "command": "prettier --write \"+(src|test|schemas)/**/*.+(ts|js|json)|command-snapshot.json\""
+      "command": "prettier --write \"+(src|test|schemas)/**/*.+(ts|js|json)|command-snapshot.json\"",
+      "files": [
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "schemas/**/*.json",
+        "command-snapshot.json",
+        ".prettier*"
+      ],
+      "output": []
     },
     "lint": {
       "command": "eslint src test --color --cache --cache-location .eslintcache",
@@ -170,8 +173,7 @@
         "src/**/*.ts",
         "test/**/*.ts",
         "messages/**",
-        ".eslintignore",
-        ".eslintrc.js"
+        ".eslint*"
       ],
       "output": []
     },
@@ -200,7 +202,10 @@
         "test/**/*.ts",
         "src/**/*.ts",
         "tsconfig.json",
-        "test/tsconfig.json"
+        ".mocha*",
+        "test/tsconfig.json",
+        "!*.nut.ts",
+        ".nycrc"
       ],
       "output": []
     },
@@ -208,7 +213,8 @@
       "command": "\"./bin/dev\" commandreference:generate --erroronwarnings",
       "files": [
         "src/**/*.ts",
-        "messages/**"
+        "messages/**",
+        "package.json"
       ],
       "output": [
         "tmp/root"
