@@ -47,7 +47,7 @@ describe('creates a user from a file and verifies', () => {
     const usernameResult = output?.result.fields.username as string;
     expect(usernameResult.startsWith(testUsername)).to.be.true;
     // ends with . followed by the prefix for orgId (lowercased!) and 15 more lowercase characters or digits
-    expect(usernameResult).matches(/.*\.00d[a-z|\d]{15}$/);
+    expect(usernameResult).matches(/.*\.__NO__00d[a-z|\d]{15}$/);
   });
 
   it('creates a user with setuniqueusername without username on commandline', () => {

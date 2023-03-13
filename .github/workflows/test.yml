@@ -14,4 +14,4 @@ jobs:
       fail-fast: false
     with:
       os: ${{ matrix.os }}
-      retries: 1
+      retries: 2
