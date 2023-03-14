@@ -38,7 +38,7 @@ describe('creates a user from a file and verifies', () => {
   it('creates a user with setuniqueusername from username on commandline', () => {
     const testUsername = 'test@test.test';
     const output = execCmd<CreateUserOutput>(
-      `org:create:user --json --setuniqueusername username=${testUsername} profileName="Chatter Free User"`,
+      `org:create:user --json --setuniqueusername username=${testUsername} profileName='Chatter Free User'`,
       {
         ensureExitCode: 0,
       }
