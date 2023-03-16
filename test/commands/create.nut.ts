@@ -35,10 +35,10 @@ describe('creates a user from a file and verifies', () => {
     execCmd('force:source:push', { cli: 'sfdx', ensureExitCode: 0 });
   });
 
-  it('creates a user with setuniqueusername from username on commandline', () => {
+  it('creates a user with set-unique-username from username on commandline', () => {
     const testUsername = 'test@test.test';
     const output = execCmd<CreateUserOutput>(
-      `org:create:user --json --setuniqueusername username=${testUsername} profileName='Chatter Free User'`,
+      `org:create:user --json --set-unique-username username=${testUsername} profileName="Chatter Free User"`,
       {
         ensureExitCode: 0,
       }
@@ -50,9 +50,9 @@ describe('creates a user from a file and verifies', () => {
     expect(usernameResult).matches(/.*\.00d[a-z|\d]{15}$/);
   });
 
-  it('creates a user with setuniqueusername without username on commandline', () => {
+  it('creates a user with set-unique-username without username on commandline', () => {
     const output = execCmd<CreateUserOutput>(
-      `org:create:user --json -f ${path.join('config', 'fileWithUsername.json')} --setuniqueusername`,
+      `org:create:user --json -f ${path.join('config', 'fileWithUsername.json')} --set-unique-username`,
       {
         ensureExitCode: 0,
       }
