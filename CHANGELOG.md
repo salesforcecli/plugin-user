@@ -1,3 +1,12 @@
+## [2.3.5](https://github.com/salesforcecli/plugin-user/compare/2.3.4...2.3.5) (2023-03-16)
+
+
+### Bug Fixes
+
+* double quotes on NUT ([#569](https://github.com/salesforcecli/plugin-user/issues/569)) ([5674a46](https://github.com/salesforcecli/plugin-user/commit/5674a46cd6aee62ad18f49b9dddb216b3572ba76))
+
+
+
 ## [2.3.4](https://github.com/salesforcecli/plugin-user/compare/2.3.3...2.3.4) (2023-03-12)
 
 
