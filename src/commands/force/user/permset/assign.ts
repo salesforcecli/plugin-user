@@ -16,8 +16,8 @@ const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assig
 export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
   public static readonly hidden = true;
   public static readonly summary = messages.getMessage('summary');
-  public static readonly description = messages.getMessage('description');
-  public static readonly examples = messages.getMessages('examples');
+  public static readonly description = messages.getMessage('description.force');
+  public static readonly examples = messages.getMessages('examples.force');
   public static readonly flags = {
     'perm-set-name': arrayWithDeprecation({
       aliases: ['permsetname'],
