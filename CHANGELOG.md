@@ -1,3 +1,12 @@
+## [2.3.6](https://github.com/salesforcecli/plugin-user/compare/2.3.5...2.3.6) (2023-03-31)
+
+
+### Bug Fixes
+
+* fix examples ([481ec50](https://github.com/salesforcecli/plugin-user/commit/481ec50a34da691e231a95163d32a88559bd671e))
+
+
+
 ## [2.3.5](https://github.com/salesforcecli/plugin-user/compare/2.3.4...2.3.5) (2023-03-16)
 
 
