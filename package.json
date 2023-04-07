@@ -94,7 +94,7 @@
         }
       },
       "org": {
-        "description": "commands that perform user-related admin tasks",
+        "external": true,
         "subtopics": {
           "assign": {
             "description": "Used to assign permissions to a user"
