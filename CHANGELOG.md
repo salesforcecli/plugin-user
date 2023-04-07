@@ -1,3 +1,12 @@
+## [2.3.8](https://github.com/salesforcecli/plugin-user/compare/2.3.7...2.3.8) (2023-04-07)
+
+
+### Bug Fixes
+
+* update package.json for correct help and command ref ([b981fdc](https://github.com/salesforcecli/plugin-user/commit/b981fdc7cb16af5ff748565cf98a7e5f65780c44))
+
+
+
 ## [2.3.7](https://github.com/salesforcecli/plugin-user/compare/2.3.6...2.3.7) (2023-04-02)
 
 
