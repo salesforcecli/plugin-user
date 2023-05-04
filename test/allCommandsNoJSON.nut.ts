@@ -21,15 +21,13 @@ describe('verifies all commands run successfully (no json)', () => {
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
-          executable: 'sfdx',
-          duration: 1,
           setDefault: true,
           config: path.join('config', 'project-scratch-def.json'),
         },
       ],
     });
 
-    execCmd('force:source:push', { cli: 'sfdx', ensureExitCode: 0 });
+    execCmd('force:source:push', { ensureExitCode: 0 });
   });
 
   it('user display', () => {
