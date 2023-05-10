@@ -49,11 +49,8 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
     loglevel,
   };
 
-  private logger: Logger;
-
   public async run(): Promise<DisplayUserResult> {
     const { flags } = await this.parse(DisplayUserCommand);
-    this.logger = await Logger.child(this.constructor.name);
 
     const username = ensureString(flags['target-org'].getUsername());
     const userAuthDataArray = await flags['target-org'].readUserAuthFiles();
@@ -74,7 +71,8 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
       }
     } catch (err) {
       profileName = 'unknown';
-      this.logger.debug(
+      const logger = await Logger.child(this.constructor.name);
+      logger.debug(
         `Query for the profile name failed for username: ${username} with message: ${getString(err, 'message')}`
       );
     }
@@ -86,9 +84,8 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
       }
     } catch (err) {
       userId = 'unknown';
-      this.logger.debug(
-        `Query for the user ID failed for username: ${username} with message: ${getString(err, 'message')}`
-      );
+      const logger = await Logger.child(this.constructor.name);
+      logger.debug(`Query for the user ID failed for username: ${username} with message: ${getString(err, 'message')}`);
     }
 
     const result: DisplayUserResult = {
