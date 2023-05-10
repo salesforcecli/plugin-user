@@ -18,8 +18,8 @@ import {
   User,
   UserFields,
 } from '@salesforce/core';
-import { mapKeys, omit, parseJson, toBoolean } from '@salesforce/kit';
-import { Dictionary, ensureString, getString, isArray } from '@salesforce/ts-types';
+import { mapKeys, omit, toBoolean } from '@salesforce/kit';
+import { Dictionary, ensureString, getString, isArray, JsonMap } from '@salesforce/ts-types';
 import {
   Flags,
   loglevel,
@@ -91,48 +91,31 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     loglevel,
   };
 
-  private targetOrgUser: User;
   private successes: SuccessMsg[] = [];
   private failures: FailureMsg[] = [];
-  private newUserAuthInfo: AuthInfo;
-  private logger: Logger;
-  private flags: Interfaces.InferredFlags<typeof CreateUserCommand.flags>;
-  // eslint-disable-next-line sf-plugin/no-deprecated-properties
-  private varargs: Record<string, unknown>;
 
-  /**
-   * removes fields that cause errors in salesforce APIs within sfdx-core's createUser method
-   *
-   * @param fields a list of combined fields from varargs and the config file
-   * @private
-   */
-  private static stripInvalidAPIFields(fields: UserFields & Dictionary<string>): UserFields {
-    return omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName']);
-  }
+  // assert! because they're set early in run method
+  private flags!: Interfaces.InferredFlags<typeof CreateUserCommand.flags>;
+  private varargs!: Record<string, unknown>;
 
   public async run(): Promise<CreateUserOutput> {
     const { flags, argv } = await this.parse(CreateUserCommand);
+    this.flags = flags;
+    const logger = await Logger.child(this.constructor.name);
     this.varargs = parseVarArgs({}, argv as string[]);
-    this.flags = flags as Interfaces.InferredFlags<typeof CreateUserCommand.flags>;
-    this.logger = await Logger.child(this.constructor.name);
-    const defaultUserFields: DefaultUserFields = await DefaultUserFields.create({
-      templateUser: this.flags['target-org'].getUsername() ?? '',
+
+    const conn = flags['target-org'].getConnection(flags['api-version']);
+    const defaultUserFields = await DefaultUserFields.create({
+      templateUser: ensureString(flags['target-org'].getUsername()),
     });
-    this.targetOrgUser = await User.create({ org: this.flags['target-org'] });
+    const targetOrgUser = await User.create({ org: flags['target-org'] });
 
     // merge defaults with provided values with cli > file > defaults
-    const fields = await this.aggregateFields(defaultUserFields.getFields());
+    const fields = await this.aggregateFields(defaultUserFields.getFields(), logger);
 
-    try {
-      this.newUserAuthInfo = await this.targetOrgUser.createUser(CreateUserCommand.stripInvalidAPIFields(fields));
-    } catch (e) {
-      if (!(e instanceof Error)) {
-        throw e;
-      }
-      await this.catchCreateUser(e, fields);
-    }
+    const newUserAuthInfo = await getNewUserAuthInfo(targetOrgUser, fields, conn);
 
-    if (fields.profileName) await this.newUserAuthInfo.save({ userProfileName: fields.profileName });
+    if (fields.profileName) await newUserAuthInfo?.save({ userProfileName: fields.profileName });
 
     // Assign permission sets to the created user
     if (fields.permsets) {
@@ -141,10 +124,7 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
         // it will either be a comma separated string, or an array, force it into an array
         const permsetArray = permsetsStringToArray(fields.permsets);
 
-        await this.targetOrgUser.assignPermissionSets(
-          ensureString(this.newUserAuthInfo.getFields().userId),
-          permsetArray
-        );
+        await targetOrgUser.assignPermissionSets(ensureString(newUserAuthInfo.getFields().userId), permsetArray);
         this.successes.push({
           name: 'Permission Set Assignment',
           value: permsetArray.join(','),
@@ -162,10 +142,10 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     if (fields.generatePassword) {
       try {
         const password = User.generatePasswordUtf8();
-        await this.targetOrgUser.assignPassword(this.newUserAuthInfo, password);
+        await targetOrgUser.assignPassword(newUserAuthInfo, password);
         password.value((pass: Buffer) => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          this.newUserAuthInfo.save({ password: pass.toString('utf-8') });
+          newUserAuthInfo.save({ password: pass.toString('utf-8') });
           this.successes.push({
             name: 'Password Assignment',
             value: pass.toString(),
@@ -181,67 +161,48 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     }
 
     // Set the alias if specified
-    if (this.flags['set-alias']) {
+    if (flags['set-alias']) {
       const stateAggregator = await StateAggregator.getInstance();
-      stateAggregator.aliases.set(this.flags['set-alias'], fields.username);
+      stateAggregator.aliases.set(flags['set-alias'], fields.username);
       await stateAggregator.aliases.write();
     }
 
-    fields.id = ensureString(this.newUserAuthInfo.getFields().userId);
+    fields.id = ensureString(newUserAuthInfo.getFields().userId);
     this.print(fields);
     this.setExitCode();
 
     const { permsets, ...fieldsWithoutPermsets } = fields;
     return {
-      orgId: this.flags['target-org'].getOrgId(),
+      orgId: flags['target-org'].getOrgId(),
       permissionSetAssignments: permsetsStringToArray(permsets),
       fields: { ...mapKeys(fieldsWithoutPermsets, (value, key) => key.toLowerCase()) },
     };
   }
 
-  private async catchCreateUser(respBody: Error, fields: UserFields): Promise<void> {
-    // For Gacks, the error message is on response.body[0].message but for handled errors
-    // the error message is on response.body.Errors[0].description.
-    const errMessage = getString(respBody, 'message') ?? 'Unknown Error';
-    const conn: Connection = this.flags['target-org'].getConnection(this.flags['api-version']);
-
-    // Provide a more user friendly error message for certain server errors.
-    if (errMessage.includes('LICENSE_LIMIT_EXCEEDED')) {
-      const profile = await conn.singleRecordQuery<{ Name: string }>(
-        `SELECT name FROM profile WHERE id='${fields.profileId}'`
-      );
-      throw new SfError(messages.getMessage('licenseLimitExceeded', [profile.Name]), 'licenseLimitExceeded');
-    } else if (errMessage.includes('DUPLICATE_USERNAME')) {
-      throw new SfError(messages.getMessage('duplicateUsername', [fields.username]), 'duplicateUsername');
-    } else {
-      throw SfError.wrap(errMessage);
-    }
-  }
-
-  private async aggregateFields(defaultFields: UserFields): Promise<UserFields & Dictionary<string>> {
+  // this method is pretty rough, so we'll ignore some TS errors
+  private async aggregateFields(defaultFields: UserFields, logger: Logger): Promise<UserFields & Dictionary<string>> {
     // username can be overridden both in the file or varargs, save it to check if it was changed somewhere
     const defaultUsername = defaultFields.username;
 
     // start with the default fields, then add the fields from the file, then (possibly overwriting) add the fields from the cli varargs param
     if (this.flags['definition-file']) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-      const content = parseJson(await fs.promises.readFile(this.flags['definition-file'], 'utf-8')) as UserFields;
-      Object.keys(content).forEach((key) => {
-        // cast entries to lowercase to standardize
-        defaultFields[lowerFirstLetter(key)] = content[key] as keyof typeof REQUIRED_FIELDS;
+      const content = JSON.parse(await fs.promises.readFile(this.flags['definition-file'], 'utf-8')) as JsonMap;
+      Object.entries(content).forEach(([key, value]) => {
+        // @ts-expect-error cast entries to lowercase to standardize
+        defaultFields[lowerFirstLetter(key)] = value as keyof typeof REQUIRED_FIELDS;
       });
     }
 
     if (this.varargs) {
       Object.keys(this.varargs).forEach((key) => {
         if (key.toLowerCase() === 'generatepassword') {
-          // standardize generatePassword casing
+          // @ts-expect-error standardize generatePassword casing
           defaultFields['generatePassword'] = toBoolean(this.varargs[key]);
         } else if (key.toLowerCase() === 'profilename') {
-          // standardize profileName casing
+          // @ts-expect-error standardize profileName casing
           defaultFields['profileName'] = this.varargs[key];
         } else {
-          // all other varargs are left "as is"
+          // @ts-expect-error all other varargs are left "as is"
           defaultFields[lowerFirstLetter(key)] = this.varargs[key];
         }
       });
@@ -252,10 +213,11 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
       defaultFields.username = `${defaultFields.username}.${this.flags['target-org'].getOrgId().toLowerCase()}`;
     }
 
-    // check if "profileName" was passed, this needs to become a profileId before calling User.create
+    // @ts-expect-error check if "profileName" was passed, this needs to become a profileId before calling User.create
     if (defaultFields['profileName']) {
+      // @ts-expect-error profileName is not a valid field on UserFields
       const name = (defaultFields['profileName'] ?? 'Standard User') as string;
-      this.logger.debug(`Querying org for profile name [${name}]`);
+      logger.debug(`Querying org for profile name [${name}]`);
       const profile = await this.flags['target-org']
         .getConnection(this.flags['api-version'])
         .singleRecordQuery<{ Id: string }>(`SELECT id FROM profile WHERE name='${name}'`);
@@ -308,3 +270,46 @@ export interface CreateUserOutput {
 }
 
 const lowerFirstLetter = (word: string): string => word[0].toLowerCase() + word.substr(1);
+
+/**
+ * removes fields that cause errors in salesforce APIs within sfdx-core's createUser method
+ *
+ * @param fields a list of combined fields from varargs and the config file
+ * @private
+ */
+const stripInvalidAPIFields = (fields: UserFields & Dictionary<string>): UserFields =>
+  omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName']);
+
+const getNewUserAuthInfo = async (
+  targetOrgUser: User,
+  fields: UserFields & Dictionary<string>,
+  conn: Connection
+): Promise<AuthInfo> => {
+  try {
+    return await targetOrgUser.createUser(stripInvalidAPIFields(fields));
+  } catch (e) {
+    if (!(e instanceof Error)) {
+      throw e;
+    }
+    return catchCreateUser(e, fields, conn);
+  }
+};
+
+/** will definitely throw, but will throw better error messages than User.createUser was going to */
+const catchCreateUser = async (respBody: Error, fields: UserFields, conn: Connection): Promise<never> => {
+  // For Gacks, the error message is on response.body[0].message but for handled errors
+  // the error message is on response.body.Errors[0].description.
+  const errMessage = getString(respBody, 'message') ?? 'Unknown Error';
+
+  // Provide a more user friendly error message for certain server errors.
+  if (errMessage.includes('LICENSE_LIMIT_EXCEEDED')) {
+    const profile = await conn.singleRecordQuery<{ Name: string }>(
+      `SELECT name FROM profile WHERE id='${fields.profileId}'`
+    );
+    throw new SfError(messages.getMessage('licenseLimitExceeded', [profile.Name]), 'licenseLimitExceeded');
+  } else if (errMessage.includes('DUPLICATE_USERNAME')) {
+    throw new SfError(messages.getMessage('duplicateUsername', [fields.username]), 'duplicateUsername');
+  } else {
+    throw SfError.wrap(errMessage);
+  }
+};

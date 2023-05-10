@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
+import { Connection, Logger, Messages, SfError, StateAggregator } from '@salesforce/core';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectory(__dirname);
@@ -40,11 +40,7 @@ export abstract class UserPermSetLicenseAssignBaseCommand extends SfCommand<PSLR
     const logger = await Logger.child(this.constructor.name);
 
     logger.debug(`will assign perm set license "${pslName}" to users: ${this.usernamesOrAliases.join(', ')}`);
-    const pslId = (
-      await conn.singleRecordQuery<PermissionSetLicense>(
-        `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
-      )
-    ).Id;
+    const pslId = await queryPsl(conn, pslName);
 
     (
       await Promise.all(
@@ -154,3 +150,15 @@ export abstract class UserPermSetLicenseAssignBaseCommand extends SfCommand<PSLR
 }
 
 const isSuccess = (input: SuccessMsg | FailureMsg): input is SuccessMsg => (input as SuccessMsg).value !== undefined;
+
+const queryPsl = async (conn: Connection, pslName: string): Promise<string> => {
+  try {
+    return (
+      await conn.singleRecordQuery<PermissionSetLicense>(
+        `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
+      )
+    ).Id;
+  } catch (e) {
+    throw new SfError('PermissionSetLicense not found');
+  }
+};

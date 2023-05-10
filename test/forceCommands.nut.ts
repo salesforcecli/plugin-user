@@ -19,7 +19,7 @@ import { DisplayUserResult } from '../src/commands/org/display/user';
 use(chaiEach);
 let session: TestSession;
 
-let mainUserId;
+let mainUserId: string | undefined;
 
 describe('verifies legacy force commands run successfully ', () => {
   before(async () => {
