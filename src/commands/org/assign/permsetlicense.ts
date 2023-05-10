@@ -36,8 +36,10 @@ export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCom
 
   public async run(): Promise<PSLResult> {
     const { flags } = await this.parse(AssignPermSetLicenseCommand);
-    const username = flags['target-org'].getUsername();
-    this.usernamesOrAliases = ensureArray(flags['on-behalf-of'] ?? username);
-    return this.assign(flags['target-org'].getConnection(flags['api-version']), flags.name);
+    return this.assign({
+      conn: flags['target-org'].getConnection(flags['api-version']),
+      pslName: flags.name,
+      usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
+    });
   }
 }

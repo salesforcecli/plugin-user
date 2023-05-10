@@ -31,20 +31,26 @@ interface PermissionSetLicense {
 }
 
 export abstract class UserPermSetLicenseAssignBaseCommand extends SfCommand<PSLResult> {
-  protected usernamesOrAliases: string[] = [];
-
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
 
-  public async assign(conn: Connection, pslName: string): Promise<PSLResult> {
+  public async assign({
+    conn,
+    pslName,
+    usernamesOrAliases,
+  }: {
+    conn: Connection;
+    pslName: string;
+    usernamesOrAliases: string[];
+  }): Promise<PSLResult> {
     const logger = await Logger.child(this.constructor.name);
 
-    logger.debug(`will assign perm set license "${pslName}" to users: ${this.usernamesOrAliases.join(', ')}`);
+    logger.debug(`will assign perm set license "${pslName}" to users: ${usernamesOrAliases.join(', ')}`);
     const pslId = await queryPsl(conn, pslName);
 
     (
       await Promise.all(
-        this.usernamesOrAliases.map((usernameOrAlias) =>
+        usernamesOrAliases.map((usernameOrAlias) =>
           this.usernameToPSLAssignment({
             pslName,
             usernameOrAlias,
