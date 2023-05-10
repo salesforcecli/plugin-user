@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Connection, Logger, Messages, SfError, StateAggregator } from '@salesforce/core';
+import { Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectory(__dirname);
@@ -32,32 +32,28 @@ interface PermissionSetLicense {
 
 export abstract class UserPermSetLicenseAssignBaseCommand extends SfCommand<PSLResult> {
   protected usernamesOrAliases: string[] = [];
-  protected pslName: string;
-  protected connection: Connection;
 
-  private logger: Logger;
   private readonly successes: SuccessMsg[] = [];
   private readonly failures: FailureMsg[] = [];
-  private pslId: string;
 
-  public async assign(): Promise<PSLResult> {
-    this.logger = await Logger.child(this.constructor.name);
-    this.logger.debug(`will assign perm set license "${this.pslName}" to users: ${this.usernamesOrAliases.join(', ')}`);
-    try {
-      this.pslId = (
-        await this.connection.singleRecordQuery<PermissionSetLicense>(
-          `select Id from PermissionSetLicense where DeveloperName = '${this.pslName}' or MasterLabel = '${this.pslName}'`
-        )
-      ).Id;
-    } catch {
-      throw new SfError('PermissionSetLicense not found');
-    }
+  public async assign(conn: Connection, pslName: string): Promise<PSLResult> {
+    const logger = await Logger.child(this.constructor.name);
+
+    logger.debug(`will assign perm set license "${pslName}" to users: ${this.usernamesOrAliases.join(', ')}`);
+    const pslId = (
+      await conn.singleRecordQuery<PermissionSetLicense>(
+        `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
+      )
+    ).Id;
+
     (
       await Promise.all(
         this.usernamesOrAliases.map((usernameOrAlias) =>
           this.usernameToPSLAssignment({
-            pslName: this.pslName,
+            pslName,
             usernameOrAlias,
+            pslId,
+            conn,
           })
         )
       )
@@ -82,23 +78,25 @@ export abstract class UserPermSetLicenseAssignBaseCommand extends SfCommand<PSLR
   private async usernameToPSLAssignment({
     pslName,
     usernameOrAlias,
+    pslId,
+    conn,
   }: {
     pslName: string;
     usernameOrAlias: string;
+    pslId: string;
+    conn: Connection;
   }): Promise<SuccessMsg | FailureMsg> {
     // Convert any aliases to usernames
     const resolvedUsername = (await StateAggregator.getInstance()).aliases.resolveUsername(usernameOrAlias);
 
     try {
       const AssigneeId = (
-        await this.connection.singleRecordQuery<{ Id: string }>(
-          `select Id from User where Username = '${resolvedUsername}'`
-        )
+        await conn.singleRecordQuery<{ Id: string }>(`select Id from User where Username = '${resolvedUsername}'`)
       ).Id;
 
-      await this.connection.sobject('PermissionSetLicenseAssign').create({
+      await conn.sobject('PermissionSetLicenseAssign').create({
         AssigneeId,
-        PermissionSetLicenseId: this.pslId,
+        PermissionSetLicenseId: pslId,
       });
       return {
         name: resolvedUsername,

@@ -38,8 +38,6 @@ export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCom
     const { flags } = await this.parse(AssignPermSetLicenseCommand);
     const username = flags['target-org'].getUsername();
     this.usernamesOrAliases = ensureArray(flags['on-behalf-of'] ?? username);
-    this.pslName = flags.name;
-    this.connection = flags['target-org'].getConnection(flags['api-version']);
-    return this.assign();
+    return this.assign(flags['target-org'].getConnection(flags['api-version']), flags.name);
   }
 }
