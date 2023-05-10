@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Connection, Messages, Org, StateAggregator } from '@salesforce/core';
+import { Connection, Messages, StateAggregator } from '@salesforce/core';
 import {
   Flags,
   loglevel,
@@ -31,9 +31,9 @@ export type AuthList = Partial<{
 export type ListUsers = AuthList[];
 
 type UserInfo = { Username: string; ProfileId: string; Id: string };
-type UserInfoMap = Record<string, UserInfo>;
+type UserInfoMap = Map<string, UserInfo>;
 type ProfileInfo = { Id: string; Name: string };
-type ProfileInfoMap = Record<string, string>;
+type ProfileInfoMap = Map<string, ProfileInfo>;
 
 export class ListUsersCommand extends SfCommand<ListUsers> {
   // eslint-disable-next-line sf-plugin/encourage-alias-deprecation
@@ -55,18 +55,15 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
     loglevel,
   };
 
-  private conn: Connection;
-  private org: Org;
-
   public async run(): Promise<ListUsers> {
     const { flags } = await this.parse(ListUsersCommand);
-    this.org = flags['target-org'];
-    this.conn = flags['target-org'].getConnection(flags['api-version']);
+    const org = flags['target-org'];
+    const conn = flags['target-org'].getConnection(flags['api-version']);
     // parallelize 2 org queries and 2 fs operations
     const [userInfos, profileInfos, userAuthData, aliases] = await Promise.all([
-      this.buildUserInfos(),
-      this.buildProfileInfos(),
-      this.org.readUserAuthFiles(),
+      buildUserInfos(conn),
+      buildProfileInfos(conn),
+      org.readUserAuthFiles(),
       (await StateAggregator.getInstance()).aliases,
     ]);
 
@@ -74,8 +71,8 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
       const username = authData.getUsername();
       // if they passed in an alias see if it maps to an Alias.
       const alias = aliases.get(username);
-      const userInfo = userInfos[username];
-      const profileName = userInfo && profileInfos[userInfo.ProfileId];
+      const userInfo = userInfos.get(username);
+      const profileName = userInfo && profileInfos.get(userInfo.ProfileId)?.Name;
       return {
         defaultMarker: flags['target-org']?.getUsername() === username ? '(A)' : '',
         alias: alias ?? '',
@@ -85,7 +82,7 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
         accessToken: authData.getFields().accessToken,
         instanceUrl: authData.getFields().instanceUrl,
         loginUrl: authData.getFields().loginUrl,
-        userId: userInfos[username].Id,
+        userId: userInfos.get(username)?.Id,
       };
     });
 
@@ -102,40 +99,26 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
 
     return authList;
   }
-
-  /**
-   * Build a map of { [Username]: { ProfileId, Id } } for all users in the org
-   *
-   * @private
-   * @return Promise<UserInfo>
-   */
-  private async buildUserInfos(): Promise<UserInfoMap> {
-    const userRecords = await this.conn.query<UserInfo>('SELECT username, profileid, id FROM User');
-
-    if (userRecords.records) {
-      return userRecords.records.reduce((userInfo, { Username, ProfileId, Id }) => {
-        userInfo[Username] = { ProfileId, Id };
-        return userInfo;
-      }, {});
-    }
-    return {};
-  }
-
-  /**
-   * Build a map of { [ProfileId]: ProfileName } for all profiles in the org
-   *
-   * @private
-   * @return Promise<ProfileInfo>
-   */
-  private async buildProfileInfos(): Promise<ProfileInfoMap> {
-    const profileRecords = await this.conn.query<ProfileInfo>('SELECT id, name FROM Profile');
-
-    if (profileRecords.records) {
-      return profileRecords.records.reduce((profileInfo, { Id, Name }) => {
-        profileInfo[Id] = Name;
-        return profileInfo;
-      }, {});
-    }
-    return {};
-  }
 }
+
+/**
+ * Build a map of { [ProfileId]: ProfileName } for all profiles in the org
+ *
+ * @private
+ * @return Promise<ProfileInfo>
+ */
+const buildProfileInfos = async (conn: Connection): Promise<ProfileInfoMap> => {
+  const profileRecords = await conn.query<ProfileInfo>('SELECT id, name FROM Profile');
+  return new Map((profileRecords.records ?? []).map((profileInfo) => [profileInfo.Id, profileInfo]));
+};
+
+/**
+ * query the user table and build a map of Username: { ProfileId, Id } } for all users in the org
+ *
+ * @private
+ * @return Promise<UserInfo>
+ */
+const buildUserInfos = async (conn: Connection): Promise<UserInfoMap> => {
+  const userRecords = await conn.query<UserInfo>('SELECT username, profileid, id FROM User');
+  return new Map((userRecords.records ?? []).map((userInfo) => [userInfo.Username, userInfo]));
+};
