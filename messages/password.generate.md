@@ -4,7 +4,7 @@ Generate a random password for scratch org users.
 
 # description
 
-By default, new scratch orgs contain one admin user with no password. Use the CLI to generate or change a password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
+By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
 
 To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types of characters used in the generated password:
 
@@ -15,7 +15,7 @@ To change the password strength, set the --complexity flag to a value between 0 
 4 - lower and upper case letters and symbols only
 5 - lower and upper case letters and numbers and symbols only
 
-To see a password that was previously generated, run "<%= config.bin %> org user display".
+To see a password that was previously generated, run "org display user".
 
 # examples
 
@@ -33,7 +33,7 @@ To see a password that was previously generated, run "<%= config.bin %> org user
 
 - Generate a password for the specified users in the default scratch org:
 
-  <%= config.bin %> <%= command.id %> --on-behalf-of "user1@my.org,user2@my.org,user3@my.org"
+  <%= config.bin %> <%= command.id %> --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 
 # flags.onBehalfOf.summary
 
@@ -78,7 +78,7 @@ Successfully set passwords:%s
 
 # viewWithCommand
 
-You can see the password again by running "sfdx user:display -u %s".
+You can see the password again by running "<%= config.bin %> org display user -o %s".
 
 # flags.target-org.summary
 
@@ -86,7 +86,7 @@ Scratch org alias or login user.
 
 # onBehalfOfMultipleError
 
-Found a comma-separated list of usernames or aliases for the --onbehalfof parameter. Either specify one per flag or
+Found a comma-separated list of usernames or aliases for the --on-behalf-of flag. Either specify one per flag or
 separate by a space.
 
 # flags.target-hub.deprecation

@@ -15,7 +15,9 @@ If you don't customize your new user, this command creates a user with the follo
     * The values of the required fields of the User sObject are the corresponding values of the administrator user.
     * The user has no password.
 
-Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. When this command completes, it displays the new username and user ID. Run the "<%= config.bin %> org user display" command to get more information about the new user.
+Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. This alias is local and different from the Alias field of the User sObject record of the new user, which you set in the Setup UI.
+
+When this command completes, it displays the new username and user ID. Run the "org display user" command to get more information about the new user.
 
 For more information about user limits, defaults, and other considerations when creating a new scratch org user, see https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
 
