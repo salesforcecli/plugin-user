@@ -1,3 +1,12 @@
+## [2.3.11](https://github.com/salesforcecli/plugin-user/compare/2.3.10...2.3.11) (2023-05-11)
+
+
+### Bug Fixes
+
+* clean up messages/examples ([fb98344](https://github.com/salesforcecli/plugin-user/commit/fb98344d48ca265db7122da918f7dc8183c742f1))
+
+
+
 ## [2.3.10](https://github.com/salesforcecli/plugin-user/compare/2.3.9...2.3.10) (2023-04-30)
 
 
