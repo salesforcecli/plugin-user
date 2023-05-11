@@ -4,7 +4,7 @@ Display information about a Salesforce user.
 
 # description
 
-Output includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable.
+Output includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable. The displayed alias is local and different from the Alias field of the User sObject record of the new user, which you set in the Setup UI.
 
 # examples
 
