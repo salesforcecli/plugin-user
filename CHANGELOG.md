@@ -1,3 +1,12 @@
+## [2.3.13](https://github.com/salesforcecli/plugin-user/compare/2.3.12...2.3.13) (2023-05-16)
+
+
+### Bug Fixes
+
+* **deps:** bump vm2 from 3.9.17 to 3.9.18 ([14c6716](https://github.com/salesforcecli/plugin-user/commit/14c671661f5f6fa24e7822c5bad83ab24e59858b))
+
+
+
 ## [2.3.12](https://github.com/salesforcecli/plugin-user/compare/2.3.11...2.3.12) (2023-05-15)
 
 
