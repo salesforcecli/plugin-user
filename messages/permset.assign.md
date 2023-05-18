@@ -16,9 +16,9 @@ To assign multiple permission sets, either set multiple --perm-set-name flags or
 
 # examples
 
-- Assign two permission sets called DreamHouse and LargeDreamHouse to original admin user of your default scratch org:
+- Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
 
-  <%= config.bin %> <%= command.id %> --name DreamHouse --name LargeDreamHouse
+  <%= config.bin %> <%= command.id %> --name DreamHouse --name CloudHouse
 
 - Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
 
@@ -30,9 +30,9 @@ To assign multiple permission sets, either set multiple --perm-set-name flags or
 
 # examples.force
 
-- Assign two permission sets called DreamHouse and LargeDreamHouse to original admin user of your default scratch org:
+- Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
 
-  <%= config.bin %> <%= command.id %> --perm-set-name DreamHouse --perm-set-name LargeDreamHouse
+  <%= config.bin %> <%= command.id %> --perm-set-name DreamHouse --perm-set-name CloudHouse
 
 - Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
 

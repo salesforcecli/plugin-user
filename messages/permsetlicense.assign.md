@@ -14,9 +14,9 @@ To assign multiple permission sets, either set multiple --name flags or a single
 
   <%= config.bin %> <%= command.id %> --name DreamHouse
 
-- Assign the Dreamhouse permission set license to the original admin user of the scratch org with alias "my-scratch":
+- Assign two permission set licenses to the original admin user of the scratch org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --name DreamHouse --target-org my-scratch
+  <%= config.bin %> <%= command.id %> --name DreamHouse --name CloudHouse --target-org my-scratch
 
 - Assign the Dreamhouse permission set license to the specified list of users of your default scratch org:
 
