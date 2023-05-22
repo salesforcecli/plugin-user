@@ -26,14 +26,17 @@ export type PermsetAssignResult = {
 };
 
 export abstract class UserPermSetAssignBaseCommand extends SfCommand<PermsetAssignResult> {
-  protected connection: Connection;
-  protected org: Org;
+  protected connection?: Connection;
+  protected org?: Org;
   protected aliasOrUsernames: string[] = [];
   protected permSetNames: string[] = [];
   protected readonly successes: SuccessMsg[] = [];
   protected readonly failures: FailureMsg[] = [];
 
   public async assign(): Promise<PermsetAssignResult> {
+    if (!this.org || !this.connection) {
+      throw new SfError('No org or connection found');
+    }
     try {
       // sequentially to avoid auth file collisions until configFile if safer
       /* eslint-disable no-await-in-loop */

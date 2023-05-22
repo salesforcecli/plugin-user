@@ -7,7 +7,6 @@
 import * as os from 'os';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 import { AuthInfo, Connection, Messages, Org, SfError, StateAggregator, User } from '@salesforce/core';
-import { PasswordConditions } from '@salesforce/core/lib/org/user';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
@@ -19,23 +18,18 @@ export type PasswordData = {
 
 export type GenerateResult = PasswordData | PasswordData[];
 
+export type GenerateInput = {
+  usernames: string[];
+  conn: Connection;
+  length: number;
+  complexity: number;
+};
 export abstract class UserPasswordGenerateBaseCommand extends SfCommand<GenerateResult> {
-  protected usernames: string[];
-  protected passwordData: PasswordData[] = [];
-  protected connection: Connection;
-  protected org: Org;
-  protected length: number;
-  protected complexity: number;
-
-  public async generate(): Promise<GenerateResult> {
-    const passwordCondition: PasswordConditions = {
-      length: this.length,
-      complexity: this.complexity,
-    };
-
+  public async generate({ usernames, conn, length, complexity }: GenerateInput): Promise<GenerateResult> {
+    const passwordData: PasswordData[] = [];
     // sequentially to avoid auth file collisions until configFile if safer
     /* eslint-disable no-await-in-loop */
-    for (const aliasOrUsername of this.usernames) {
+    for (const aliasOrUsername of usernames) {
       try {
         // Convert any aliases to usernames
         // fetch will return undefined if there's no Alias for that name
@@ -43,10 +37,13 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
 
         const authInfo: AuthInfo = await AuthInfo.create({ username });
         const connection: Connection = await Connection.create({ authInfo });
-        connection.setApiVersion(this.connection.getApiVersion());
+        connection.setApiVersion(conn.getApiVersion());
         const org = await Org.create({ connection });
         const user: User = await User.create({ org });
-        const password = User.generatePasswordUtf8(passwordCondition);
+        const password = User.generatePasswordUtf8({
+          length,
+          complexity,
+        });
         // we only need the Id, so instead of User.retrieve we'll just query
         // this avoids permission issues if ProfileId is restricted for the user querying for it
         const result = await connection.singleRecordQuery<{ Id: string }>(
@@ -58,7 +55,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
         await user.assignPassword(authInfo, password);
 
         password.value((pass) => {
-          this.passwordData.push({ username, password: pass.toString('utf-8') });
+          passwordData.push({ username, password: pass.toString('utf-8') });
           authInfo.update({ password: pass.toString('utf-8') });
         });
 
@@ -72,7 +69,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
           // we don't have access to the apiVersion from what happened in the try, so until v51 is r2, we have to check versions the hard way
           const authInfo: AuthInfo = await AuthInfo.create({ username: aliasOrUsername });
           const connection: Connection = await Connection.create({ authInfo });
-          connection.setApiVersion(this.connection.getApiVersion());
+          connection.setApiVersion(conn.getApiVersion());
           if (parseInt(connection.getApiVersion(), 10) >= 51) {
             throw messages.createError('noSelfSetError');
           }
@@ -83,15 +80,15 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
     }
     /* eslint-enable no-await-in-loop */
 
-    this.print();
+    this.print(passwordData);
 
-    return this.passwordData.length === 1 ? this.passwordData[0] : this.passwordData;
+    return passwordData.length === 1 ? passwordData[0] : passwordData;
   }
 
-  private print(): void {
-    if (this.passwordData) {
-      const successMsg = messages.getMessage('success', [this.passwordData[0].password, this.passwordData[0].username]);
-      const viewMsg = messages.getMessage('viewWithCommand', [this.passwordData[0].username]);
+  private print(passwordData: PasswordData[]): void {
+    if (passwordData) {
+      const successMsg = messages.getMessage('success', [passwordData[0].password, passwordData[0].username]);
+      const viewMsg = messages.getMessage('viewWithCommand', [passwordData[0].username]);
       this.log(`${successMsg}${os.EOL}${viewMsg}`);
     } else {
       this.log(messages.getMessage('successMultiple', [os.EOL]));
@@ -99,7 +96,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
         username: { header: 'USERNAME' },
         password: { header: 'PASSWORD' },
       };
-      this.table(this.passwordData, columnData);
+      this.table(passwordData, columnData);
     }
   }
 }

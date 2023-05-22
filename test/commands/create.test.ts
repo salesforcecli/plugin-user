@@ -12,6 +12,7 @@ import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@sal
 import { Config } from '@oclif/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
+import { assert, JsonMap } from '@salesforce/ts-types';
 import CreateUserCommand from '../../src/commands/org/create/user';
 
 const username = 'defaultusername@test.com';
@@ -77,7 +78,7 @@ describe('org:create:user', () => {
     });
   });
 
-  async function prepareStubs(throws: { license?: boolean; duplicate?: boolean } = {}, readsFile?) {
+  async function prepareStubs(throws: { license?: boolean; duplicate?: boolean } = {}, readsFile?: JsonMap | boolean) {
     await $$.stubAuths(testOrg, devHub);
     $$.stubUsers({ [testOrg.username]: [] });
     await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': testOrg.username });
@@ -246,6 +247,7 @@ describe('org:create:user', () => {
       await createCommand.run();
       expect.fail('should have thrown an error');
     } catch (e) {
+      assert(e instanceof Error);
       expect(e.message).to.equal('There are no available user licenses for the user profile "testName".');
       expect(e.name).to.equal('licenseLimitExceeded');
     }
@@ -261,6 +263,7 @@ describe('org:create:user', () => {
       await createCommand.run();
       expect.fail('should have thrown an error');
     } catch (e) {
+      assert(e instanceof Error);
       expect(e.name).to.equal('duplicateUsername');
       expect(e.message).to.equal(
         'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs. Try using the --set-unique-username flag to force a unique username by appending the org ID.'

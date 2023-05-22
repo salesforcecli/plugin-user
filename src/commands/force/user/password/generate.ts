@@ -64,11 +64,11 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
 
   public async run(): Promise<GenerateResult> {
     const { flags } = await this.parse(ForceUserPasswordGenerateCommand);
-    this.usernames = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
-    this.length = flags.length;
-    this.complexity = flags.complexity;
-    this.org = flags['target-org'];
-    this.connection = this.org.getConnection(flags['api-version']);
-    return this.generate();
+    return this.generate({
+      usernames: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
+      length: flags.length,
+      complexity: flags.complexity,
+      conn: flags['target-org'].getConnection(flags['api-version']),
+    });
   }
 }

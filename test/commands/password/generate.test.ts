@@ -8,7 +8,7 @@
 import { Connection, Messages, User } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer';
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { Config } from '@oclif/core';
 import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password';
 
@@ -101,6 +101,7 @@ describe('org:generate:password', () => {
       await passwordGenerate.run();
       expect.fail('should have thrown an error');
     } catch (result) {
+      assert(result instanceof Error);
       expect(result.message).to.equal(messages.getMessage('noSelfSetError'));
       expect(result.name).to.equal('NoSelfSetError');
     }

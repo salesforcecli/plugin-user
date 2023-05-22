@@ -7,7 +7,7 @@
 import { Connection } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { Config } from '@oclif/core';
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { AssignPermSetLicenseCommand } from '../../../src/commands/org/assign/permsetlicense';
 import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign';
 
@@ -95,6 +95,7 @@ describe('org:assign:permsetlicense', () => {
     try {
       await userPermSetLicenseAssignCommand.run();
     } catch (e) {
+      assert(e instanceof Error);
       expect(e.message).to.equal('PermissionSetLicense not found');
     }
   });

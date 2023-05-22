@@ -44,9 +44,10 @@ export class ForceUserPermSetLicenseAssignCommand extends UserPermSetLicenseAssi
 
   public async run(): Promise<PSLResult> {
     const { flags } = await this.parse(ForceUserPermSetLicenseAssignCommand);
-    this.usernamesOrAliases = ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername());
-    this.pslName = flags.name;
-    this.connection = flags['target-org'].getConnection(flags['api-version']);
-    return this.assign();
+    return this.assign({
+      conn: flags['target-org'].getConnection(flags['api-version']),
+      pslName: flags.name,
+      usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
+    });
   }
 }
