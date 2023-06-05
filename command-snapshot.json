@@ -12,31 +12,41 @@
       "target-dev-hub",
       "target-org"
     ],
-    "alias": []
+    "alias": [],
+    "flagChars": ["c", "l", "o", "u", "v"],
+    "flagAliases": ["apiversion", "onbehalfof", "targetdevhubusername", "targetusername"]
   },
   {
     "command": "force:user:permset:assign",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "json", "loglevel", "on-behalf-of", "perm-set-name", "target-org"],
-    "alias": []
+    "alias": [],
+    "flagChars": ["n", "o", "u"],
+    "flagAliases": ["apiversion", "onbehalfof", "permsetname", "targetusername"]
   },
   {
     "command": "force:user:permsetlicense:assign",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "json", "loglevel", "name", "on-behalf-of", "target-org"],
-    "alias": []
+    "alias": [],
+    "flagChars": ["b", "n", "u"],
+    "flagAliases": ["apiversion", "onbehalfof", "perm-set-license", "psl", "targetusername"]
   },
   {
     "command": "org:assign:permset",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "json", "name", "on-behalf-of", "target-org"],
-    "alias": []
+    "alias": [],
+    "flagChars": ["b", "n", "o"],
+    "flagAliases": ["onbehalfof", "permsetname"]
   },
   {
     "command": "org:assign:permsetlicense",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "json", "name", "on-behalf-of", "target-org"],
-    "alias": []
+    "alias": [],
+    "flagChars": ["b", "n", "o"],
+    "flagAliases": ["onbehalfof", "perm-set-license", "psl"]
   },
   {
     "command": "org:create:user",
@@ -51,24 +61,40 @@
       "target-dev-hub",
       "target-org"
     ],
-    "alias": ["force:user:create"]
+    "alias": ["force:user:create"],
+    "flagChars": ["a", "f", "o", "s", "v"],
+    "flagAliases": [
+      "apiversion",
+      "definitionfile",
+      "setalias",
+      "setuniqueusername",
+      "targetdevhubusername",
+      "targetusername",
+      "u"
+    ]
   },
   {
     "command": "org:display:user",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "json", "loglevel", "target-dev-hub", "target-org"],
-    "alias": ["force:user:display"]
+    "alias": ["force:user:display"],
+    "flagChars": ["o", "v"],
+    "flagAliases": ["apiversion", "targetdevhubusername", "targetusername", "u"]
   },
   {
     "command": "org:generate:password",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "complexity", "json", "length", "on-behalf-of", "target-org"],
-    "alias": []
+    "alias": [],
+    "flagChars": ["b", "c", "l", "o"],
+    "flagAliases": ["onbehalfof"]
   },
   {
     "command": "org:list:users",
     "plugin": "@salesforce/plugin-user",
     "flags": ["api-version", "json", "loglevel", "target-dev-hub", "target-org"],
-    "alias": ["force:user:list"]
+    "alias": ["force:user:list"],
+    "flagChars": ["o", "v"],
+    "flagAliases": ["apiversion", "targetusername", "u"]
   }
 ]
