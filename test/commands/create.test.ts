@@ -32,21 +32,23 @@ describe('org:create:user', () => {
 
   it('will properly merge fields regardless of capitalization', async () => {
     // notice the varied capitalization
-    $$.SANDBOX.stub(fs.promises, 'readFile').resolves(
-      JSON.stringify({
-        id: originalUserId,
-        Username: '1605130295132_test-j6asqt5qoprs@example.com',
-        Alias: 'testAlias',
-        Email: username,
-        EmailEncodingKey: 'UTF-8',
-        LanguageLocaleKey: 'en_US',
-        localeSidKey: 'en_US',
-        ProfileId: '00e2D000000bNexWWR',
-        LastName: 'User',
-        timeZoneSidKey: 'America/Los_Angeles',
-        permsets: ['permset1', 'permset2'],
-      })
-    );
+    $$.SANDBOX.stub(fs.promises, 'readFile')
+      .withArgs('testing')
+      .resolves(
+        JSON.stringify({
+          id: originalUserId,
+          Username: '1605130295132_test-j6asqt5qoprs@example.com',
+          Alias: 'testAlias',
+          Email: username,
+          EmailEncodingKey: 'UTF-8',
+          LanguageLocaleKey: 'en_US',
+          localeSidKey: 'en_US',
+          ProfileId: '00e2D000000bNexWWR',
+          LastName: 'User',
+          timeZoneSidKey: 'America/Los_Angeles',
+          permsets: ['permset1', 'permset2'],
+        })
+      );
 
     const createCommand = new CreateUserCommand(['-f', 'userConfig.json'], {} as Config);
 
@@ -131,7 +133,15 @@ describe('org:create:user', () => {
     if (readsFile) {
       $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery').resolves({ Id: '12345678' });
       $$.SANDBOX.stub(Logger.prototype, 'debug');
-      $$.SANDBOX.stub(fs.promises, 'readFile').resolves(JSON.stringify(readsFile));
+      if (typeof readsFile !== 'boolean') {
+        const fsStub = $$.SANDBOX.stub(fs.promises, 'readFile');
+        fsStub.withArgs('parent/child/file.json').resolves(JSON.stringify(readsFile));
+        fsStub.callThrough();
+        // $$.SANDBOX.stub(fs.promises, 'readFile')
+        //   .withArgs('parent/child/file.json')
+        //   .resolves(JSON.stringify(readsFile))
+        //   .callThrough();
+      }
     }
   }
 
@@ -151,7 +161,7 @@ describe('org:create:user', () => {
         localesidkey: 'en_US',
         generatepassword: true,
         profileid: '12345678',
-        profilename: 'profileFromArgs',
+        profilename: 'profileFromFile',
         timezonesidkey: 'America/Los_Angeles',
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
@@ -163,6 +173,8 @@ describe('org:create:user', () => {
         testOrg.username,
         '--target-dev-hub',
         'devhub@test.com',
+        '--definition-file',
+        'parent/child/file.json',
         "permsets='permCLI, permCLI2'",
         'generatepassword=true',
       ],
