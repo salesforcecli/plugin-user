@@ -137,10 +137,6 @@ describe('org:create:user', () => {
         const fsStub = $$.SANDBOX.stub(fs.promises, 'readFile');
         fsStub.withArgs('parent/child/file.json').resolves(JSON.stringify(readsFile));
         fsStub.callThrough();
-        // $$.SANDBOX.stub(fs.promises, 'readFile')
-        //   .withArgs('parent/child/file.json')
-        //   .resolves(JSON.stringify(readsFile))
-        //   .callThrough();
       }
     }
   }
