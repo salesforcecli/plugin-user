@@ -1035,10 +1035,10 @@
     handlebars "^4.7.7"
     tslib "^2"
 
-"@salesforce/plugin-source@^2.10.12":
-  version "2.10.12"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.12.tgz#51aa78be307b030828c1dc3c074e66a89b18d4a5"
-  integrity sha512-tpA08b8rhsHdPiSJ90MVtMIJVrlayZAlKgCK9jbmJwBD4E8Y/RC7a5gLP1tBl2SJbJBwyavEC3O09BQjwA6d0g==
+"@salesforce/plugin-source@^2.10.14":
+  version "2.10.14"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.14.tgz#4b3269a61937f1e7028ad3cc9b3a32e06dbbe0d5"
+  integrity sha512-bfzXHqAT8u/HD7PnLuoVel2FKxNPOcnuXHKlfRtTBsKQXRyYMotqXQ207oTdJ9sZIE8DQzDcB2p3dEmXPpLZxw==
   dependencies:
     "@oclif/core" "^2.8.2"
     "@salesforce/apex-node" "^1.6.0"
