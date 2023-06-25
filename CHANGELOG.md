@@ -1,3 +1,12 @@
+## [2.3.18](https://github.com/salesforcecli/plugin-user/compare/2.3.17...2.3.18) (2023-06-25)
+
+
+### Bug Fixes
+
+* **deps:** bump fast-xml-parser from 4.2.4 to 4.2.5 ([39fe8a2](https://github.com/salesforcecli/plugin-user/commit/39fe8a23d03d1023ffbc6dfac440b14c4f4f7f68))
+
+
+
 ## [2.3.17](https://github.com/salesforcecli/plugin-user/compare/2.3.16...2.3.17) (2023-06-07)
 
 
