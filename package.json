@@ -10,7 +10,7 @@
     "@salesforce/core": "^4.1.0",
     "@salesforce/kit": "^3.0.2",
     "@salesforce/sf-plugins-core": "^3.0.2",
-    "@salesforce/ts-types": "^2.0.2",
+    "@salesforce/ts-types": "^2.0.3",
     "tslib": "^2"
   },
   "devDependencies": {
