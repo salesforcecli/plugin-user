@@ -1,3 +1,12 @@
+## [2.3.19](https://github.com/salesforcecli/plugin-user/compare/2.3.18...2.3.19) (2023-06-26)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/ts-types from 2.0.2 to 2.0.3 ([eec6c07](https://github.com/salesforcecli/plugin-user/commit/eec6c0706603dd61c1e4181318d492debc8ef718))
+
+
+
 ## [2.3.18](https://github.com/salesforcecli/plugin-user/compare/2.3.17...2.3.18) (2023-06-25)
 
 
