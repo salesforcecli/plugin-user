@@ -731,10 +731,10 @@
     wordwrap "^1.0.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/plugin-command-snapshot@^4.0.4":
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-4.0.4.tgz#366a54ac648795bddbf47e6871915db489abd98a"
-  integrity sha512-aL7TkSqrNR2SCwabLSrxI2M5WPPnmc0f81FEwkiNB0URLf8Yz+cQ0wNNHZ930qINZYsQYoX7+CV5NYagFTOhdA==
+"@oclif/plugin-command-snapshot@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-4.0.5.tgz#04365afc5692b024d7a4d4444ec276023a03efdc"
+  integrity sha512-j/oEX/fQISLynLiolUH/STJm5cbQ05XdhHAgWAjMQrwwyGMeTSBV5N/hhvPujjcCAmHnpWxZVcLoyyrzJkJImw==
   dependencies:
     "@oclif/core" "^2.8.7"
     chalk "^4.1.2"
@@ -742,7 +742,7 @@
     lodash "^4.17.21"
     semver "^7.5.2"
     ts-json-schema-generator "^1.2.0"
-    tslib "^2.5.2"
+    tslib "^2.5.3"
 
 "@oclif/plugin-help@^5.1.19":
   version "5.2.6"
@@ -7491,7 +7491,7 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.5.0, tslib@^2.5.2:
+tslib@^2, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.5.0, tslib@^2.5.2, tslib@^2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.3.tgz#24944ba2d990940e6e982c4bea147aba80209913"
   integrity sha512-mSxlJJwl3BMEQCUNnxXBU9jP4JBktcEGhURcPR6VQVlnP0FdDEsIaz0C35dXNGLyRfrATNofF0F5p2KPxQgB+w==
