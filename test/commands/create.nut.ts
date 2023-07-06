@@ -79,7 +79,7 @@ describe('creates a user from a file and verifies', () => {
     // there will also be a profile in there, too, with a cryptic name on it
     expect(queryResult.records.some((assignment) => assignment.PermissionSet.Name === 'VolunteeringApp'));
   });
-  it('verifies the new user appears in list of users for the org', async () => {
+  it('verifies the new user appears in list of users for the org', () => {
     const output = execCmd<AuthList[]>(`org:list:users --json -u ${session.orgs.get('default')?.username}`, {
       ensureExitCode: 0,
     }).jsonOutput;
