@@ -58,7 +58,7 @@ describe('PermissionSetLicense tests', () => {
   });
 
   describe('multiple PSL via onBehalfOf', () => {
-    it('assigns a psl to multiple users via onBehalfOf', async () => {
+    it('assigns a psl to multiple users via onBehalfOf', () => {
       const anotherPSL = 'SurveyCreatorPsl';
       const originalUsername = session.orgs.get('default')?.username;
 
@@ -84,7 +84,7 @@ describe('PermissionSetLicense tests', () => {
       ]);
     });
 
-    it('assigns a psl to multiple users via onBehalfOf (partial success)', async () => {
+    it('assigns a psl to multiple users via onBehalfOf (partial success)', () => {
       // sales console user can't be assigned to a platform license
       const anotherPSL = 'SalesConsoleUser';
       const originalUsername = session.orgs.get('default')?.username;
