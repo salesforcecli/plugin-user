@@ -1,3 +1,12 @@
+## [2.3.27](https://github.com/salesforcecli/plugin-user/compare/2.3.26...2.3.27) (2023-07-25)
+
+
+### Bug Fixes
+
+* pass bin to message ([f6a662c](https://github.com/salesforcecli/plugin-user/commit/f6a662ca749fa7da5ec888192b272bfeccc8eaeb))
+
+
+
 ## [2.3.26](https://github.com/salesforcecli/plugin-user/compare/2.3.25...2.3.26) (2023-07-24)
 
 
