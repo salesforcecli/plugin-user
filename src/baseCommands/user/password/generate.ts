@@ -88,7 +88,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
   private print(passwordData: PasswordData[]): void {
     if (passwordData) {
       const successMsg = messages.getMessage('success', [passwordData[0].password, passwordData[0].username]);
-      const viewMsg = messages.getMessage('viewWithCommand', [passwordData[0].username]);
+      const viewMsg = messages.getMessage('viewWithCommand', [this.config.bin, passwordData[0].username]);
       this.log(`${successMsg}${os.EOL}${viewMsg}`);
     } else {
       this.log(messages.getMessage('successMultiple', [os.EOL]));

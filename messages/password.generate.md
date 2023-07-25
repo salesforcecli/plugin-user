@@ -78,7 +78,7 @@ Successfully set passwords:%s
 
 # viewWithCommand
 
-You can see the password again by running "<%= config.bin %> org display user -o %s".
+You can see the password again by running "%s org display user -o %s".
 
 # flags.target-org.summary
 
