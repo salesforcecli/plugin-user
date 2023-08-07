@@ -1,3 +1,12 @@
+## [2.3.28](https://github.com/salesforcecli/plugin-user/compare/2.3.27...2.3.28) (2023-08-07)
+
+
+### Bug Fixes
+
+* **deps:** core 5 ([0bc92cc](https://github.com/salesforcecli/plugin-user/commit/0bc92cc804c2c9aab250c329033762673c5e07c1))
+
+
+
 ## [2.3.27](https://github.com/salesforcecli/plugin-user/compare/2.3.26...2.3.27) (2023-07-25)
 
 
