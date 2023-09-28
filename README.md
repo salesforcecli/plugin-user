@@ -88,267 +88,389 @@ For more NUT options and examples, see <https://github.com/salesforcecli/cli-plu
 
 <!-- commands -->
 
-- [`sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceusercreate-namevalue--a-string--f-string--s--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserdisplay--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserlist--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx force:user:password:generate [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserpasswordgenerate--o-array--l-integer--c-integer--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx force:user:permset:assign -n <array> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserpermsetassign--n-array--o-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx force:user:permsetlicense:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-forceuserpermsetlicenseassign--n-string--o-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+- [`sfdx force:user:password:generate`](#sfdx-forceuserpasswordgenerate)
+- [`sfdx org:assign:permset`](#sfdx-orgassignpermset)
+- [`sfdx org:assign:permsetlicense`](#sfdx-orgassignpermsetlicense)
+- [`sfdx org:create:user`](#sfdx-orgcreateuser)
+- [`sfdx org:display:user`](#sfdx-orgdisplayuser)
+- [`sfdx org:generate:password`](#sfdx-orggeneratepassword)
+- [`sfdx org:list:users`](#sfdx-orglistusers)
 
-## `sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx force:user:password:generate`
 
-create a user for a scratch org
-
-```
-USAGE
-  $ sfdx force:user:create [name=value...] [-a <string>] [-f <string>] [-s] [-v <string>] [-u <string>] [--apiversion
-    <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
-
-FLAGS
-  -a, --setalias=<value>                                                            set an alias for the created
-                                                                                    username to reference within the CLI
-  -f, --definitionfile=<value>                                                      file path to a user definition
-  -s, --setuniqueusername                                                           force the username, if specified in
-                                                                                    the definition file or at the
-                                                                                    command line, to be unique by
-                                                                                    appending the org ID
-  -u, --targetusername=<value>                                                      username or alias for the target
-                                                                                    org; overrides default target org
-  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
-                                                                                    org; overrides default dev hub org
-  --apiversion=<value>                                                              override the api version used for
-                                                                                    api requests made by this command
-  --json                                                                            format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
-
-DESCRIPTION
-  create a user for a scratch org
-
-  Create a user for a scratch org, optionally setting an alias for use by the CLI, assigning permission sets (e.g.,
-  permsets=ps1,ps2), generating a password (e.g., generatepassword=true), and setting User sObject fields.
-
-EXAMPLES
-  $ sfdx force:user:create
-
-  $ sfdx force:user:create -a testuser1 -f config/project-user-def.json profileName='Chatter Free User'
-
-  $ sfdx force:user:create username=testuser1@my.org email=me@my.org permsets=DreamHouse
-
-  $ sfdx force:user:create -f config/project-user-def.json email=me@my.org generatepassword=true
-```
-
-_See code: [src/commands/force/user/create.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.2/src/commands/force/user/create.ts)_
-
-## `sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
-
-displays information about a user of a scratch org
+Generate a random password for scratch org users.
 
 ```
 USAGE
-  $ sfdx force:user:display [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx force:user:password:generate -u <value> [--json] [-o <value>] [-l <value>] [-c <value>] [--api-version <value>]
 
 FLAGS
-  -u, --targetusername=<value>                                                      username or alias for the target
-                                                                                    org; overrides default target org
-  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
-                                                                                    org; overrides default dev hub org
-  --apiversion=<value>                                                              override the api version used for
-                                                                                    api requests made by this command
-  --json                                                                            format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
+                                 stronger the password.
+  -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
+                                 8 and 100.
+  -o, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to.
+  -u, --target-org=<value>       (required) Scratch org alias or login user.
+  --api-version=<value>          Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
-  displays information about a user of a scratch org
+  Generate a random password for scratch org users.
 
-  Output includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable.
+  By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a
+  password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
 
-EXAMPLES
-  $ sfdx force:user:display
-
-  $ sfdx force:user:display -u me@my.org --json
-```
-
-_See code: [src/commands/force/user/display.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.2/src/commands/force/user/display.ts)_
-
-## `sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
-
-list all authenticated users of an org
-
-```
-USAGE
-  $ sfdx force:user:list [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
-
-FLAGS
-  -u, --targetusername=<value>                                                      username or alias for the target
-                                                                                    org; overrides default target org
-  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
-                                                                                    org; overrides default dev hub org
-  --apiversion=<value>                                                              override the api version used for
-                                                                                    api requests made by this command
-  --json                                                                            format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
-
-DESCRIPTION
-  list all authenticated users of an org
-
-  The original scratch org admin is marked with "(A)"
-
-EXAMPLES
-  $ sfdx force:user:list
-
-  $ sfdx force:user:list -u me@my.org --json
-
-  $ sfdx force:user:list --json > tmp/MyUserList.json
-```
-
-_See code: [src/commands/force/user/list.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.2/src/commands/force/user/list.ts)_
-
-## `sfdx force:user:password:generate [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
-
-generate a password for scratch org users
-
-```
-USAGE
-  $ sfdx force:user:password:generate [-o <array>] [-l <integer>] [-c <integer>] [-v <string>] [-u <string>] [--apiversion
-    <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
-
-FLAGS
-  -c, --complexity=<value>                                                          [default: 5] level of password
-                                                                                    complexity or strength; the higher
-                                                                                    the value, the stronger the password
-  -l, --length=<value>                                                              [default: 13] number of characters
-                                                                                    in the generated password; valid
-                                                                                    values are between 8 and 1000
-  -o, --onbehalfof=<value>                                                          comma-separated list of usernames or
-                                                                                    aliases to assign the password to
-  -u, --targetusername=<value>                                                      username or alias for the target
-                                                                                    org; overrides default target org
-  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
-                                                                                    org; overrides default dev hub org
-  --apiversion=<value>                                                              override the api version used for
-                                                                                    api requests made by this command
-  --json                                                                            format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
-
-DESCRIPTION
-  generate a password for scratch org users
-
-  Generates and sets a random password for one or more scratch org users. Targets the usernames listed with the
-  --onbehalfof parameter or the --targetusername parameter. Defaults to the defaultusername.
-
-  If you haven’t set a default Dev Hub, or if your scratch org isn’t associated with your default Dev Hub,
-  --targetdevhubusername is required.
-
-  To change the password strength, set the --complexity parameter to a value between 0 and 5. Each value specifies the
-  types of characters used in the generated password:
+  To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types
+  of characters used in the generated password:
 
   0 - lower case letters only
-
   1 - lower case letters and numbers only
-
   2 - lower case letters and symbols only
-
   3 - lower and upper case letters and numbers only
-
   4 - lower and upper case letters and symbols only
-
   5 - lower and upper case letters and numbers and symbols only
 
-  To see a password that was previously generated, run "sfdx force:user:display".
+  To see a password that was previously generated, run "org display user".
 
 EXAMPLES
-  $ sfdx force:user:password:generate
+  Generate a password for the original admin user of your default scratch org:
 
-  $ sfdx force:user:password:generate -l 12
+    $ sfdx force:user:password:generate
 
-  $ sfdx force:user:password:generate -c 3
+  Generate a password that contains 12 characters for the original admin user of the scratch org with alias
+  "my-scratch":
 
-  $ sfdx force:user:password:generate -u me@my.org --json
+    $ sfdx force:user:password:generate --length 12 --target-org my-scratch
 
-  $ sfdx force:user:password:generate -o "user1@my.org,user2@my.org,user3@my.org"
+  Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
+
+    $ sfdx force:user:password:generate --complexity 3
+
+  Generate a password for the specified users in the default scratch org:
+
+    $ sfdx force:user:password:generate --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of \
+      user3@my.org
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.2/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/force/user/password/generate.ts)_
 
-## `sfdx force:user:permset:assign -n <array> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx org:assign:permset`
 
-assign a permission set to one or more users of an org
+Assign a permission set to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sfdx force:user:permset:assign -n <array> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx org:assign:permset -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
 
 FLAGS
-  -n, --permsetname=<value>                                                         (required) comma-separated list of
-                                                                                    permission sets to assign
-  -o, --onbehalfof=<value>                                                          comma-separated list of usernames or
-                                                                                    aliases to assign the permission set
-                                                                                    to
-  -u, --targetusername=<value>                                                      username or alias for the target
-                                                                                    org; overrides default target org
-  --apiversion=<value>                                                              override the api version used for
-                                                                                    api requests made by this command
-  --json                                                                            format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  -b, --on-behalf-of=<value>...  Username or alias to assign the permission set to.
+  -n, --name=<value>...          (required) Permission set to assign.
+  -o, --target-org=<value>       (required) Scratch org alias or login user.
+  --api-version=<value>          Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
-  assign a permission set to one or more users of an org
+  Assign a permission set to one or more users of a scratch org.
 
-  To specify an alias for the -u or -o parameter, use the username alias you set with the "alias:set" CLI command, not
-  the User.Alias value of the org user.
+  To specify an alias for the --target-org or --on-behalf-of flags, use the CLI username alias, such as the one you set
+  with the "alias set" command. Don't use the value of the Alias field of the User Salesforce object for the org user.
+
+  To assign multiple permission sets, either set multiple --name flags or a single --name flag with multiple names
+  separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to
+  --on-behalf-of.
 
 EXAMPLES
-  $ sfdx force:user:permset:assign -n "DreamHouse, LargeDreamHouse"
+  Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
 
-  $ sfdx force:user:permset:assign -n DreamHouse -u me@my.org
+    $ sfdx org:assign:permset --name DreamHouse --name CloudHouse
 
-  $ sfdx force:user:permset:assign -n DreamHouse -o "user1@my.org,user2,user3"
+  Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
+
+    $ sfdx org:assign:permset --name DreamHouse --target-org my-scratch
+
+  Assign the Dreamhouse permission set to the specified list of users of your default scratch org:
+
+    $ sfdx org:assign:permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/force/user/permset/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.2/src/commands/force/user/permset/assign.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/org/assign/permset.ts)_
 
-## `sfdx force:user:permsetlicense:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx org:assign:permsetlicense`
 
-assign a permission set license to one or more users of an org
+Assign a permission set license to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sfdx force:user:permsetlicense:assign -n <string> [-o <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
-    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx org:assign:permsetlicense -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
 
 FLAGS
-  -n, --name=<value>                                                                (required) the name of the
-                                                                                    permission set license to assign
-  -o, --onbehalfof=<value>                                                          comma-separated list of usernames or
-                                                                                    aliases to assign the permission set
-                                                                                    license to
-  -u, --targetusername=<value>                                                      username or alias for the target
-                                                                                    org; overrides default target org
-  --apiversion=<value>                                                              override the api version used for
-                                                                                    api requests made by this command
-  --json                                                                            format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  -b, --on-behalf-of=<value>...  Usernames or alias to assign the permission set license to.
+  -n, --name=<value>             (required) Name of the permission set license to assign.
+  -o, --target-org=<value>       (required) Scratch org alias or login user.
+  --api-version=<value>          Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
-  assign a permission set license to one or more users of an org
+  Assign a permission set license to one or more users of a scratch org.
+
+  To specify an alias for the --target-org or --on-behalf-of flags, use the CLI username alias, such as the one you set
+  with the "alias set" command. Don't use the value of the Alias field of the User Salesforce object for the org user.
+
+  To assign multiple permission sets, either set multiple --name flags or a single --name flag with multiple names
+  separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to
+  --on-behalf-of.
 
 EXAMPLES
-  $ sfdx force:user:permsetlicense:assign -n DreamHouse
+  Assign the DreamHouse permission set license to original admin user of your default scratch org:
 
-  $ sfdx force:user:permsetlicense:assign -n DreamHouse -u me@my.org
+    $ sfdx org:assign:permsetlicense --name DreamHouse
 
-  $ sfdx force:user:permsetlicense:assign -n DreamHouse -o "user1@my.org,user2,user3"
+  Assign two permission set licenses to the original admin user of the scratch org with alias "my-scratch":
+
+    $ sfdx org:assign:permsetlicense --name DreamHouse --name CloudHouse --target-org my-scratch
+
+  Assign the Dreamhouse permission set license to the specified list of users of your default scratch org:
+
+    $ sfdx org:assign:permsetlicense --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 \
+      --on-behalf-of user3
 ```
 
-_See code: [src/commands/force/user/permsetlicense/assign.ts](https://github.com/salesforcecli/plugin-user/blob/v2.0.2/src/commands/force/user/permsetlicense/assign.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/org/assign/permsetlicense.ts)_
+
+## `sfdx org:create:user`
+
+Create a user for a scratch org.
+
+```
+USAGE
+  $ sfdx org:create:user -o <value> [--json] [-a <value>] [-f <value>] [-s] [--api-version <value>]
+
+FLAGS
+  -a, --set-alias=<value>        Set an alias for the created username to reference in other CLI commands.
+  -f, --definition-file=<value>  File path to a user definition file for customizing the new user.
+  -o, --target-org=<value>       (required) Username or alias of the target org.
+  -s, --set-unique-username      Force the username, if specified in the definition file or at the command line, to be
+                                 unique by appending the org ID.
+  --api-version=<value>          Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Create a user for a scratch org.
+
+  A scratch org includes one administrator user by default. For testing purposes, however, you sometimes need to create
+  additional users.
+
+  The easiest way to create a user is to let this command assign default or generated characteristics to the new user.
+  If you want to customize your new user, create a definition file and specify it with the --definition-file flag. In
+  the file, you can include all the User sObject (SSalesforce object) fields and Salesforce DX-specific options, as
+  described in "User Definition File for Customizing a Scratch Org User"
+  (https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm).
+  You can also specify these options on the command line.
+
+  If you don't customize your new user, this command creates a user with the following default characteristics:
+
+  * The username is the existing administrator’s username prepended with a timestamp, such as
+  1505759162830_test-wvkpnfm5z113@example.com.
+  * The user’s profile is Standard User.
+  * The values of the required fields of the User sObject are the corresponding values of the administrator user.
+  * The user has no password.
+
+  Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. This alias
+  is local and different from the Alias field of the User sObject record of the new user, which you set in the Setup UI.
+
+  When this command completes, it displays the new username and user ID. Run the "org display user" command to get more
+  information about the new user.
+
+  For more information about user limits, defaults, and other considerations when creating a new scratch org user, see
+  https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
+
+ALIASES
+  $ sfdx force:user:create
+
+EXAMPLES
+  Create a user for your default scratch org and let this command generate a username, user ID, and other
+  characteristics:
+
+    $ sfdx org:create:user
+
+  Create a user with alias "testuser1" using a user definition file. Set the "profileName" option to "Chatter Free
+  User", which overrides the value in the defintion file if it also exists there. Create the user for the scratch org
+  with alias "my-scratch":
+
+    $ sfdx org:create:user --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter \
+      Free User' --target-org my-scratch
+
+  Create a user by specifying the username, email, and perm set assignment at the command line; command fails if the
+  username already exists in Salesforce:
+
+    $ sfdx org:create:user username=testuser1@my.org email=me@my.org permsets=DreamHouse
+
+  Create a user with a definition file, set the email value as specified (overriding any value in the definition
+  file), and generate a password for the user. If the username in the definition file isn't unique, the command
+  appends the org ID to make it unique:
+
+    $ sfdx org:create:user --definition-file config/project-user-def.json email=me@my.org generatepassword=true \
+      --set-unique-username
+
+FLAG DESCRIPTIONS
+  -f, --definition-file=<value>  File path to a user definition file for customizing the new user.
+
+    The user definition file uses JSON format and can include any Salesforce User sObject field and Salesforce
+    DX-specific options. See
+    https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm
+    for more information.
+
+  -s, --set-unique-username
+
+    Force the username, if specified in the definition file or at the command line, to be unique by appending the org
+    ID.
+
+    The new user’s username must be unique across all Salesforce orgs and in the form of an email address. If you let
+    this command generate a username for you, it's guaranteed to be unique. If you specify an existing username in a
+    definition file, the command fails. Set this flag to force the username to be unique; as a result, the username
+    might be different than what you specify in the definition file.
+```
+
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/org/create/user.ts)_
+
+## `sfdx org:display:user`
+
+Display information about a Salesforce user.
+
+```
+USAGE
+  $ sfdx org:display:user -o <value> [--json] [--api-version <value>]
+
+FLAGS
+  -o, --target-org=<value>  (required) Username or alias of the target org.
+  --api-version=<value>     Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Display information about a Salesforce user.
+
+  Output includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable. The
+  displayed alias is local and different from the Alias field of the User sObject record of the new user, which you set
+  in the Setup UI.
+
+ALIASES
+  $ sfdx force:user:display
+
+EXAMPLES
+  Display information about the admin user of your default scratch org:
+
+    $ sfdx org:display:user
+
+  Display information about the specified user and output in JSON format:
+
+    $ sfdx org:display:user --target-org me@my.org --json
+```
+
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/org/display/user.ts)_
+
+## `sfdx org:generate:password`
+
+Generate a random password for scratch org users.
+
+```
+USAGE
+  $ sfdx org:generate:password -o <value> [--json] [-b <value>] [-l <value>] [-c <value>] [--api-version <value>]
+
+FLAGS
+  -b, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to.
+  -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
+                                 stronger the password.
+  -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
+                                 8 and 100.
+  -o, --target-org=<value>       (required) Username or alias of the target org.
+  --api-version=<value>          Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Generate a random password for scratch org users.
+
+  By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a
+  password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
+
+  To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types
+  of characters used in the generated password:
+
+  0 - lower case letters only
+  1 - lower case letters and numbers only
+  2 - lower case letters and symbols only
+  3 - lower and upper case letters and numbers only
+  4 - lower and upper case letters and symbols only
+  5 - lower and upper case letters and numbers and symbols only
+
+  To see a password that was previously generated, run "org display user".
+
+EXAMPLES
+  Generate a password for the original admin user of your default scratch org:
+
+    $ sfdx org:generate:password
+
+  Generate a password that contains 12 characters for the original admin user of the scratch org with alias
+  "my-scratch":
+
+    $ sfdx org:generate:password --length 12 --target-org my-scratch
+
+  Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
+
+    $ sfdx org:generate:password --complexity 3
+
+  Generate a password for the specified users in the default scratch org:
+
+    $ sfdx org:generate:password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
+```
+
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/org/generate/password.ts)_
+
+## `sfdx org:list:users`
+
+List all locally-authenticated users of an org.
+
+```
+USAGE
+  $ sfdx org:list:users -o <value> [--json] [--api-version <value>]
+
+FLAGS
+  -o, --target-org=<value>  (required) Username or alias of the target org.
+  --api-version=<value>     Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  List all locally-authenticated users of an org.
+
+  For scratch orgs, the list includes any users you've created with the "org create user" command; the original scratch
+  org admin user is marked with "(A)". For other orgs, the list includes the users you used to authenticate to the org.
+
+ALIASES
+  $ sfdx force:user:list
+
+EXAMPLES
+  List the locally-authenticated users of your default org:
+
+    $ sfdx org:list:users
+
+  List the locally-authenticated users of the specified org:
+
+    $ sfdx org:list:users --target-org me@my.org
+```
+
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.33/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
