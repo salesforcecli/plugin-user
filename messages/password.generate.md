@@ -4,7 +4,9 @@ Generate a random password for scratch org users.
 
 # description
 
-By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
+By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a password for this admin user. After it's set, you can’t unset a password, you can only change it.
+
+You can also use the --on-behalf-of flag to generate a password for a scratch org user that you've created locally with the "org create user" command. This command doesn't work for users you created in the scratch org using Setup.
 
 To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types of characters used in the generated password:
 
@@ -31,13 +33,13 @@ To see a password that was previously generated, run "org display user".
 
   <%= config.bin %> <%= command.id %> --complexity 3
 
-- Generate a password for the specified users in the default scratch org:
+- Generate a password for the specified users in the default scratch org; these users must have been created locally with the "org create user" command:
 
   <%= config.bin %> <%= command.id %> --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 
 # flags.onBehalfOf.summary
 
-Comma-separated list of usernames or aliases to assign the password to.
+Comma-separated list of usernames or aliases to assign the password to; must have been created locally with the "org create user" command.
 
 # flags.length.summary
 
