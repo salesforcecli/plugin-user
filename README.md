@@ -109,7 +109,8 @@ FLAGS
                                  stronger the password.
   -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
                                  8 and 100.
-  -o, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to.
+  -o, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to; must have been
+                                 created locally with the "org create user" command.
   -u, --target-org=<value>       (required) Scratch org alias or login user.
   --api-version=<value>          Override the api version used for api requests made by this command
 
@@ -120,7 +121,10 @@ DESCRIPTION
   Generate a random password for scratch org users.
 
   By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a
-  password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
+  password for this admin user. After it's set, you can’t unset a password, you can only change it.
+
+  You can also use the --on-behalf-of flag to generate a password for a scratch org user that you've created locally
+  with the "org create user" command. This command doesn't work for users you created in the scratch org using Setup.
 
   To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types
   of characters used in the generated password:
@@ -148,13 +152,14 @@ EXAMPLES
 
     $ sfdx force:user:password:generate --complexity 3
 
-  Generate a password for the specified users in the default scratch org:
+  Generate a password for the specified users in the default scratch org; these users must have been created locally
+  with the "org create user" command:
 
     $ sfdx force:user:password:generate --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of \
       user3@my.org
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/force/user/password/generate.ts)_
 
 ## `sfdx org:assign:permset`
 
@@ -197,7 +202,7 @@ EXAMPLES
     $ sfdx org:assign:permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/org/assign/permset.ts)_
 
 ## `sfdx org:assign:permsetlicense`
 
@@ -241,7 +246,7 @@ EXAMPLES
       --on-behalf-of user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sfdx org:create:user`
 
@@ -339,7 +344,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/org/create/user.ts)_
 
 ## `sfdx org:display:user`
 
@@ -376,7 +381,7 @@ EXAMPLES
     $ sfdx org:display:user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/org/display/user.ts)_
 
 ## `sfdx org:generate:password`
 
@@ -387,7 +392,8 @@ USAGE
   $ sfdx org:generate:password -o <value> [--json] [-b <value>] [-l <value>] [-c <value>] [--api-version <value>]
 
 FLAGS
-  -b, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to.
+  -b, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to; must have been
+                                 created locally with the "org create user" command.
   -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
                                  stronger the password.
   -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
@@ -402,7 +408,10 @@ DESCRIPTION
   Generate a random password for scratch org users.
 
   By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a
-  password for any scratch org user. After it's set, you can’t unset a password, you can only change it.
+  password for this admin user. After it's set, you can’t unset a password, you can only change it.
+
+  You can also use the --on-behalf-of flag to generate a password for a scratch org user that you've created locally
+  with the "org create user" command. This command doesn't work for users you created in the scratch org using Setup.
 
   To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types
   of characters used in the generated password:
@@ -430,12 +439,13 @@ EXAMPLES
 
     $ sfdx org:generate:password --complexity 3
 
-  Generate a password for the specified users in the default scratch org:
+  Generate a password for the specified users in the default scratch org; these users must have been created locally
+  with the "org create user" command:
 
     $ sfdx org:generate:password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/org/generate/password.ts)_
 
 ## `sfdx org:list:users`
 
@@ -471,6 +481,6 @@ EXAMPLES
     $ sfdx org:list:users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.35/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.36/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->

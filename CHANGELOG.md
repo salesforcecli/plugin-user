@@ -1,3 +1,9 @@
+## [2.3.36](https://github.com/salesforcecli/plugin-user/compare/2.3.35...2.3.36) (2023-10-06)
+
+### Bug Fixes
+
+- update "org generate password" help to say --on-behalf-of works for only locally-created users ([b20d852](https://github.com/salesforcecli/plugin-user/commit/b20d852b6c555eae7ab9a6b324e872879b503109))
+
 ## [2.3.35](https://github.com/salesforcecli/plugin-user/compare/2.3.34...2.3.35) (2023-10-01)
 
 ### Bug Fixes
