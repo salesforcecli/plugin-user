@@ -51,7 +51,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
         );
 
         // userId is used by `assignPassword` so we need to set it here
-        authInfo.getFields().userId = result.Id;
+        authInfo.update({ userId: result.Id });
         await user.assignPassword(authInfo, password);
 
         password.value((pass) => {
