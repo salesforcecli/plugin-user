@@ -32,11 +32,12 @@ describe('verifies legacy force commands run successfully ', () => {
         {
           setDefault: true,
           config: path.join('config', 'project-scratch-def.json'),
+          tracksSource: false,
         },
       ],
     });
 
-    execCmd('force:source:push', { ensureExitCode: 0 });
+    execCmd('project:deploy:start', { ensureExitCode: 0, cli: 'sf' });
   });
 
   it('user display', () => {

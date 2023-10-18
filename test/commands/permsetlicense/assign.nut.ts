@@ -24,11 +24,12 @@ describe('PermissionSetLicense tests', () => {
         {
           setDefault: true,
           config: path.join('config', 'project-scratch-def.json'),
+          tracksSource: false,
         },
       ],
     });
 
-    execCmd('force:source:push', { ensureExitCode: 0 });
+    execCmd('project:deploy:start', { ensureExitCode: 0, cli: 'sf' });
   });
 
   it('assigns a psl to default user', () => {
