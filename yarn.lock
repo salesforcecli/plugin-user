@@ -2909,17 +2909,17 @@ eslint-config-salesforce-license@^0.2.0:
   resolved "https://registry.yarnpkg.com/eslint-config-salesforce-license/-/eslint-config-salesforce-license-0.2.0.tgz#323193f1aa15dd33fbf108d25fc1210afc11065e"
   integrity sha512-DJdBvgj82Erum82YMe+YvG/o6ukna3UA++lRl0HSTldj0VlBl3Q8hzCp97nRXZHra6JH1I912yievZzklXDw6w==
 
-eslint-config-salesforce-typescript@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-salesforce-typescript/-/eslint-config-salesforce-typescript-2.0.0.tgz#df6cd54c7d5254158e0c175a8a3526d3f9510b56"
-  integrity sha512-1gq4ChEamP3VaDXoMJdEUX92fOdNMjX9/xOfByOO5AsQJnakRE/P4LWQrw5QqQQGWU8YnnM/OADFI9otD002aQ==
+eslint-config-salesforce-typescript@^2.0.0, eslint-config-salesforce-typescript@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-salesforce-typescript/-/eslint-config-salesforce-typescript-2.0.1.tgz#31e89fb58994071901c343ad29cdd7fca3cb3d65"
+  integrity sha512-3gmTUi3AU3P/84UM7twqR+dkZkSVm+u/yqMKbx/iaBSuFI8lAoALv7xTaOaoJO+4DCvJo+CmsJX7h71H9eUSRw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.62.0"
     "@typescript-eslint/parser" "^5.62.0"
     eslint-config-prettier "^8.10.0"
     eslint-config-salesforce "^2.0.2"
     eslint-config-salesforce-license "^0.2.0"
-    eslint-plugin-import "^2.28.1"
+    eslint-plugin-import "^2.29.0"
     eslint-plugin-jsdoc "^43.0.5"
     eslint-plugin-unicorn "^48.0.1"
 
@@ -2949,7 +2949,7 @@ eslint-plugin-header@^3.1.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-header/-/eslint-plugin-header-3.1.1.tgz#6ce512432d57675265fac47292b50d1eff11acd6"
   integrity sha512-9vlKxuJ4qf793CmeeSrZUvVClw6amtpghq3CuWcB5cUNnWHQhgcqy5eF8oVKFk1G3Y/CbchGfEaw3wiIJaNmVg==
 
-eslint-plugin-import@^2.27.5, eslint-plugin-import@^2.28.1, eslint-plugin-import@^2.29.0:
+eslint-plugin-import@^2.27.5, eslint-plugin-import@^2.29.0:
   version "2.29.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.29.0.tgz#8133232e4329ee344f2f612885ac3073b0b7e155"
   integrity sha512-QPOO5NO6Odv5lpoTkddtutccQjysJuFxoPS7fAHO+9m9udNHvTCPSAMW9zGAYj8lAIdr40I8yPCdUYrncXtrwg==
