@@ -44,10 +44,10 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
   public static readonly flags = {
     'target-dev-hub': Flags.optionalOrg({
       char: 'v',
-      summary: messages.getMessage('flags.target-hub.summary'),
+      summary: messages.getMessage('flags.target-dev-hub.summary'),
       hidden: true,
       deprecated: {
-        message: messages.getMessage('flags.target-hub.deprecation'),
+        message: messages.getMessage('flags.target-dev-hub.deprecation'),
       },
     }),
     'target-org': requiredOrgFlagWithDeprecations,

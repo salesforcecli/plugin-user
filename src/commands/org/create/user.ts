@@ -4,8 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as os from 'os';
-import * as fs from 'fs';
+import * as os from 'node:os';
+import * as fs from 'node:fs';
 import {
   AuthInfo,
   Connection,
@@ -61,21 +61,21 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
   public static readonly flags = {
     'set-alias': Flags.string({
       char: 'a',
-      summary: messages.getMessage('flags.alias.summary'),
+      summary: messages.getMessage('flags.set-alias.summary'),
       aliases: ['setalias'],
       deprecateAliases: true,
     }),
     'definition-file': Flags.string({
       char: 'f',
-      summary: messages.getMessage('flags.definitionfile.summary'),
-      description: messages.getMessage('flags.definitionfile.description'),
+      summary: messages.getMessage('flags.definition-file.summary'),
+      description: messages.getMessage('flags.definition-file.description'),
       aliases: ['definitionfile'],
       deprecateAliases: true,
     }),
     'set-unique-username': Flags.boolean({
       char: 's',
-      summary: messages.getMessage('flags.setuniqueusername.summary'),
-      description: messages.getMessage('flags.setuniqueusername.description'),
+      summary: messages.getMessage('flags.set-unique-username.summary'),
+      description: messages.getMessage('flags.set-unique-username.description'),
       aliases: ['setuniqueusername'],
       deprecateAliases: true,
     }),

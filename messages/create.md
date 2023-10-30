@@ -39,23 +39,23 @@ For more information about user limits, defaults, and other considerations when 
 
   <%= config.bin %> <%= command.id %> --definition-file config/project-user-def.json email=me@my.org generatepassword=true --set-unique-username
 
-# flags.alias.summary
+# flags.set-alias.summary
 
 Set an alias for the created username to reference in other CLI commands.
 
-# flags.definitionfile.summary
+# flags.definition-file.summary
 
 File path to a user definition file for customizing the new user.
 
-# flags.definitionfile.description
+# flags.definition-file.description
 
 The user definition file uses JSON format and can include any Salesforce User sObject field and Salesforce DX-specific options. See https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm for more information.
 
-# flags.setuniqueusername.summary
+# flags.set-unique-username.summary
 
 Force the username, if specified in the definition file or at the command line, to be unique by appending the org ID.
 
-# flags.setuniqueusername.description
+# flags.set-unique-username.description
 
 The new user’s username must be unique across all Salesforce orgs and in the form of an email address. If you let this command generate a username for you, it's guaranteed to be unique. If you specify an existing username in a definition file, the command fails. Set this flag to force the username to be unique; as a result, the username might be different than what you specify in the definition file.
 
