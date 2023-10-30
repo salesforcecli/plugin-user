@@ -159,7 +159,7 @@ EXAMPLES
       user3@my.org
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/force/user/password/generate.ts)_
 
 ## `sfdx org:assign:permset`
 
@@ -202,7 +202,7 @@ EXAMPLES
     $ sfdx org:assign:permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/org/assign/permset.ts)_
 
 ## `sfdx org:assign:permsetlicense`
 
@@ -246,7 +246,7 @@ EXAMPLES
       --on-behalf-of user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sfdx org:create:user`
 
@@ -344,7 +344,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/org/create/user.ts)_
 
 ## `sfdx org:display:user`
 
@@ -381,7 +381,7 @@ EXAMPLES
     $ sfdx org:display:user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/org/display/user.ts)_
 
 ## `sfdx org:generate:password`
 
@@ -445,7 +445,7 @@ EXAMPLES
     $ sfdx org:generate:password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/org/generate/password.ts)_
 
 ## `sfdx org:list:users`
 
@@ -481,6 +481,6 @@ EXAMPLES
     $ sfdx org:list:users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.40/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.41/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->

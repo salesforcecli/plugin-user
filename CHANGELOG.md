@@ -1,3 +1,9 @@
+## [2.3.41](https://github.com/salesforcecli/plugin-user/compare/2.3.40...2.3.41) (2023-10-30)
+
+### Bug Fixes
+
+- message naming conventions from linter, node: imports ([#770](https://github.com/salesforcecli/plugin-user/issues/770)) ([468de2f](https://github.com/salesforcecli/plugin-user/commit/468de2fd442385ee8c53eabcae0b656f365cb371))
+
 ## [2.3.40](https://github.com/salesforcecli/plugin-user/compare/2.3.39...2.3.40) (2023-10-29)
 
 ### Bug Fixes
