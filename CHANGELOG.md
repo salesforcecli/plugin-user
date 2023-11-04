@@ -1,3 +1,9 @@
+## [2.3.42](https://github.com/salesforcecli/plugin-user/compare/2.3.41...2.3.42) (2023-11-04)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 5.3.10 to 5.3.17 ([7e197d6](https://github.com/salesforcecli/plugin-user/commit/7e197d6f9ef194c245c50de81e912234cd28ce6d))
+
 ## [2.3.41](https://github.com/salesforcecli/plugin-user/compare/2.3.40...2.3.41) (2023-10-30)
 
 ### Bug Fixes
