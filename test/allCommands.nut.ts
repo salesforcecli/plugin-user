@@ -7,7 +7,7 @@
 
 import * as path from 'node:path';
 import { expect, use } from 'chai';
-import * as chaiEach from 'chai-each';
+import chaiEach from 'chai-each';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
