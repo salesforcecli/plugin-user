@@ -5,11 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Connection } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { Config } from '@oclif/core';
 import { assert, expect } from 'chai';
-import { AssignPermSetLicenseCommand } from '../../../src/commands/org/assign/permsetlicense';
-import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign';
+import { AssignPermSetLicenseCommand } from '../../../src/commands/org/assign/permsetlicense.js';
+import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign.js';
 
 describe('org:assign:permsetlicense', () => {
   const $$ = new TestContext();

@@ -6,10 +6,10 @@
  */
 
 import { Connection, Org } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { Config } from '@oclif/core';
 import { expect } from 'chai';
-import { ListUsersCommand } from '../../src/commands/org/list/users';
+import { ListUsersCommand } from '../../src/commands/org/list/users.js';
 
 const user1 = 'defaultusername@test.com';
 const user2 = 'otherUser@test.com';

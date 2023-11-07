@@ -6,11 +6,11 @@
  */
 
 import { Connection, Messages, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
-import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer.js';
 import { assert, expect } from 'chai';
 import { Config } from '@oclif/core';
-import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password';
+import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password.js';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');

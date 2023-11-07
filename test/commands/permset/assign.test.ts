@@ -6,11 +6,11 @@
  */
 
 import { Connection, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
 import { Config } from '@oclif/core';
-import { AssignPermSetCommand } from '../../../src/commands/org/assign/permset';
-import { PermsetAssignResult } from '../../../src/baseCommands/user/permset/assign';
+import { AssignPermSetCommand } from '../../../src/commands/org/assign/permset.js';
+import { PermsetAssignResult } from '../../../src/baseCommands/user/permset/assign.js';
 
 describe('org:assign:permset', () => {
   const $$ = new TestContext();

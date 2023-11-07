@@ -11,10 +11,10 @@ import * as chaiEach from 'chai-each';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
-import { PermsetAssignResult } from '../src/baseCommands/user/permset/assign';
-import { AuthList } from '../src/commands/org/list/users';
-import { CreateUserOutput } from '../src/commands/org/create/user';
-import { DisplayUserResult } from '../src/commands/org/display/user';
+import { PermsetAssignResult } from '../src/baseCommands/user/permset/assign.js';
+import { AuthList } from '../src/commands/org/list/users.js';
+import { CreateUserOutput } from '../src/commands/org/create/user.js';
+import { DisplayUserResult } from '../src/commands/org/display/user.js';
 
 use(chaiEach);
 let session: TestSession;

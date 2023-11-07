@@ -10,10 +10,10 @@
 import * as fs from 'node:fs';
 import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@salesforce/core';
 import { Config } from '@oclif/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
 import { assert, JsonMap } from '@salesforce/ts-types';
-import CreateUserCommand from '../../src/commands/org/create/user';
+import CreateUserCommand from '../../src/commands/org/create/user.js';
 
 const username = 'defaultusername@test.com';
 const originalUserId = '0052D0000043PawWWR';

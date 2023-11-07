@@ -9,8 +9,8 @@ import * as path from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
-import { CreateUserOutput } from '../../src/commands/org/create/user';
-import { AuthList } from '../../src/commands/org/list/users';
+import { CreateUserOutput } from '../../src/commands/org/create/user.js';
+import { AuthList } from '../../src/commands/org/list/users.js';
 
 let session: TestSession;
 

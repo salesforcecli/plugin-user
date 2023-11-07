@@ -6,6 +6,8 @@
  */
 import * as os from 'node:os';
 import * as fs from 'node:fs';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   AuthInfo,
   Connection,
@@ -31,7 +33,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'create');
 
 type SuccessMsg = {

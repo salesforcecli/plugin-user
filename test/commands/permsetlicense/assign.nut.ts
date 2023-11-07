@@ -7,8 +7,8 @@
 import * as path from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign';
-import { CreateUserOutput } from '../../../src/commands/org/create/user';
+import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign.js';
+import { CreateUserOutput } from '../../../src/commands/org/create/user.js';
 
 describe('PermissionSetLicense tests', () => {
   const testPSL = 'IdentityConnect';

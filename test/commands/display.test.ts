@@ -6,10 +6,10 @@
  */
 
 import { AuthInfo, Connection, Org } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
 import { Config } from '@oclif/core';
-import { DisplayUserCommand } from '../../src/commands/org/display/user';
+import { DisplayUserCommand } from '../../src/commands/org/display/user.js';
 
 const username = 'defaultusername@test.com';
 
