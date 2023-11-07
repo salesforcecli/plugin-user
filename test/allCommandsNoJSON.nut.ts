@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
+import { join } from 'node:path';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
@@ -16,13 +16,13 @@ describe('verifies all commands run successfully (no json)', () => {
     session = await TestSession.create({
       project: {
         // destinationDir: projectPath,
-        sourceDir: path.join('test', 'df17AppBuilding'),
+        sourceDir: join('test', 'df17AppBuilding'),
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
           setDefault: true,
-          config: path.join('config', 'project-scratch-def.json'),
+          config: join('config', 'project-scratch-def.json'),
           tracksSource: false,
         },
       ],

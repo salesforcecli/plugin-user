@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
+import { join } from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign.js';
@@ -17,13 +17,13 @@ describe('PermissionSetLicense tests', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
-        sourceDir: path.join('test', 'df17AppBuilding'),
+        sourceDir: join('test', 'df17AppBuilding'),
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
           setDefault: true,
-          config: path.join('config', 'project-scratch-def.json'),
+          config: join('config', 'project-scratch-def.json'),
           tracksSource: false,
         },
       ],
@@ -66,7 +66,7 @@ describe('PermissionSetLicense tests', () => {
       expect(originalUsername).to.be.a('string');
       // create a second user
       const secondUsername = execCmd<CreateUserOutput>(
-        `org:create:user --json -a Other -f ${path.join('config', 'fullUser.json')}`,
+        `org:create:user --json -a Other -f ${join('config', 'fullUser.json')}`,
         {
           ensureExitCode: 0,
         }
@@ -91,7 +91,7 @@ describe('PermissionSetLicense tests', () => {
       const originalUsername = session.orgs.get('default')?.username;
 
       const secondUsername = execCmd<CreateUserOutput>(
-        `org:create:user --json -f ${path.join('config', 'chatterUser.json')}`,
+        `org:create:user --json -f ${join('config', 'chatterUser.json')}`,
         {
           ensureExitCode: 0,
         }

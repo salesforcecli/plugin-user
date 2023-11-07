@@ -7,7 +7,7 @@
 
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
 
-import * as fs from 'node:fs';
+import fs from 'node:fs';
 import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@salesforce/core';
 import { Config } from '@oclif/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
