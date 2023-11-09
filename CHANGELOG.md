@@ -1,3 +1,5 @@
+## [3.0.1](https://github.com/salesforcecli/plugin-user/compare/2.3.42...3.0.1) (2023-11-09)
+
 ## [2.3.42](https://github.com/salesforcecli/plugin-user/compare/2.3.41...2.3.42) (2023-11-04)
 
 ### Bug Fixes

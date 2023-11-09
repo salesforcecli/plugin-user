@@ -88,21 +88,21 @@ For more NUT options and examples, see <https://github.com/salesforcecli/cli-plu
 
 <!-- commands -->
 
-- [`sfdx force:user:password:generate`](#sfdx-forceuserpasswordgenerate)
-- [`sfdx org:assign:permset`](#sfdx-orgassignpermset)
-- [`sfdx org:assign:permsetlicense`](#sfdx-orgassignpermsetlicense)
-- [`sfdx org:create:user`](#sfdx-orgcreateuser)
-- [`sfdx org:display:user`](#sfdx-orgdisplayuser)
-- [`sfdx org:generate:password`](#sfdx-orggeneratepassword)
-- [`sfdx org:list:users`](#sfdx-orglistusers)
+- [`sf force user password generate`](#sf-force-user-password-generate)
+- [`sf org assign permset`](#sf-org-assign-permset)
+- [`sf org assign permsetlicense`](#sf-org-assign-permsetlicense)
+- [`sf org create user`](#sf-org-create-user)
+- [`sf org display user`](#sf-org-display-user)
+- [`sf org generate password`](#sf-org-generate-password)
+- [`sf org list users`](#sf-org-list-users)
 
-## `sfdx force:user:password:generate`
+## `sf force user password generate`
 
 Generate a random password for scratch org users.
 
 ```
 USAGE
-  $ sfdx force:user:password:generate -u <value> [--json] [-o <value>] [-l <value>] [-c <value>] [--api-version <value>]
+  $ sf force user password generate -u <value> [--json] [-o <value>] [-l <value>] [-c <value>] [--api-version <value>]
 
 FLAGS
   -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
@@ -141,33 +141,33 @@ DESCRIPTION
 EXAMPLES
   Generate a password for the original admin user of your default scratch org:
 
-    $ sfdx force:user:password:generate
+    $ sf force user password generate
 
   Generate a password that contains 12 characters for the original admin user of the scratch org with alias
   "my-scratch":
 
-    $ sfdx force:user:password:generate --length 12 --target-org my-scratch
+    $ sf force user password generate --length 12 --target-org my-scratch
 
   Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
 
-    $ sfdx force:user:password:generate --complexity 3
+    $ sf force user password generate --complexity 3
 
   Generate a password for the specified users in the default scratch org; these users must have been created locally
   with the "org create user" command:
 
-    $ sfdx force:user:password:generate --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of \
+    $ sf force user password generate --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of \
       user3@my.org
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/force/user/password/generate.ts)_
 
-## `sfdx org:assign:permset`
+## `sf org assign permset`
 
 Assign a permission set to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sfdx org:assign:permset -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
+  $ sf org assign permset -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Username or alias to assign the permission set to.
@@ -191,26 +191,26 @@ DESCRIPTION
 EXAMPLES
   Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
 
-    $ sfdx org:assign:permset --name DreamHouse --name CloudHouse
+    $ sf org assign permset --name DreamHouse --name CloudHouse
 
   Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
 
-    $ sfdx org:assign:permset --name DreamHouse --target-org my-scratch
+    $ sf org assign permset --name DreamHouse --target-org my-scratch
 
   Assign the Dreamhouse permission set to the specified list of users of your default scratch org:
 
-    $ sfdx org:assign:permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
+    $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/org/assign/permset.ts)_
 
-## `sfdx org:assign:permsetlicense`
+## `sf org assign permsetlicense`
 
 Assign a permission set license to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sfdx org:assign:permsetlicense -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
+  $ sf org assign permsetlicense -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Usernames or alias to assign the permission set license to.
@@ -234,27 +234,27 @@ DESCRIPTION
 EXAMPLES
   Assign the DreamHouse permission set license to original admin user of your default scratch org:
 
-    $ sfdx org:assign:permsetlicense --name DreamHouse
+    $ sf org assign permsetlicense --name DreamHouse
 
   Assign two permission set licenses to the original admin user of the scratch org with alias "my-scratch":
 
-    $ sfdx org:assign:permsetlicense --name DreamHouse --name CloudHouse --target-org my-scratch
+    $ sf org assign permsetlicense --name DreamHouse --name CloudHouse --target-org my-scratch
 
   Assign the Dreamhouse permission set license to the specified list of users of your default scratch org:
 
-    $ sfdx org:assign:permsetlicense --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 \
-      --on-behalf-of user3
+    $ sf org assign permsetlicense --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of \
+      user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/org/assign/permsetlicense.ts)_
 
-## `sfdx org:create:user`
+## `sf org create user`
 
 Create a user for a scratch org.
 
 ```
 USAGE
-  $ sfdx org:create:user -o <value> [--json] [-a <value>] [-f <value>] [-s] [--api-version <value>]
+  $ sf org create user -o <value> [--json] [-a <value>] [-f <value>] [-s] [--api-version <value>]
 
 FLAGS
   -a, --set-alias=<value>        Set an alias for the created username to reference in other CLI commands.
@@ -298,31 +298,31 @@ DESCRIPTION
   https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
 
 ALIASES
-  $ sfdx force:user:create
+  $ sf force user create
 
 EXAMPLES
   Create a user for your default scratch org and let this command generate a username, user ID, and other
   characteristics:
 
-    $ sfdx org:create:user
+    $ sf org create user
 
   Create a user with alias "testuser1" using a user definition file. Set the "profileName" option to "Chatter Free
   User", which overrides the value in the defintion file if it also exists there. Create the user for the scratch org
   with alias "my-scratch":
 
-    $ sfdx org:create:user --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter \
+    $ sf org create user --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter \
       Free User' --target-org my-scratch
 
   Create a user by specifying the username, email, and perm set assignment at the command line; command fails if the
   username already exists in Salesforce:
 
-    $ sfdx org:create:user username=testuser1@my.org email=me@my.org permsets=DreamHouse
+    $ sf org create user username=testuser1@my.org email=me@my.org permsets=DreamHouse
 
   Create a user with a definition file, set the email value as specified (overriding any value in the definition
   file), and generate a password for the user. If the username in the definition file isn't unique, the command
   appends the org ID to make it unique:
 
-    $ sfdx org:create:user --definition-file config/project-user-def.json email=me@my.org generatepassword=true \
+    $ sf org create user --definition-file config/project-user-def.json email=me@my.org generatepassword=true \
       --set-unique-username
 
 FLAG DESCRIPTIONS
@@ -344,15 +344,15 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/org/create/user.ts)_
 
-## `sfdx org:display:user`
+## `sf org display user`
 
 Display information about a Salesforce user.
 
 ```
 USAGE
-  $ sfdx org:display:user -o <value> [--json] [--api-version <value>]
+  $ sf org display user -o <value> [--json] [--api-version <value>]
 
 FLAGS
   -o, --target-org=<value>  (required) Username or alias of the target org.
@@ -369,27 +369,27 @@ DESCRIPTION
   in the Setup UI.
 
 ALIASES
-  $ sfdx force:user:display
+  $ sf force user display
 
 EXAMPLES
   Display information about the admin user of your default scratch org:
 
-    $ sfdx org:display:user
+    $ sf org display user
 
   Display information about the specified user and output in JSON format:
 
-    $ sfdx org:display:user --target-org me@my.org --json
+    $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/org/display/user.ts)_
 
-## `sfdx org:generate:password`
+## `sf org generate password`
 
 Generate a random password for scratch org users.
 
 ```
 USAGE
-  $ sfdx org:generate:password -o <value> [--json] [-b <value>] [-l <value>] [-c <value>] [--api-version <value>]
+  $ sf org generate password -o <value> [--json] [-b <value>] [-l <value>] [-c <value>] [--api-version <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to; must have been
@@ -428,32 +428,32 @@ DESCRIPTION
 EXAMPLES
   Generate a password for the original admin user of your default scratch org:
 
-    $ sfdx org:generate:password
+    $ sf org generate password
 
   Generate a password that contains 12 characters for the original admin user of the scratch org with alias
   "my-scratch":
 
-    $ sfdx org:generate:password --length 12 --target-org my-scratch
+    $ sf org generate password --length 12 --target-org my-scratch
 
   Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
 
-    $ sfdx org:generate:password --complexity 3
+    $ sf org generate password --complexity 3
 
   Generate a password for the specified users in the default scratch org; these users must have been created locally
   with the "org create user" command:
 
-    $ sfdx org:generate:password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
+    $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/org/generate/password.ts)_
 
-## `sfdx org:list:users`
+## `sf org list users`
 
 List all locally-authenticated users of an org.
 
 ```
 USAGE
-  $ sfdx org:list:users -o <value> [--json] [--api-version <value>]
+  $ sf org list users -o <value> [--json] [--api-version <value>]
 
 FLAGS
   -o, --target-org=<value>  (required) Username or alias of the target org.
@@ -469,18 +469,18 @@ DESCRIPTION
   org admin user is marked with "(A)". For other orgs, the list includes the users you used to authenticate to the org.
 
 ALIASES
-  $ sfdx force:user:list
+  $ sf force user list
 
 EXAMPLES
   List the locally-authenticated users of your default org:
 
-    $ sfdx org:list:users
+    $ sf org list users
 
   List the locally-authenticated users of the specified org:
 
-    $ sfdx org:list:users --target-org me@my.org
+    $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.42/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/2.3.43/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
