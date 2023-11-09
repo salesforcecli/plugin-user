@@ -4,11 +4,13 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as os from 'node:os';
+import { EOL } from 'node:os';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 import { AuthInfo, Connection, Messages, Org, SfError, StateAggregator, User } from '@salesforce/core';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 export type PasswordData = {
@@ -89,9 +91,9 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
     if (passwordData) {
       const successMsg = messages.getMessage('success', [passwordData[0].password, passwordData[0].username]);
       const viewMsg = messages.getMessage('viewWithCommand', [this.config.bin, passwordData[0].username]);
-      this.log(`${successMsg}${os.EOL}${viewMsg}`);
+      this.log(`${successMsg}${EOL}${viewMsg}`);
     } else {
-      this.log(messages.getMessage('successMultiple', [os.EOL]));
+      this.log(messages.getMessage('successMultiple', [EOL]));
       const columnData = {
         username: { header: 'USERNAME' },
         password: { header: 'PASSWORD' },

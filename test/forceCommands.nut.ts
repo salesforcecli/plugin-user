@@ -5,16 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'node:path';
+import { join } from 'node:path';
 import { expect, use } from 'chai';
-import * as chaiEach from 'chai-each';
+import chaiEach from 'chai-each';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 
-import { PermsetAssignResult } from '../src/baseCommands/user/permset/assign';
-import { AuthList } from '../src/commands/org/list/users';
-import { CreateUserOutput } from '../src/commands/org/create/user';
-import { DisplayUserResult } from '../src/commands/org/display/user';
+import { PermsetAssignResult } from '../src/baseCommands/user/permset/assign.js';
+import { AuthList } from '../src/commands/org/list/users.js';
+import { CreateUserOutput } from '../src/commands/org/create/user.js';
+import { DisplayUserResult } from '../src/commands/org/display/user.js';
 
 use(chaiEach);
 let session: TestSession;
@@ -25,13 +25,13 @@ describe('verifies legacy force commands run successfully ', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
-        sourceDir: path.join('test', 'df17AppBuilding'),
+        sourceDir: join('test', 'df17AppBuilding'),
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
           setDefault: true,
-          config: path.join('config', 'project-scratch-def.json'),
+          config: join('config', 'project-scratch-def.json'),
           tracksSource: false,
         },
       ],

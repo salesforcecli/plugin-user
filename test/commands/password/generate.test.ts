@@ -5,14 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Connection, Messages, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
-import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer.js';
 import { assert, expect } from 'chai';
 import { Config } from '@oclif/core';
-import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password';
+import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 describe('org:generate:password', () => {

@@ -4,8 +4,10 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as os from 'node:os';
-import * as fs from 'node:fs';
+import { EOL } from 'node:os';
+import fs from 'node:fs';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   AuthInfo,
   Connection,
@@ -31,7 +33,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'create');
 
 type SuccessMsg = {
@@ -232,7 +234,7 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
       fields.username,
       fields.id,
       this.flags['target-org'].getOrgId(),
-      os.EOL,
+      EOL,
       this.config.bin,
       fields.username,
     ]);

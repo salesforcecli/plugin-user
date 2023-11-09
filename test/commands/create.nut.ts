@@ -5,12 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'node:path';
+import { join } from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
-import { CreateUserOutput } from '../../src/commands/org/create/user';
-import { AuthList } from '../../src/commands/org/list/users';
+import { CreateUserOutput } from '../../src/commands/org/create/user.js';
+import { AuthList } from '../../src/commands/org/list/users.js';
 
 let session: TestSession;
 
@@ -20,13 +20,13 @@ describe('creates a user from a file and verifies', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
-        sourceDir: path.join('test', 'df17AppBuilding'),
+        sourceDir: join('test', 'df17AppBuilding'),
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
           setDefault: true,
-          config: path.join('config', 'project-scratch-def.json'),
+          config: join('config', 'project-scratch-def.json'),
           tracksSource: false,
         },
       ],
@@ -51,7 +51,7 @@ describe('creates a user from a file and verifies', () => {
 
   it('creates a user with set-unique-username without username on commandline', () => {
     const output = execCmd<CreateUserOutput>(
-      `org:create:user --json -f ${path.join('config', 'fileWithUsername.json')} --set-unique-username`,
+      `org:create:user --json -f ${join('config', 'fileWithUsername.json')} --set-unique-username`,
       {
         ensureExitCode: 0,
       }
@@ -63,7 +63,7 @@ describe('creates a user from a file and verifies', () => {
 
   it('creates a secondary user with password and permsets assigned', () => {
     const output = execCmd<CreateUserOutput>(
-      `org:create:user --json -a Other -f ${path.join('config', 'complexUser.json')}`,
+      `org:create:user --json -a Other -f ${join('config', 'complexUser.json')}`,
       { ensureExitCode: 0 }
     ).jsonOutput;
     expect(output?.result).to.have.all.keys(['orgId', 'permissionSetAssignments', 'fields']);
