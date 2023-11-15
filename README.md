@@ -112,7 +112,7 @@ FLAGS
   -o, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to; must have been
                                  created locally with the "org create user" command.
   -u, --target-org=<value>       (required) Scratch org alias or login user.
-  --api-version=<value>          Override the api version used for api requests made by this command
+      --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -159,7 +159,7 @@ EXAMPLES
       user3@my.org
 ```
 
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/force/user/password/generate.ts)_
+_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/force/user/password/generate.ts)_
 
 ## `sf org assign permset`
 
@@ -173,7 +173,7 @@ FLAGS
   -b, --on-behalf-of=<value>...  Username or alias to assign the permission set to.
   -n, --name=<value>...          (required) Permission set to assign.
   -o, --target-org=<value>       (required) Scratch org alias or login user.
-  --api-version=<value>          Override the api version used for api requests made by this command
+      --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -202,7 +202,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -216,7 +216,7 @@ FLAGS
   -b, --on-behalf-of=<value>...  Usernames or alias to assign the permission set license to.
   -n, --name=<value>             (required) Name of the permission set license to assign.
   -o, --target-org=<value>       (required) Scratch org alias or login user.
-  --api-version=<value>          Override the api version used for api requests made by this command
+      --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -246,7 +246,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -262,7 +262,7 @@ FLAGS
   -o, --target-org=<value>       (required) Username or alias of the target org.
   -s, --set-unique-username      Force the username, if specified in the definition file or at the command line, to be
                                  unique by appending the org ID.
-  --api-version=<value>          Override the api version used for api requests made by this command
+      --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -344,7 +344,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -355,8 +355,8 @@ USAGE
   $ sf org display user -o <value> [--json] [--api-version <value>]
 
 FLAGS
-  -o, --target-org=<value>  (required) Username or alias of the target org.
-  --api-version=<value>     Override the api version used for api requests made by this command
+  -o, --target-org=<value>   (required) Username or alias of the target org.
+      --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -381,7 +381,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -399,7 +399,7 @@ FLAGS
   -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
                                  8 and 100.
   -o, --target-org=<value>       (required) Username or alias of the target org.
-  --api-version=<value>          Override the api version used for api requests made by this command
+      --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -445,7 +445,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -456,8 +456,8 @@ USAGE
   $ sf org list users -o <value> [--json] [--api-version <value>]
 
 FLAGS
-  -o, --target-org=<value>  (required) Username or alias of the target org.
-  --api-version=<value>     Override the api version used for api requests made by this command
+  -o, --target-org=<value>   (required) Username or alias of the target org.
+      --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -481,6 +481,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.3/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.0.4/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
