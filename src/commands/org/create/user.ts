@@ -14,6 +14,7 @@ import {
   DefaultUserFields,
   Logger,
   Messages,
+  Org,
   REQUIRED_FIELDS,
   SfError,
   StateAggregator,
@@ -106,7 +107,8 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     const logger = await Logger.child(this.constructor.name);
     this.varargs = parseVarArgs({}, argv as string[]);
 
-    const conn = flags['target-org'].getConnection(flags['api-version']);
+    const conn = await getValidatedConnection(flags['target-org'], flags['api-version']);
+
     const defaultUserFields = await DefaultUserFields.create({
       templateUser: ensureString(flags['target-org'].getUsername()),
     });
@@ -314,4 +316,20 @@ const catchCreateUser = async (respBody: Error, fields: UserFields, conn: Connec
   } else {
     throw SfError.wrap(errMessage);
   }
+};
+
+/** the org must be a scratch org AND not use JWT with hyperforce */
+const getValidatedConnection = async (targetOrg: Org, apiVersion?: string): Promise<Connection> => {
+  if (!(await targetOrg.determineIfScratch())) {
+    throw messages.createError('error.nonScratchOrg');
+  }
+  const conn = targetOrg.getConnection(apiVersion);
+  if (
+    conn.getAuthInfo().isJwt() &&
+    // hyperforce sandbox instances end in S like USA254S
+    targetOrg.getField<string>(Org.Fields.CREATED_ORG_INSTANCE).endsWith('S')
+  ) {
+    throw messages.createError('error.jwtHyperforce');
+  }
+  return conn;
 };
