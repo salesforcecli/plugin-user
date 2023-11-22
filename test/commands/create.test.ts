@@ -213,54 +213,6 @@ describe('org:create:user', () => {
     expect(result).to.deep.equal(expected);
   });
 
-  it('works on hyperforce if non-JWT', async () => {
-    await prepareStubs({ createdOrgInstance: 'USA100S' }, true);
-    const expected = {
-      orgId: testOrg.orgId,
-      permissionSetAssignments: [],
-      fields: {
-        alias: 'testAlias',
-        email: username,
-        emailencodingkey: 'UTF-8',
-        id: newUserId,
-        languagelocalekey: 'en_US',
-        lastname: 'User',
-        localesidkey: 'en_US',
-        profileid: '12345678',
-        profilename: 'profileFromArgs',
-        timezonesidkey: 'America/Los_Angeles',
-        username: '1605130295132_test-j6asqt5qoprs@example.com',
-      },
-    };
-    const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-    const result = await createCommand.run();
-    expect(result).to.deep.equal(expected);
-  });
-
-  it('works if JWT but not hyperforce', async () => {
-    await prepareStubs({ isJWT: true }, true);
-    const expected = {
-      orgId: testOrg.orgId,
-      permissionSetAssignments: [],
-      fields: {
-        alias: 'testAlias',
-        email: username,
-        emailencodingkey: 'UTF-8',
-        id: newUserId,
-        languagelocalekey: 'en_US',
-        lastname: 'User',
-        localesidkey: 'en_US',
-        profileid: '12345678',
-        profilename: 'profileFromArgs',
-        timezonesidkey: 'America/Los_Angeles',
-        username: '1605130295132_test-j6asqt5qoprs@example.com',
-      },
-    };
-    const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-    const result = await createCommand.run();
-    expect(result).to.deep.equal(expected);
-  });
-
   it('will merge fields from the cli args, and the definitionfile correctly, preferring cli args', async () => {
     await prepareStubs({}, { generatepassword: true, permsets: ['test1', 'test2'] });
     const expected = {
@@ -295,60 +247,6 @@ describe('org:create:user', () => {
     );
     const result = await createCommand.run();
     expect(result).to.deep.equal(expected);
-  });
-
-  describe('exceptions', () => {
-    it('throws if org is not a scratchOrg', async () => {
-      await prepareStubs({ nonScratch: true }, false);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      try {
-        await createCommand.run();
-        expect.fail('should have thrown an error');
-      } catch (e) {
-        assert(e instanceof Error);
-        expect(e.name).to.equal('NonScratchOrgError');
-      }
-    });
-
-    it('throws if JWT and hyperforce', async () => {
-      await prepareStubs({ isJWT: true, createdOrgInstance: 'USA100S' }, false);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      try {
-        await createCommand.run();
-        expect.fail('should have thrown an error');
-      } catch (e) {
-        assert(e instanceof Error);
-        expect(e.name).to.equal('JwtHyperforceError');
-      }
-    });
-
-    it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
-      await prepareStubs({ license: true }, false);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      try {
-        await createCommand.run();
-        expect.fail('should have thrown an error');
-      } catch (e) {
-        assert(e instanceof Error);
-        expect(e.message).to.equal('There are no available user licenses for the user profile "testName".');
-        expect(e.name).to.equal('licenseLimitExceeded');
-      }
-    });
-
-    it('will handle a failed `createUser` call with a DuplicateUsername error', async () => {
-      await prepareStubs({ duplicate: true }, true);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      try {
-        await createCommand.run();
-        expect.fail('should have thrown an error');
-      } catch (e) {
-        assert(e instanceof Error);
-        expect(e.name).to.equal('duplicateUsername');
-        expect(e.message).to.equal(
-          'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs. Try using the --set-unique-username flag to force a unique username by appending the org ID.'
-        );
-      }
-    });
   });
 
   it('will append the org id to the passed username if the setuniqueusername is used', async () => {
@@ -403,5 +301,109 @@ describe('org:create:user', () => {
     );
     const result = await createCommand.run();
     expect(result).to.deep.equal(expected);
+  });
+
+  describe('valid hyperforce/jwt combos', () => {
+    it('works on hyperforce if non-JWT', async () => {
+      await prepareStubs({ createdOrgInstance: 'USA100S' }, true);
+      const expected = {
+        orgId: testOrg.orgId,
+        permissionSetAssignments: [],
+        fields: {
+          alias: 'testAlias',
+          email: username,
+          emailencodingkey: 'UTF-8',
+          id: newUserId,
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          profileid: '12345678',
+          profilename: 'profileFromArgs',
+          timezonesidkey: 'America/Los_Angeles',
+          username: '1605130295132_test-j6asqt5qoprs@example.com',
+        },
+      };
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      const result = await createCommand.run();
+      expect(result).to.deep.equal(expected);
+    });
+
+    it('works if JWT but not hyperforce', async () => {
+      await prepareStubs({ isJWT: true }, true);
+      const expected = {
+        orgId: testOrg.orgId,
+        permissionSetAssignments: [],
+        fields: {
+          alias: 'testAlias',
+          email: username,
+          emailencodingkey: 'UTF-8',
+          id: newUserId,
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          profileid: '12345678',
+          profilename: 'profileFromArgs',
+          timezonesidkey: 'America/Los_Angeles',
+          username: '1605130295132_test-j6asqt5qoprs@example.com',
+        },
+      };
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      const result = await createCommand.run();
+      expect(result).to.deep.equal(expected);
+    });
+  });
+
+  describe('exceptions', () => {
+    it('throws if org is not a scratchOrg', async () => {
+      await prepareStubs({ nonScratch: true }, false);
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      try {
+        await createCommand.run();
+        expect.fail('should have thrown an error');
+      } catch (e) {
+        assert(e instanceof Error);
+        expect(e.name).to.equal('NonScratchOrgError');
+      }
+    });
+
+    it('throws if JWT and hyperforce', async () => {
+      await prepareStubs({ isJWT: true, createdOrgInstance: 'USA100S' }, false);
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      try {
+        await createCommand.run();
+        expect.fail('should have thrown an error');
+      } catch (e) {
+        assert(e instanceof Error);
+        expect(e.name).to.equal('JwtHyperforceError');
+      }
+    });
+
+    it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
+      await prepareStubs({ license: true }, false);
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      try {
+        await createCommand.run();
+        expect.fail('should have thrown an error');
+      } catch (e) {
+        assert(e instanceof Error);
+        expect(e.message).to.equal('There are no available user licenses for the user profile "testName".');
+        expect(e.name).to.equal('licenseLimitExceeded');
+      }
+    });
+
+    it('will handle a failed `createUser` call with a DuplicateUsername error', async () => {
+      await prepareStubs({ duplicate: true }, true);
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      try {
+        await createCommand.run();
+        expect.fail('should have thrown an error');
+      } catch (e) {
+        assert(e instanceof Error);
+        expect(e.name).to.equal('duplicateUsername');
+        expect(e.message).to.equal(
+          'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs. Try using the --set-unique-username flag to force a unique username by appending the org ID.'
+        );
+      }
+    });
   });
 });
