@@ -8,7 +8,7 @@
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
-import { ensureString, getString } from '@salesforce/ts-types';
+import { ensureString } from '@salesforce/ts-types';
 import {
   loglevel,
   optionalHubFlagWithDeprecations,
@@ -75,7 +75,9 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
       profileName = 'unknown';
       const logger = await Logger.child(this.constructor.name);
       logger.debug(
-        `Query for the profile name failed for username: ${username} with message: ${getString(err, 'message')}`
+        `Query for the profile name failed for username: ${username} with message: ${
+          err instanceof Error ? err.message : ''
+        }`
       );
     }
 
@@ -87,7 +89,11 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
     } catch (err) {
       userId = 'unknown';
       const logger = await Logger.child(this.constructor.name);
-      logger.debug(`Query for the user ID failed for username: ${username} with message: ${getString(err, 'message')}`);
+      logger.debug(
+        `Query for the user ID failed for username: ${username} with message: ${
+          err instanceof Error ? err.message : ''
+        }`
+      );
     }
 
     const result: DisplayUserResult = {
@@ -118,24 +124,25 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
   }
 
   private print(result: DisplayUserResult): void {
-    const columns = {
-      key: { header: 'key' },
-      label: { header: 'label' },
-    };
-    type TT = { key: string; label: string };
-    const tableRow: TT[] = [];
-    // to get proper capitalization and spacing, enter the rows
-    tableRow.push({ key: 'Username', label: result.username ?? 'unknown' });
-    tableRow.push({ key: 'Profile Name', label: result.profileName });
-    tableRow.push({ key: 'Id', label: result.id });
-    tableRow.push({ key: 'Org Id', label: result.orgId });
-    tableRow.push({ key: 'Access Token', label: result.accessToken ?? '' });
-    tableRow.push({ key: 'Instance Url', label: result.instanceUrl ?? '' });
-    tableRow.push({ key: 'Login Url', label: result.loginUrl ?? '' });
-    if (result.alias) tableRow.push({ key: 'Alias', label: result.alias });
-    if (result.password) tableRow.push({ key: 'Password', label: result.password });
-
     this.styledHeader('User Description');
-    this.table(tableRow, columns);
+    this.table(
+      // to get proper capitalization and spacing, enter th e rows
+      [
+        { key: 'Username', label: result.username ?? 'unknown' },
+        { key: 'Profile Name', label: result.profileName },
+        { key: 'Profile Name', label: result.profileName },
+        { key: 'Id', label: result.id },
+        { key: 'Org Id', label: result.orgId },
+        ...(result.accessToken ? [{ key: 'Access Token', label: result.accessToken }] : []),
+        ...(result.instanceUrl ? [{ key: 'Instance Url', label: result.instanceUrl }] : []),
+        ...(result.loginUrl ? [{ key: 'Login Url', label: result.loginUrl }] : []),
+        ...(result.alias ? [{ key: 'Alias', label: result.alias }] : []),
+        ...(result.password ? [{ key: 'Password', label: result.password }] : []),
+      ] satisfies Array<{ key: string; label: string }>,
+      {
+        key: { header: 'key' },
+        label: { header: 'label' },
+      }
+    );
   }
 }

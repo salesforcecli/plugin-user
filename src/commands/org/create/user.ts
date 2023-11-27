@@ -22,7 +22,7 @@ import {
   UserFields,
 } from '@salesforce/core';
 import { mapKeys, omit, toBoolean } from '@salesforce/kit';
-import { Dictionary, ensureString, getString, isArray, JsonMap } from '@salesforce/ts-types';
+import { Dictionary, ensureString, getString, JsonMap } from '@salesforce/ts-types';
 import {
   Flags,
   loglevel,
@@ -49,7 +49,7 @@ type FailureMsg = {
 
 const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {
   if (!fieldsPermsets) return [];
-  return isArray(fieldsPermsets)
+  return Array.isArray(fieldsPermsets)
     ? fieldsPermsets
     : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
 };
