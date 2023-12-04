@@ -45,7 +45,7 @@
   ],
   "license": "BSD-3-Clause",
   "resolutions": {
-    "@salesforce/core": "^6.2.2-qa.0"
+    "@salesforce/core": "^6.2.3-qa.0"
   },
   "oclif": {
     "commands": "./lib/commands",
