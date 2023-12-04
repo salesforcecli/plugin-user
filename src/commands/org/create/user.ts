@@ -47,13 +47,6 @@ type FailureMsg = {
   message: string;
 };
 
-const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {
-  if (!fieldsPermsets) return [];
-  return Array.isArray(fieldsPermsets)
-    ? fieldsPermsets
-    : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
-};
-
 export class CreateUserCommand extends SfCommand<CreateUserOutput> {
   public static strict = false;
   public static readonly deprecateAliases = true;
@@ -332,4 +325,11 @@ const getValidatedConnection = async (targetOrg: Org, apiVersion?: string): Prom
     throw messages.createError('error.jwtHyperforce');
   }
   return conn;
+};
+
+const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {
+  if (!fieldsPermsets) return [];
+  return Array.isArray(fieldsPermsets)
+    ? fieldsPermsets
+    : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
 };

@@ -927,10 +927,10 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.7.1"
 
-"@salesforce/core@^5.3.20", "@salesforce/core@^6.1.0", "@salesforce/core@^6.2.0", "@salesforce/core@^6.2.3-qa.0":
-  version "6.2.3-qa.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-6.2.3-qa.0.tgz#e73c9162aa7de77e07569f1d398ad85231b30dc5"
-  integrity sha512-WiTPVEzAD7XE1OzlTFAEQH/tSf7OkMHOJmBzJLdH6k/plX9qvbeShUbpeo4MiKfG7l4m0DFiwK1OcLfB0Yg4yA==
+"@salesforce/core@^5.3.20", "@salesforce/core@^6.1.0", "@salesforce/core@^6.2.0", "@salesforce/core@^6.2.3-qa.0", "@salesforce/core@^6.2.3-qa.1":
+  version "6.2.3-qa.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-6.2.3-qa.1.tgz#8defc764cd922fee22cd598ef67900fa25fe903f"
+  integrity sha512-WntKezbRycZeVE+GpTfjqHPudQg/mYSdBpbklimGbx7fGD0T/t9vZlx2HMUih6PmEoqwnqKMfm/LusE4BuE7Tg==
   dependencies:
     "@salesforce/kit" "^3.0.15"
     "@salesforce/schemas" "^1.6.1"
