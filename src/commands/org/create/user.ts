@@ -14,6 +14,7 @@ import {
   DefaultUserFields,
   Logger,
   Messages,
+  Org,
   REQUIRED_FIELDS,
   SfError,
   StateAggregator,
@@ -21,7 +22,7 @@ import {
   UserFields,
 } from '@salesforce/core';
 import { mapKeys, omit, toBoolean } from '@salesforce/kit';
-import { Dictionary, ensureString, getString, isArray, JsonMap } from '@salesforce/ts-types';
+import { Dictionary, ensureString, getString, JsonMap } from '@salesforce/ts-types';
 import {
   Flags,
   loglevel,
@@ -44,13 +45,6 @@ type SuccessMsg = {
 type FailureMsg = {
   name: string;
   message: string;
-};
-
-const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {
-  if (!fieldsPermsets) return [];
-  return isArray(fieldsPermsets)
-    ? fieldsPermsets
-    : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
 };
 
 export class CreateUserCommand extends SfCommand<CreateUserOutput> {
@@ -106,7 +100,8 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     const logger = await Logger.child(this.constructor.name);
     this.varargs = parseVarArgs({}, argv as string[]);
 
-    const conn = flags['target-org'].getConnection(flags['api-version']);
+    const conn = await getValidatedConnection(flags['target-org'], flags['api-version']);
+
     const defaultUserFields = await DefaultUserFields.create({
       templateUser: ensureString(flags['target-org'].getUsername()),
     });
@@ -314,4 +309,27 @@ const catchCreateUser = async (respBody: Error, fields: UserFields, conn: Connec
   } else {
     throw SfError.wrap(errMessage);
   }
+};
+
+/** the org must be a scratch org AND not use JWT with hyperforce */
+const getValidatedConnection = async (targetOrg: Org, apiVersion?: string): Promise<Connection> => {
+  if (!(await targetOrg.determineIfScratch())) {
+    throw messages.createError('error.nonScratchOrg');
+  }
+  const conn = targetOrg.getConnection(apiVersion);
+  if (
+    conn.getAuthInfo().isJwt() &&
+    // hyperforce sandbox instances end in S like USA254S
+    targetOrg.getField<string>(Org.Fields.CREATED_ORG_INSTANCE).endsWith('S')
+  ) {
+    throw messages.createError('error.jwtHyperforce');
+  }
+  return conn;
+};
+
+const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {
+  if (!fieldsPermsets) return [];
+  return Array.isArray(fieldsPermsets)
+    ? fieldsPermsets
+    : fieldsPermsets.split(',').map((item) => item.replace("'", '').trim());
 };

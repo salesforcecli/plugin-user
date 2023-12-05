@@ -75,3 +75,15 @@ See more details about this user by running "%s org user display -o %s".
 # flags.target-hub.deprecation
 
 The --target-dev-hub flag is deprecated and is no longer used by this command. The flag will be removed in API version 57.0 or later.
+
+# error.nonScratchOrg
+
+This command works with only scratch orgs.
+
+# error.jwtHyperforce
+
+This command doesn't work when authorizing an org using the JWT flow if the org is on Hyperforce.
+
+# error.jwtHyperforce.actions
+
+- Authorize your Dev Hub with either the `org login web` or `org login sfdx-url` command. You can then successfully use the `org create user` command on scratch orgs that you create with your Dev Hub.
