@@ -1,3 +1,9 @@
+# [3.1.0](https://github.com/salesforcecli/plugin-user/compare/3.0.7...3.1.0) (2023-12-05)
+
+### Features
+
+- validate org in org create user ([6f19448](https://github.com/salesforcecli/plugin-user/commit/6f19448bd4f7dd3f9b2ec17127e51513bf4c5bb4))
+
 ## [3.0.7](https://github.com/salesforcecli/plugin-user/compare/3.0.6...3.0.7) (2023-12-03)
 
 ### Bug Fixes
