@@ -54,7 +54,7 @@ describe('PermissionSetLicense tests', () => {
   it('fails for non-existing psl', () => {
     const badPSL = 'badPSL';
     execCmd<PSLResult>(`org:assign:permsetlicense -n ${badPSL} --json`, {
-      ensureExitCode: 1,
+      ensureExitCode: 'nonZero',
     });
   });
 
