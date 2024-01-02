@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
 import { Connection, Messages, StateAggregator } from '@salesforce/core';
 import {
   Flags,
@@ -15,7 +14,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
 
 export type AuthList = Partial<{
@@ -38,8 +37,8 @@ type ProfileInfo = { Id: string; Name: string };
 type ProfileInfoMap = Map<string, ProfileInfo>;
 
 export class ListUsersCommand extends SfCommand<ListUsers> {
-  // eslint-disable-next-line sf-plugin/encourage-alias-deprecation
   public static readonly aliases = ['force:user:list'];
+  public static readonly deprecateAliases = true;
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
