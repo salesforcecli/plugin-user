@@ -88,78 +88,12 @@ For more NUT options and examples, see <https://github.com/salesforcecli/cli-plu
 
 <!-- commands -->
 
-- [`sf force user password generate`](#sf-force-user-password-generate)
 - [`sf org assign permset`](#sf-org-assign-permset)
 - [`sf org assign permsetlicense`](#sf-org-assign-permsetlicense)
 - [`sf org create user`](#sf-org-create-user)
 - [`sf org display user`](#sf-org-display-user)
 - [`sf org generate password`](#sf-org-generate-password)
 - [`sf org list users`](#sf-org-list-users)
-
-## `sf force user password generate`
-
-Generate a random password for scratch org users.
-
-```
-USAGE
-  $ sf force user password generate -u <value> [--json] [-o <value>] [-l <value>] [-c <value>] [--api-version <value>]
-
-FLAGS
-  -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
-                                 stronger the password.
-  -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
-                                 8 and 100.
-  -o, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to; must have been
-                                 created locally with the "org create user" command.
-  -u, --target-org=<value>       (required) Scratch org alias or login user.
-      --api-version=<value>      Override the api version used for api requests made by this command
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Generate a random password for scratch org users.
-
-  By default, new scratch orgs contain one admin user with no password. Use this command to generate or change a
-  password for this admin user. After it's set, you can’t unset a password, you can only change it.
-
-  You can also use the --on-behalf-of flag to generate a password for a scratch org user that you've created locally
-  with the "org create user" command. This command doesn't work for users you created in the scratch org using Setup.
-
-  To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types
-  of characters used in the generated password:
-
-  0 - lower case letters only
-  1 - lower case letters and numbers only
-  2 - lower case letters and symbols only
-  3 - lower and upper case letters and numbers only
-  4 - lower and upper case letters and symbols only
-  5 - lower and upper case letters and numbers and symbols only
-
-  To see a password that was previously generated, run "org display user".
-
-EXAMPLES
-  Generate a password for the original admin user of your default scratch org:
-
-    $ sf force user password generate
-
-  Generate a password that contains 12 characters for the original admin user of the scratch org with alias
-  "my-scratch":
-
-    $ sf force user password generate --length 12 --target-org my-scratch
-
-  Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
-
-    $ sf force user password generate --complexity 3
-
-  Generate a password for the specified users in the default scratch org; these users must have been created locally
-  with the "org create user" command:
-
-    $ sf force user password generate --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of \
-      user3@my.org
-```
-
-_See code: [src/commands/force/user/password/generate.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/force/user/password/generate.ts)_
 
 ## `sf org assign permset`
 
@@ -202,7 +136,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.2.0/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -246,7 +180,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.2.0/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -345,7 +279,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.2.0/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -383,7 +317,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.2.0/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -448,7 +382,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.2.0/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -485,6 +419,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.1.5/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.2.0/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->

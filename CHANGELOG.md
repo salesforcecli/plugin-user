@@ -1,3 +1,9 @@
+# [3.2.0](https://github.com/salesforcecli/plugin-user/compare/3.1.5...3.2.0) (2024-01-02)
+
+### Features
+
+- deprecation warnings on renamed commands ([77f0651](https://github.com/salesforcecli/plugin-user/commit/77f0651bd51dd9003e63ddc3be3538cee4b25674))
+
 ## [3.1.5](https://github.com/salesforcecli/plugin-user/compare/3.1.4...3.1.5) (2023-12-31)
 
 ### Bug Fixes
