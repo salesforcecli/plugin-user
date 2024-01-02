@@ -5,14 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages, Org } from '@salesforce/core';
 import { Flags, arrayWithDeprecation, loglevel, orgApiVersionFlagWithDeprecations } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
 import { PermsetAssignResult, UserPermSetAssignBaseCommand } from '../../../../baseCommands/user/permset/assign.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
 
 export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand {
@@ -20,6 +18,10 @@ export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand 
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description.force');
   public static readonly examples = messages.getMessages('examples.force');
+  public static readonly state = 'deprecated';
+  public static readonly deprecationOptions = {
+    to: 'org assign permset',
+  };
   public static readonly flags = {
     'perm-set-name': arrayWithDeprecation({
       aliases: ['permsetname'],

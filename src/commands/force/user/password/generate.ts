@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
 import {
   arrayWithDeprecation,
   Flags,
@@ -17,13 +16,18 @@ import { Messages } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
 import { GenerateResult, UserPasswordGenerateBaseCommand } from '../../../../baseCommands/user/password/generate.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCommand {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
+  public static readonly state = 'deprecated';
+  public static readonly deprecationOptions = {
+    to: 'org generate password',
+  };
+  public static readonly hidden = true;
   public static readonly flags = {
     'on-behalf-of': arrayWithDeprecation({
       aliases: ['onbehalfof'],
