@@ -1,3 +1,9 @@
+## [3.2.1](https://github.com/salesforcecli/plugin-user/compare/3.2.0...3.2.1) (2024-01-05)
+
+### Bug Fixes
+
+- **deps:** plugins-core 7 (esm) ([#837](https://github.com/salesforcecli/plugin-user/issues/837)) ([19b9591](https://github.com/salesforcecli/plugin-user/commit/19b9591d2f26c1b79742f98847a1547f647fa530))
+
 # [3.2.0](https://github.com/salesforcecli/plugin-user/compare/3.1.5...3.2.0) (2024-01-02)
 
 ### Features
