@@ -7,7 +7,6 @@
 import { EOL } from 'node:os';
 import fs from 'node:fs';
 
-
 import {
   AuthInfo,
   Connection,
@@ -34,7 +33,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'create');
 
 type SuccessMsg = {
@@ -320,7 +319,7 @@ const getValidatedConnection = async (targetOrg: Org, apiVersion?: string): Prom
   if (
     conn.getAuthInfo().isJwt() &&
     // hyperforce sandbox instances end in S like USA254S
-    targetOrg.getField<string>(Org.Fields.CREATED_ORG_INSTANCE).endsWith('S')
+    targetOrg.getField<string>(Org.Fields.CREATED_ORG_INSTANCE)?.endsWith('S')
   ) {
     throw messages.createError('error.jwtHyperforce');
   }
