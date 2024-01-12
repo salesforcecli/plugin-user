@@ -1,3 +1,9 @@
+## [3.2.2](https://github.com/salesforcecli/plugin-user/compare/3.2.1...3.2.2) (2024-01-12)
+
+### Bug Fixes
+
+- handle missing createdOrgInstance field ([99315fa](https://github.com/salesforcecli/plugin-user/commit/99315fabff15bd52c680b20409142a042a61751b))
+
 ## [3.2.1](https://github.com/salesforcecli/plugin-user/compare/3.2.0...3.2.1) (2024-01-05)
 
 ### Bug Fixes
