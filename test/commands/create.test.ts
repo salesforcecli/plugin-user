@@ -19,6 +19,8 @@ const username = 'defaultusername@test.com';
 const originalUserId = '0052D0000043PawWWR';
 const newUserId = '0052D0000044PawWWR';
 
+const createdOrgInstanceMissing = 'MISSING';
+
 describe('org:create:user', () => {
   const $$ = new TestContext();
 
@@ -121,7 +123,9 @@ describe('org:create:user', () => {
     $$.SANDBOX.stub(Org.prototype, 'getOrgId').returns(testOrg.orgId);
     $$.SANDBOX.stub(Org.prototype, 'getField')
       .withArgs(Org.Fields.CREATED_ORG_INSTANCE)
-      .returns(throws.createdOrgInstance ?? testOrg.orgId);
+      .returns(
+        throws.createdOrgInstance === createdOrgInstanceMissing ? undefined : throws.createdOrgInstance ?? testOrg.orgId
+      );
     $$.SANDBOX.stub(Org.prototype, 'determineIfScratch').resolves(throws.nonScratch ? false : true);
 
     if (throws.license) {
@@ -330,6 +334,30 @@ describe('org:create:user', () => {
 
     it('works if JWT but not hyperforce', async () => {
       await prepareStubs({ isJWT: true }, true);
+      const expected = {
+        orgId: testOrg.orgId,
+        permissionSetAssignments: [],
+        fields: {
+          alias: 'testAlias',
+          email: username,
+          emailencodingkey: 'UTF-8',
+          id: newUserId,
+          languagelocalekey: 'en_US',
+          lastname: 'User',
+          localesidkey: 'en_US',
+          profileid: '12345678',
+          profilename: 'profileFromArgs',
+          timezonesidkey: 'America/Los_Angeles',
+          username: '1605130295132_test-j6asqt5qoprs@example.com',
+        },
+      };
+      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
+      const result = await createCommand.run();
+      expect(result).to.deep.equal(expected);
+    });
+
+    it('works if JWT but missing createdOrgInstance auth field', async () => {
+      await prepareStubs({ isJWT: true, createdOrgInstance: createdOrgInstanceMissing }, true);
       const expected = {
         orgId: testOrg.orgId,
         permissionSetAssignments: [],
