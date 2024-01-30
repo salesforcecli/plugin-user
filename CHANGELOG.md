@@ -1,3 +1,9 @@
+## [3.2.6](https://github.com/salesforcecli/plugin-user/compare/3.2.5...3.2.6) (2024-01-30)
+
+### Bug Fixes
+
+- more info about automatic user authentication/hyperforce/jwt ([#860](https://github.com/salesforcecli/plugin-user/issues/860)) ([43be968](https://github.com/salesforcecli/plugin-user/commit/43be9689466c64b0d65506d707339f31112958fd))
+
 ## [3.2.5](https://github.com/salesforcecli/plugin-user/compare/3.2.4...3.2.5) (2024-01-28)
 
 ### Bug Fixes
