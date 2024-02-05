@@ -27,14 +27,10 @@ describe('org:assign:permset', () => {
 
   const testOrg = new MockTestOrgData();
   testOrg.username = 'defaultusername@test.com';
-  const devHub = new MockTestOrgData();
-  devHub.username = 'mydevhub.org';
-  devHub.devHubUsername = 'mydevhub.org';
-  devHub.isDevHub = true;
 
   async function prepareStubs(throws = false) {
-    await $$.stubAuths(testOrg, devHub);
-    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': testOrg.username });
+    await $$.stubAuths(testOrg);
+    await $$.stubConfig({ 'target-org': testOrg.username });
 
     $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'query').resolves({
       records: [{ Id: '1234567890' }],

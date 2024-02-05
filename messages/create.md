@@ -74,10 +74,6 @@ The username "%s" already exists in this or another Salesforce org. Usernames mu
 Successfully created user "%s" with ID %s for org %s.%s
 See more details about this user by running "%s org user display -o %s".
 
-# flags.target-hub.deprecation
-
-The --target-dev-hub flag is deprecated and is no longer used by this command. The flag will be removed in API version 57.0 or later.
-
 # error.nonScratchOrg
 
 This command works with only scratch orgs.

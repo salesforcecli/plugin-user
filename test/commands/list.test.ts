@@ -59,14 +59,9 @@ describe('org:list:users', () => {
   user2Org.loginUrl = 'login.test.com';
   user2Org.userId = '0052D0000043PcBQAU';
 
-  const devHub = new MockTestOrgData();
-  devHub.username = 'mydevhub.org';
-  devHub.devHubUsername = 'mydevhub.org';
-  devHub.isDevHub = true;
-
   beforeEach(async () => {
-    await $$.stubAuths(user1Org, devHub);
-    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': user1Org.username });
+    await $$.stubAuths(user1Org);
+    await $$.stubConfig({ 'target-org': user1Org.username });
     $$.stubAliases({ testAlias: user1 });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -136,19 +131,13 @@ describe('org:list:users', () => {
   });
 
   it('should display the correct information invoked with an alias', async () => {
-    const listComm = new ListUsersCommand(
-      ['--json', '--target-org', 'testAlias', '--target-dev-hub', devHub.username],
-      {} as Config
-    );
+    const listComm = new ListUsersCommand(['--json', '--target-org', 'testAlias'], {} as Config);
     const result = await listComm.run();
     expect(result).to.deep.equal(expected);
   });
 
   it('should display the correct information invoked by name', async () => {
-    const listComm = new ListUsersCommand(
-      ['--json', '--target-org', user1, '--target-dev-hub', devHub.username],
-      {} as Config
-    );
+    const listComm = new ListUsersCommand(['--json', '--target-org', user1], {} as Config);
     const result = await listComm.run();
     expect(result).to.deep.equal(expected);
   });

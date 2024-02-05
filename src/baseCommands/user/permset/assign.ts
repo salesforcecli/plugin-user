@@ -5,12 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Connection, Messages, Org, SfError, StateAggregator, User } from '@salesforce/core';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
 type SuccessMsg = {
   name: string;
