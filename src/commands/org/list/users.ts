@@ -7,7 +7,6 @@
 
 import { Connection, Messages, StateAggregator } from '@salesforce/core';
 import {
-  Flags,
   loglevel,
   orgApiVersionFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
@@ -43,14 +42,6 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
-    'target-dev-hub': Flags.optionalOrg({
-      char: 'v',
-      summary: messages.getMessage('flags.target-dev-hub.summary'),
-      hidden: true,
-      deprecated: {
-        message: messages.getMessage('flags.target-dev-hub.deprecation'),
-      },
-    }),
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,

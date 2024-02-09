@@ -5,14 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages, Org } from '@salesforce/core';
 import { Flags } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
 import { PermsetAssignResult, UserPermSetAssignBaseCommand } from '../../../baseCommands/user/permset/assign.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permset.assign');
 
 export class AssignPermSetCommand extends UserPermSetAssignBaseCommand {

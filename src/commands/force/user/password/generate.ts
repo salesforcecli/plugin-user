@@ -5,13 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  arrayWithDeprecation,
-  Flags,
-  loglevel,
-  optionalHubFlagWithDeprecations,
-  orgApiVersionFlagWithDeprecations,
-} from '@salesforce/sf-plugins-core';
+import { arrayWithDeprecation, Flags, loglevel, orgApiVersionFlagWithDeprecations } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
 import { GenerateResult, UserPasswordGenerateBaseCommand } from '../../../../baseCommands/user/password/generate.js';
@@ -50,13 +44,6 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
       max: 5,
       default: 5,
     }),
-    'target-dev-hub': {
-      ...optionalHubFlagWithDeprecations,
-      hidden: true,
-      deprecated: {
-        message: messages.getMessage('flags.target-hub.deprecation'),
-      },
-    },
     'target-org': Flags.requiredOrg({
       char: 'u',
       summary: messages.getMessage('flags.target-org.summary'),

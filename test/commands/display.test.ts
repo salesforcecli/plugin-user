@@ -17,10 +17,6 @@ describe('org:display:user', () => {
   const $$ = new TestContext();
 
   const testOrg = new MockTestOrgData();
-  const devHub = new MockTestOrgData();
-  devHub.username = 'mydevhub.org';
-  devHub.devHubUsername = 'mydevhub.org';
-  devHub.isDevHub = true;
   const defaultOrg = new MockTestOrgData();
   defaultOrg.orgId = 'abc123';
   defaultOrg.username = 'defaultusername@test.com';
@@ -30,8 +26,8 @@ describe('org:display:user', () => {
   defaultOrg.password = '-a098u234/1!@#';
 
   async function prepareStubs(queries = false) {
-    await $$.stubAuths(testOrg, devHub, defaultOrg);
-    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': defaultOrg.username });
+    await $$.stubAuths(testOrg, defaultOrg);
+    await $$.stubConfig({ 'target-org': defaultOrg.username });
     $$.stubAliases({ testAlias: 'defaultusername@test.com' });
 
     if (queries) {
@@ -85,10 +81,7 @@ describe('org:display:user', () => {
       profileName: 'profileName',
       username: 'defaultusername@test.com',
     };
-    const displayCommand = new DisplayUserCommand(
-      ['--json', '--target-org', defaultOrg.username, '--target-dev-hub', devHub.username],
-      {} as Config
-    );
+    const displayCommand = new DisplayUserCommand(['--json', '--target-org', defaultOrg.username], {} as Config);
     const result = await displayCommand.run();
     expect(result).to.deep.equal(expected);
   });
@@ -107,7 +100,7 @@ describe('org:display:user', () => {
       username: defaultOrg.username,
     };
     const displayCommand = new DisplayUserCommand(
-      ['--json', '--targetusername', 'defaultusername@test.com', '--targetdevhubusername', devHub.username],
+      ['--json', '--targetusername', 'defaultusername@test.com'],
       {} as Config
     );
     const result = await displayCommand.run();

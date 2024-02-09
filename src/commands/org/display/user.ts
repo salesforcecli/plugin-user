@@ -5,19 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
 import { ensureString } from '@salesforce/ts-types';
 import {
   loglevel,
-  optionalHubFlagWithDeprecations,
   orgApiVersionFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
 
 export type DisplayUserResult = {
@@ -39,13 +36,6 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly flags = {
-    'target-dev-hub': {
-      ...optionalHubFlagWithDeprecations,
-      hidden: true,
-      deprecated: {
-        message: messages.getMessage('flags.target-hub.deprecation'),
-      },
-    },
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,

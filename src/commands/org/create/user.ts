@@ -27,7 +27,6 @@ import {
   loglevel,
   orgApiVersionFlagWithDeprecations,
   parseVarArgs,
-  optionalHubFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
@@ -74,13 +73,6 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
       aliases: ['setuniqueusername'],
       deprecateAliases: true,
     }),
-    'target-dev-hub': {
-      ...optionalHubFlagWithDeprecations,
-      hidden: true,
-      deprecated: {
-        message: messages.getMessage('flags.target-hub.deprecation'),
-      },
-    },
     'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,

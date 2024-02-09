@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Connection, Messages, User } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer.js';
@@ -14,7 +12,7 @@ import { assert, expect } from 'chai';
 import { Config } from '@oclif/core';
 import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
 
 describe('org:generate:password', () => {
@@ -31,15 +29,11 @@ describe('org:generate:password', () => {
   }
 
   const testOrg = new MockTestOrgData();
-  const devHub = new MockTestOrgData();
-  devHub.username = 'mydevhub.org';
-  devHub.devHubUsername = 'mydevhub.org';
-  devHub.isDevHub = true;
   let queryStub: sinon.SinonStub;
 
   async function prepareStubs(throws = false, generatePassword = true) {
-    await $$.stubAuths(testOrg, devHub);
-    await $$.stubConfig({ 'target-dev-hub': devHub.username, 'target-org': testOrg.username });
+    await $$.stubAuths(testOrg);
+    await $$.stubConfig({ 'target-org': testOrg.username });
     queryStub = $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery').resolves({
       Id: '0052D0000043PawWWR',
     });
