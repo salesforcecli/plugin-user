@@ -1,3 +1,9 @@
+## [3.2.10](https://github.com/salesforcecli/plugin-user/compare/3.2.9...3.2.10) (2024-02-18)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 7.1.4 to 7.1.10 ([4a155ac](https://github.com/salesforcecli/plugin-user/commit/4a155ac858cf5b8305dc56ca9aa7ecabf5e8f867))
+
 ## [3.2.9](https://github.com/salesforcecli/plugin-user/compare/3.2.8...3.2.9) (2024-02-17)
 
 ### Bug Fixes
