@@ -6,14 +6,14 @@
  */
 
 import { Messages } from '@salesforce/core';
-import { arrayWithDeprecation, Flags } from '@salesforce/sf-plugins-core';
+import { arrayWithDeprecation, Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import { PSLResult, UserPermSetLicenseAssignBaseCommand } from '../../../baseCommands/user/permsetlicense/assign.js';
+import { assignPSL, print, PSLResult, resultsToExitCode } from '../../../baseCommands/user/permsetlicense/assign.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
 
-export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCommand {
+export class AssignPermSetLicenseCommand extends SfCommand<PSLResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -37,19 +37,27 @@ export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCom
 
   public async run(): Promise<PSLResult> {
     const { flags } = await this.parse(AssignPermSetLicenseCommand);
-    const results = await Promise.all(
-      flags.name.map((pslName) =>
-        this.assign({
-          conn: flags['target-org'].getConnection(flags['api-version']),
-          pslName,
-          usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
-        })
+    const result = aggregate(
+      await Promise.all(
+        flags.name.map((pslName) =>
+          assignPSL({
+            conn: flags['target-org'].getConnection(flags['api-version']),
+            pslName,
+            usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
+          })
+        )
       )
     );
-    const result = {
-      successes: results.flatMap((r) => r.successes),
-      failures: results.flatMap((r) => r.failures),
-    };
+
+    process.exitCode = resultsToExitCode(result);
+    if (!this.jsonEnabled()) {
+      print(result);
+    }
     return result;
   }
 }
+
+const aggregate = (results: PSLResult[]): PSLResult => ({
+  successes: results.flatMap((r) => r.successes),
+  failures: results.flatMap((r) => r.failures),
+});

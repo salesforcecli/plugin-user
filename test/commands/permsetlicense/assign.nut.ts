@@ -58,7 +58,7 @@ describe('PermissionSetLicense tests', () => {
     });
   });
 
-  describe('multiple PSL via onBehalfOf', () => {
+  describe('assign PSL to multiple users via onBehalfOf', () => {
     it('assigns a psl to multiple users via onBehalfOf', () => {
       const anotherPSL = 'SurveyCreatorPsl';
       const originalUsername = session.orgs.get('default')?.username;
