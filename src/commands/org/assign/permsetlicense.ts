@@ -23,6 +23,7 @@ export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCom
       summary: messages.getMessage('flags.name.summary'),
       required: true,
       aliases: ['perm-set-license', 'psl'],
+      multiple: true,
     }),
     'on-behalf-of': arrayWithDeprecation({
       char: 'b',
@@ -36,10 +37,19 @@ export class AssignPermSetLicenseCommand extends UserPermSetLicenseAssignBaseCom
 
   public async run(): Promise<PSLResult> {
     const { flags } = await this.parse(AssignPermSetLicenseCommand);
-    return this.assign({
-      conn: flags['target-org'].getConnection(flags['api-version']),
-      pslName: flags.name,
-      usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
-    });
+    const results = await Promise.all(
+      flags.name.map((pslName) =>
+        this.assign({
+          conn: flags['target-org'].getConnection(flags['api-version']),
+          pslName,
+          usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
+        })
+      )
+    );
+    const result = {
+      successes: results.flatMap((r) => r.successes),
+      failures: results.flatMap((r) => r.failures),
+    };
+    return result;
   }
 }
