@@ -8,7 +8,13 @@
 import { Messages } from '@salesforce/core';
 import { arrayWithDeprecation, Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import { assignPSL, print, PSLResult, resultsToExitCode } from '../../../baseCommands/user/permsetlicense/assign.js';
+import {
+  aggregate,
+  assignPSL,
+  print,
+  PSLResult,
+  resultsToExitCode,
+} from '../../../baseCommands/user/permsetlicense/assign.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -56,8 +62,3 @@ export class AssignPermSetLicenseCommand extends SfCommand<PSLResult> {
     return result;
   }
 }
-
-const aggregate = (results: PSLResult[]): PSLResult => ({
-  successes: results.flatMap((r) => r.successes),
-  failures: results.flatMap((r) => r.failures),
-});
