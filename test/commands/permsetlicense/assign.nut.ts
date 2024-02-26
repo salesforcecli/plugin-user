@@ -58,7 +58,22 @@ describe('PermissionSetLicense tests', () => {
     });
   });
 
-  describe('multiple PSL via onBehalfOf', () => {
+  describe('assign multiple PSLs to default user', () => {
+    it('2 successful assignments', () => {
+      const consolePSL = 'Sales Console User';
+      const commandResult = execCmd<PSLResult>(`org:assign:permsetlicense -n ${testPSL} -n "${consolePSL}" --json`, {
+        ensureExitCode: 0,
+      }).jsonOutput as { status: number; result: PSLResult; warnings: string[] };
+      expect(commandResult.result.failures).to.be.an('array').with.length(0);
+      expect(commandResult.result.successes.some((success) => success.value === testPSL)).to.be.true;
+      expect(commandResult.result.successes.some((success) => success.value === consolePSL)).to.be.true;
+      // warning because already assigned
+      expect(commandResult.warnings).to.be.an('array').with.length(1);
+      expect(commandResult.warnings[0]).to.include(testPSL);
+    });
+  });
+
+  describe('assign PSL to multiple users via onBehalfOf', () => {
     it('assigns a psl to multiple users via onBehalfOf', () => {
       const anotherPSL = 'SurveyCreatorPsl';
       const originalUsername = session.orgs.get('default')?.username;

@@ -6,14 +6,20 @@
  */
 
 import { Messages } from '@salesforce/core';
-import { arrayWithDeprecation, Flags, loglevel, orgApiVersionFlagWithDeprecations } from '@salesforce/sf-plugins-core';
+import {
+  arrayWithDeprecation,
+  Flags,
+  loglevel,
+  orgApiVersionFlagWithDeprecations,
+  SfCommand,
+} from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import { PSLResult, UserPermSetLicenseAssignBaseCommand } from '../../../../baseCommands/user/permsetlicense/assign.js';
+import { assignPSL, print, PSLResult, resultsToExitCode } from '../../../../baseCommands/user/permsetlicense/assign.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
 
-export class ForceUserPermSetLicenseAssignCommand extends UserPermSetLicenseAssignBaseCommand {
+export class ForceUserPermSetLicenseAssignCommand extends SfCommand<PSLResult> {
   public static readonly hidden = true;
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
@@ -48,10 +54,15 @@ export class ForceUserPermSetLicenseAssignCommand extends UserPermSetLicenseAssi
 
   public async run(): Promise<PSLResult> {
     const { flags } = await this.parse(ForceUserPermSetLicenseAssignCommand);
-    return this.assign({
+    const result = await assignPSL({
       conn: flags['target-org'].getConnection(flags['api-version']),
       pslName: flags.name,
       usernamesOrAliases: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
     });
+    process.exitCode = resultsToExitCode(result);
+    if (!this.jsonEnabled()) {
+      print(result);
+    }
+    return result;
   }
 }

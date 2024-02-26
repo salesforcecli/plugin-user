@@ -911,7 +911,7 @@
     "@smithy/types" "^2.10.0"
     tslib "^2.5.0"
 
-"@aws-sdk/types@3.515.0":
+"@aws-sdk/types@3.515.0", "@aws-sdk/types@^3.222.0":
   version "3.515.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/types/-/types-3.515.0.tgz#ee97c887293211f1891bc1d8f0aaf354072b6002"
   integrity sha512-B3gUpiMlpT6ERaLvZZ61D0RyrQPsFYDkCncLPVkZOKkCOoFU46zi1o6T5JcYiz8vkx1q9RGloQ5exh79s5pU/w==

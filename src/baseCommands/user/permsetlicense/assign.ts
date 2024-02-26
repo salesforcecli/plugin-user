@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Connection, Logger, Messages, SfError, StateAggregator } from '@salesforce/core';
-import { SfCommand } from '@salesforce/sf-plugins-core';
+import { Connection, Lifecycle, Logger, Messages, SfError, StateAggregator } from '@salesforce/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'permsetlicense.assign');
@@ -30,134 +30,135 @@ interface PermissionSetLicense {
   Id: string;
 }
 
-export abstract class UserPermSetLicenseAssignBaseCommand extends SfCommand<PSLResult> {
-  private readonly successes: SuccessMsg[] = [];
-  private readonly failures: FailureMsg[] = [];
+export const assignPSL = async ({
+  conn,
+  pslName,
+  usernamesOrAliases,
+}: {
+  conn: Connection;
+  pslName: string;
+  usernamesOrAliases: string[];
+}): Promise<PSLResult> => {
+  const logger = await Logger.child('assignPSL');
 
-  public async assign({
-    conn,
-    pslName,
-    usernamesOrAliases,
-  }: {
-    conn: Connection;
-    pslName: string;
-    usernamesOrAliases: string[];
-  }): Promise<PSLResult> {
-    const logger = await Logger.child(this.constructor.name);
+  logger.debug(`will assign perm set license "${pslName}" to users: ${usernamesOrAliases.join(', ')}`);
+  const queryResult = await queryPsl({ conn, pslName, usernamesOrAliases });
 
-    logger.debug(`will assign perm set license "${pslName}" to users: ${usernamesOrAliases.join(', ')}`);
-    const pslId = await queryPsl(conn, pslName);
-
-    (
-      await Promise.all(
-        usernamesOrAliases.map((usernameOrAlias) =>
-          this.usernameToPSLAssignment({
-            pslName,
-            usernameOrAlias,
-            pslId,
-            conn,
-          })
+  return typeof queryResult === 'string'
+    ? aggregate(
+        await Promise.all(
+          usernamesOrAliases.map((usernameOrAlias) =>
+            usernameToPSLAssignment({
+              pslName,
+              usernameOrAlias,
+              pslId: queryResult,
+              conn,
+            })
+          )
         )
       )
-    ).map((result) => {
-      if (isSuccess(result)) {
-        this.successes.push(result);
-      } else {
-        this.failures.push(result);
-      }
+    : queryResult;
+};
+
+/** reduce an array of PSLResult to a single one */
+export const aggregate = (results: PSLResult[]): PSLResult => ({
+  successes: results.flatMap((r) => r.successes),
+  failures: results.flatMap((r) => r.failures),
+});
+
+export const resultsToExitCode = (results: PSLResult): number => {
+  if (results.failures.length && results.successes.length) {
+    return 68;
+  } else if (results.failures.length) {
+    return 1;
+  } else if (results.successes.length) {
+    return 0;
+  }
+  throw new SfError('Unexpected state: no successes and no failures.  This should not happen.');
+};
+
+export const print = (results: PSLResult): void => {
+  const ux = new Ux();
+  if (results.failures.length > 0 && results.successes.length > 0) {
+    ux.styledHeader('Partial Success');
+  }
+  if (results.successes.length > 0) {
+    ux.styledHeader('Permset Licenses Assigned');
+    ux.table(results.successes, {
+      name: { header: 'Username' },
+      value: { header: 'Permission Set License Assignment' },
     });
-
-    this.print();
-    this.setExitCode();
-
-    return {
-      successes: this.successes,
-      failures: this.failures,
-    };
   }
 
-  // handles one username/psl combo so these can run in parallel
-  private async usernameToPSLAssignment({
-    pslName,
-    usernameOrAlias,
-    pslId,
-    conn,
-  }: {
-    pslName: string;
-    usernameOrAlias: string;
-    pslId: string;
-    conn: Connection;
-  }): Promise<SuccessMsg | FailureMsg> {
-    // Convert any aliases to usernames
-    const resolvedUsername = (await StateAggregator.getInstance()).aliases.resolveUsername(usernameOrAlias);
+  if (results.failures.length > 0) {
+    if (results.successes.length > 0) {
+      ux.log('');
+    }
 
-    try {
-      const AssigneeId = (
-        await conn.singleRecordQuery<{ Id: string }>(`select Id from User where Username = '${resolvedUsername}'`)
-      ).Id;
+    ux.styledHeader('Failures');
+    ux.table(results.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
+  }
+};
 
-      await conn.sobject('PermissionSetLicenseAssign').create({
-        AssigneeId,
-        PermissionSetLicenseId: pslId,
-      });
-      return {
+// handles one username/psl combo so these can run in parallel
+const usernameToPSLAssignment = async ({
+  pslName,
+  usernameOrAlias,
+  pslId,
+  conn,
+}: {
+  pslName: string;
+  usernameOrAlias: string;
+  pslId: string;
+  conn: Connection;
+}): Promise<PSLResult> => {
+  // Convert any aliases to usernames
+  const resolvedUsername = (await StateAggregator.getInstance()).aliases.resolveUsername(usernameOrAlias);
+
+  try {
+    const AssigneeId = (
+      await conn.singleRecordQuery<{ Id: string }>(`select Id from User where Username = '${resolvedUsername}'`)
+    ).Id;
+
+    await conn.sobject('PermissionSetLicenseAssign').create({
+      AssigneeId,
+      PermissionSetLicenseId: pslId,
+    });
+    return toResult({
+      name: resolvedUsername,
+      value: pslName,
+    });
+  } catch (e) {
+    // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
+    // but we're going to call that a success
+    if (e instanceof Error && e.message.startsWith('duplicate value found')) {
+      await Lifecycle.getInstance().emitWarning(messages.getMessage('duplicateValue', [resolvedUsername, pslName]));
+      return toResult({
         name: resolvedUsername,
         value: pslName,
-      };
-    } catch (e) {
-      // idempotency.  If user(s) already have PSL, the API will throw an error about duplicate value.
-      // but we're going to call that a success
-      if (e instanceof Error && e.message.startsWith('duplicate value found')) {
-        this.warn(messages.getMessage('duplicateValue', [resolvedUsername, pslName]));
-        return {
-          name: resolvedUsername,
-          value: pslName,
-        };
-      } else {
-        return {
-          name: resolvedUsername,
-          message: e instanceof Error ? e.message : 'error contained no message',
-        };
-      }
-    }
-  }
-
-  private setExitCode(): void {
-    if (this.failures.length && this.successes.length) {
-      process.exitCode = 68;
-    } else if (this.failures.length) {
-      process.exitCode = 1;
-    } else if (this.successes.length) {
-      process.exitCode = 0;
-    }
-  }
-
-  private print(): void {
-    if (this.failures.length > 0 && this.successes.length > 0) {
-      this.styledHeader('Partial Success');
-    }
-    if (this.successes.length > 0) {
-      this.styledHeader('Permset Licenses Assigned');
-      this.table(this.successes, {
-        name: { header: 'Username' },
-        value: { header: 'Permission Set License Assignment' },
+      });
+    } else {
+      return toResult({
+        name: resolvedUsername,
+        message: e instanceof Error ? e.message : 'error contained no message',
       });
     }
-
-    if (this.failures.length > 0) {
-      if (this.successes.length > 0) {
-        this.log('');
-      }
-
-      this.styledHeader('Failures');
-      this.table(this.failures, { name: { header: 'Username' } }, { message: { header: 'Error Message' } });
-    }
   }
-}
+};
 
+const toResult = (input: SuccessMsg | FailureMsg): PSLResult =>
+  isSuccess(input) ? { successes: [input], failures: [] } : { successes: [], failures: [input] };
 const isSuccess = (input: SuccessMsg | FailureMsg): input is SuccessMsg => (input as SuccessMsg).value !== undefined;
 
-const queryPsl = async (conn: Connection, pslName: string): Promise<string> => {
+const queryPsl = async ({
+  conn,
+  pslName,
+  usernamesOrAliases,
+}: {
+  conn: Connection;
+  pslName: string;
+  usernamesOrAliases: string[];
+}): Promise<string | PSLResult> => {
   try {
     return (
       await conn.singleRecordQuery<PermissionSetLicense>(
@@ -165,6 +166,8 @@ const queryPsl = async (conn: Connection, pslName: string): Promise<string> => {
       )
     ).Id;
   } catch (e) {
-    throw new SfError('PermissionSetLicense not found');
+    return aggregate(
+      usernamesOrAliases.map((name) => toResult({ name, message: `PermissionSetLicense not found: ${pslName}` }))
+    );
   }
 };
