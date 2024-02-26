@@ -1,3 +1,11 @@
+# [3.3.0](https://github.com/salesforcecli/plugin-user/compare/3.2.13...3.3.0) (2024-02-26)
+
+### Features
+
+- assign multiple PSLs ([28f9f5d](https://github.com/salesforcecli/plugin-user/commit/28f9f5dc309814edbcf88c6b408118b77409c324))
+- fix Failures table and handle partial success avoiding throws ([4ce8080](https://github.com/salesforcecli/plugin-user/commit/4ce808024d8ce91ddfedb22a8133b653da0b7893))
+- support multiple psl assigns ([98ae889](https://github.com/salesforcecli/plugin-user/commit/98ae8894be14454f64973f5a7dc432efe302a4c8))
+
 ## [3.2.13](https://github.com/salesforcecli/plugin-user/compare/3.2.12...3.2.13) (2024-02-26)
 
 ## [3.2.12](https://github.com/salesforcecli/plugin-user/compare/3.2.11...3.2.12) (2024-02-25)
