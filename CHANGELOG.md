@@ -1,3 +1,9 @@
+## [3.3.1](https://github.com/salesforcecli/plugin-user/compare/3.3.0...3.3.1) (2024-03-03)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 7.1.13 to 7.1.14 ([e5a8a8f](https://github.com/salesforcecli/plugin-user/commit/e5a8a8fc09d32611b3f6af4b6b697af1621726f5))
+
 # [3.3.0](https://github.com/salesforcecli/plugin-user/compare/3.2.13...3.3.0) (2024-02-26)
 
 ### Features
