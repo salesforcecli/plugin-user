@@ -120,7 +120,6 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
       [
         { key: 'Username', label: result.username ?? 'unknown' },
         { key: 'Profile Name', label: result.profileName },
-        { key: 'Profile Name', label: result.profileName },
         { key: 'Id', label: result.id },
         { key: 'Org Id', label: result.orgId },
         ...(result.accessToken ? [{ key: 'Access Token', label: result.accessToken }] : []),
