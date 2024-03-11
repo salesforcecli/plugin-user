@@ -1,26 +1,26 @@
 {
   "name": "@salesforce/plugin-user",
   "description": "Commands to interact with Users and Permission Sets",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^3.19.2",
+    "@oclif/core": "^3.23.0",
     "@salesforce/core": "^6.4.2",
     "@salesforce/kit": "^3.0.15",
     "@salesforce/sf-plugins-core": "^7.1.14",
     "@salesforce/ts-types": "^2.0.9"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.0.9",
-    "@salesforce/cli-plugins-testkit": "^5.1.9",
+    "@oclif/plugin-command-snapshot": "^5.1.1",
+    "@salesforce/cli-plugins-testkit": "^5.1.10",
     "@salesforce/dev-scripts": "^8.4.2",
     "@salesforce/plugin-command-reference": "^3.0.69",
     "chai-each": "^0.0.1",
     "eslint-plugin-sf-plugin": "^1.17.4",
-    "oclif": "^4.4.19",
+    "oclif": "^4.5.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "config": {},
   "engines": {
