@@ -15,7 +15,7 @@
     "@oclif/plugin-command-snapshot": "^5.1.1",
     "@salesforce/cli-plugins-testkit": "^5.1.10",
     "@salesforce/dev-scripts": "^8.4.2",
-    "@salesforce/plugin-command-reference": "^3.0.69",
+    "@salesforce/plugin-command-reference": "^3.0.70",
     "chai-each": "^0.0.1",
     "eslint-plugin-sf-plugin": "^1.17.4",
     "oclif": "^4.5.2",
