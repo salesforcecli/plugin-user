@@ -4,7 +4,7 @@
     "command": "force:user:password:generate",
     "flagAliases": ["apiversion", "onbehalfof", "targetusername"],
     "flagChars": ["c", "l", "o", "u"],
-    "flags": ["api-version", "complexity", "json", "length", "loglevel", "on-behalf-of", "target-org"],
+    "flags": ["api-version", "complexity", "flags-dir", "json", "length", "loglevel", "on-behalf-of", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -12,7 +12,7 @@
     "command": "force:user:permset:assign",
     "flagAliases": ["apiversion", "onbehalfof", "permsetname", "targetusername"],
     "flagChars": ["n", "o", "u"],
-    "flags": ["api-version", "json", "loglevel", "on-behalf-of", "perm-set-name", "target-org"],
+    "flags": ["api-version", "flags-dir", "json", "loglevel", "on-behalf-of", "perm-set-name", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -20,7 +20,7 @@
     "command": "force:user:permsetlicense:assign",
     "flagAliases": ["apiversion", "onbehalfof", "perm-set-license", "psl", "targetusername"],
     "flagChars": ["b", "n", "u"],
-    "flags": ["api-version", "json", "loglevel", "name", "on-behalf-of", "target-org"],
+    "flags": ["api-version", "flags-dir", "json", "loglevel", "name", "on-behalf-of", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -28,7 +28,7 @@
     "command": "org:assign:permset",
     "flagAliases": ["onbehalfof", "permsetname"],
     "flagChars": ["b", "n", "o"],
-    "flags": ["api-version", "json", "name", "on-behalf-of", "target-org"],
+    "flags": ["api-version", "flags-dir", "json", "name", "on-behalf-of", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -36,7 +36,7 @@
     "command": "org:assign:permsetlicense",
     "flagAliases": ["onbehalfof", "perm-set-license", "psl"],
     "flagChars": ["b", "n", "o"],
-    "flags": ["api-version", "json", "name", "on-behalf-of", "target-org"],
+    "flags": ["api-version", "flags-dir", "json", "name", "on-behalf-of", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -44,7 +44,16 @@
     "command": "org:create:user",
     "flagAliases": ["apiversion", "definitionfile", "setalias", "setuniqueusername", "targetusername", "u"],
     "flagChars": ["a", "f", "o", "s"],
-    "flags": ["api-version", "definition-file", "json", "loglevel", "set-alias", "set-unique-username", "target-org"],
+    "flags": [
+      "api-version",
+      "definition-file",
+      "flags-dir",
+      "json",
+      "loglevel",
+      "set-alias",
+      "set-unique-username",
+      "target-org"
+    ],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -52,7 +61,7 @@
     "command": "org:display:user",
     "flagAliases": ["apiversion", "targetusername", "u"],
     "flagChars": ["o"],
-    "flags": ["api-version", "json", "loglevel", "target-org"],
+    "flags": ["api-version", "flags-dir", "json", "loglevel", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -60,7 +69,7 @@
     "command": "org:generate:password",
     "flagAliases": ["onbehalfof"],
     "flagChars": ["b", "c", "l", "o"],
-    "flags": ["api-version", "complexity", "json", "length", "on-behalf-of", "target-org"],
+    "flags": ["api-version", "complexity", "flags-dir", "json", "length", "on-behalf-of", "target-org"],
     "plugin": "@salesforce/plugin-user"
   },
   {
@@ -68,7 +77,7 @@
     "command": "org:list:users",
     "flagAliases": ["apiversion", "targetusername", "u"],
     "flagChars": ["o"],
-    "flags": ["api-version", "json", "loglevel", "target-org"],
+    "flags": ["api-version", "flags-dir", "json", "loglevel", "target-org"],
     "plugin": "@salesforce/plugin-user"
   }
 ]

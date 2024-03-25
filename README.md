@@ -101,7 +101,7 @@ Assign a permission set to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sf org assign permset -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
+  $ sf org assign permset -n <value> -o <value> [--json] [--flags-dir <value>] [-b <value>] [--api-version <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Username or alias to assign the permission set to.
@@ -110,7 +110,8 @@ FLAGS
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Assign a permission set to one or more users of a scratch org.
@@ -144,7 +145,8 @@ Assign a permission set license to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sf org assign permsetlicense -n <value> -o <value> [--json] [-b <value>] [--api-version <value>]
+  $ sf org assign permsetlicense -n <value> -o <value> [--json] [--flags-dir <value>] [-b <value>] [--api-version
+  <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Usernames or alias to assign the permission set license to.
@@ -153,7 +155,8 @@ FLAGS
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Assign a permission set license to one or more users of a scratch org.
@@ -188,7 +191,8 @@ Create a user for a scratch org.
 
 ```
 USAGE
-  $ sf org create user -o <value> [--json] [-a <value>] [-f <value>] [-s] [--api-version <value>]
+  $ sf org create user -o <value> [--json] [--flags-dir <value>] [-a <value>] [-f <value>] [-s] [--api-version
+    <value>]
 
 FLAGS
   -a, --set-alias=<value>        Set an alias for the created username to reference in other CLI commands.
@@ -200,7 +204,8 @@ FLAGS
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Create a user for a scratch org.
@@ -294,7 +299,7 @@ Display information about a Salesforce user.
 
 ```
 USAGE
-  $ sf org display user -o <value> [--json] [--api-version <value>]
+  $ sf org display user -o <value> [--json] [--flags-dir <value>] [--api-version <value>]
 
 FLAGS
   -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
@@ -302,7 +307,8 @@ FLAGS
       --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Display information about a Salesforce user.
@@ -332,7 +338,8 @@ Generate a random password for scratch org users.
 
 ```
 USAGE
-  $ sf org generate password -o <value> [--json] [-b <value>] [-l <value>] [-c <value>] [--api-version <value>]
+  $ sf org generate password -o <value> [--json] [--flags-dir <value>] [-b <value>] [-l <value>] [-c <value>]
+    [--api-version <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Comma-separated list of usernames or aliases to assign the password to; must have been
@@ -346,7 +353,8 @@ FLAGS
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Generate a random password for scratch org users.
@@ -397,7 +405,7 @@ List all locally-authenticated users of an org.
 
 ```
 USAGE
-  $ sf org list users -o <value> [--json] [--api-version <value>]
+  $ sf org list users -o <value> [--json] [--flags-dir <value>] [--api-version <value>]
 
 FLAGS
   -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
@@ -405,7 +413,8 @@ FLAGS
       --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   List all locally-authenticated users of an org.
