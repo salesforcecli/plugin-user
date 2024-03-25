@@ -1,3 +1,9 @@
+# [3.4.0](https://github.com/salesforcecli/plugin-user/compare/3.3.4...3.4.0) (2024-03-25)
+
+### Features
+
+- bump sf-plugins-core ([#912](https://github.com/salesforcecli/plugin-user/issues/912)) ([db254e2](https://github.com/salesforcecli/plugin-user/commit/db254e2ec670f43661a8a61d8d5a73dc150ddf2d))
+
 ## [3.3.4](https://github.com/salesforcecli/plugin-user/compare/3.3.3...3.3.4) (2024-03-17)
 
 ### Bug Fixes
