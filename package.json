@@ -18,7 +18,7 @@
     "@salesforce/plugin-command-reference": "^3.0.72",
     "chai-each": "^0.0.1",
     "eslint-plugin-sf-plugin": "^1.17.4",
-    "oclif": "^4.6.2",
+    "oclif": "^4.7.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
