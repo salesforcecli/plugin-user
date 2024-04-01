@@ -8,22 +8,10 @@
 import { Connection, User } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
-import { Config } from '@oclif/core';
 import { AssignPermSetCommand } from '../../../src/commands/org/assign/permset.js';
-import { PermsetAssignResult } from '../../../src/baseCommands/user/permset/assign.js';
 
 describe('org:assign:permset', () => {
   const $$ = new TestContext();
-
-  class AssignPermSetCommandTest extends AssignPermSetCommand {
-    public constructor(argv: string[], config: Config) {
-      super(argv, config);
-    }
-
-    public async run(): Promise<PermsetAssignResult> {
-      return super.run();
-    }
-  }
 
   const testOrg = new MockTestOrgData();
   testOrg.username = 'defaultusername@test.com';
@@ -69,11 +57,15 @@ describe('org:assign:permset', () => {
         value: 'LargeDreamHouse',
       },
     ];
-    const userPermSetAssign = new AssignPermSetCommandTest(
-      ['--json', '--on-behalf-of', 'testAlias', 'testUser2@test.com', '--name', 'DreamHouse', 'LargeDreamHouse'],
-      {} as Config
-    );
-    const result = await userPermSetAssign.run();
+    const result = await AssignPermSetCommand.run([
+      '--json',
+      '--on-behalf-of',
+      'testAlias',
+      'testUser2@test.com',
+      '--name',
+      'DreamHouse',
+      'LargeDreamHouse',
+    ]);
     expect(result.successes).to.deep.equal(expected);
   });
   it('should fail with the correct error message', async () => {
@@ -85,8 +77,7 @@ describe('org:assign:permset', () => {
         message: 'Permission set "abc" not found in target org. Do you need to push source?',
       },
     ];
-    const userPermSetAssign = new AssignPermSetCommandTest(['--json', '--permsetname', 'PERM2'], {} as Config);
-    const result = await userPermSetAssign.run();
+    const result = await AssignPermSetCommand.run(['--json', '--permsetname', 'PERM2']);
     expect(result.failures).to.deep.equal(expected);
   });
 });

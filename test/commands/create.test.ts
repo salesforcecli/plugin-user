@@ -9,10 +9,10 @@
 
 import fs from 'node:fs';
 import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@salesforce/core';
-import { Config } from '@oclif/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
 import { assert, JsonMap } from '@salesforce/ts-types';
+import { Config } from '@oclif/core';
 import CreateUserCommand from '../../src/commands/org/create/user.js';
 
 const username = 'defaultusername@test.com';
@@ -48,7 +48,9 @@ describe('org:create:user', () => {
         })
       );
 
-    const createCommand = new CreateUserCommand(['-f', 'userConfig.json'], {} as Config);
+    const createCommand = new CreateUserCommand(['-f', 'userConfig.json'], {
+      runHook: () => ({ successes: [], failures: [] }),
+    } as unknown as Config);
 
     // @ts-ignore
     createCommand.flags = { 'definition-file': 'testing' };
@@ -177,19 +179,15 @@ describe('org:create:user', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new CreateUserCommand(
-      [
-        '--json',
-        '--target-org',
-        testOrg.username,
-        '--definition-file',
-        'parent/child/file.json',
-        "permsets='permCLI, permCLI2'",
-        'generatepassword=true',
-      ],
-      {} as Config
-    );
-    const result = await createCommand.run();
+    const result = await CreateUserCommand.run([
+      '--json',
+      '--target-org',
+      testOrg.username,
+      '--definition-file',
+      'parent/child/file.json',
+      "permsets='permCLI, permCLI2'",
+      'generatepassword=true',
+    ]);
     expect(result).to.deep.equal(expected);
   });
 
@@ -212,8 +210,7 @@ describe('org:create:user', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-    const result = await createCommand.run();
+    const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
     expect(result).to.deep.equal(expected);
   });
 
@@ -237,19 +234,16 @@ describe('org:create:user', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new CreateUserCommand(
-      [
-        '--json',
-        '--target-org',
-        testOrg.username,
-        '--definition-file',
-        'parent/child/file.json',
-        'email=me@my.org',
-        'generatepassword=false',
-      ],
-      {} as Config
-    );
-    const result = await createCommand.run();
+    const result = await CreateUserCommand.run([
+      '--json',
+      '--target-org',
+      testOrg.username,
+      '--definition-file',
+      'parent/child/file.json',
+      'email=me@my.org',
+      'generatepassword=false',
+    ]);
+
     expect(result).to.deep.equal(expected);
   });
 
@@ -272,11 +266,14 @@ describe('org:create:user', () => {
         username: `user@cliFlag.com.${testOrg.orgId}`,
       },
     };
-    const createCommand = new CreateUserCommand(
-      ['--json', '--target-org', testOrg.username, 'username=user@cliFlag.com', '--setuniqueusername'],
-      {} as Config
-    );
-    const result = await createCommand.run();
+    const result = await CreateUserCommand.run([
+      '--json',
+      '--target-org',
+      testOrg.username,
+      'username=user@cliFlag.com',
+      '--setuniqueusername',
+    ]);
+
     expect(result).to.deep.equal(expected);
   });
 
@@ -299,11 +296,8 @@ describe('org:create:user', () => {
         username: '1605130295132_test-j6asqt5qoprs@example.com',
       },
     };
-    const createCommand = new CreateUserCommand(
-      ['--json', '--target-org', testOrg.username, '--setuniqueusername'],
-      {} as Config
-    );
-    const result = await createCommand.run();
+    const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username, '--setuniqueusername']);
+
     expect(result).to.deep.equal(expected);
   });
 
@@ -327,8 +321,7 @@ describe('org:create:user', () => {
           username: '1605130295132_test-j6asqt5qoprs@example.com',
         },
       };
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      const result = await createCommand.run();
+      const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
       expect(result).to.deep.equal(expected);
     });
 
@@ -351,8 +344,7 @@ describe('org:create:user', () => {
           username: '1605130295132_test-j6asqt5qoprs@example.com',
         },
       };
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      const result = await createCommand.run();
+      const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
       expect(result).to.deep.equal(expected);
     });
 
@@ -375,8 +367,7 @@ describe('org:create:user', () => {
           username: '1605130295132_test-j6asqt5qoprs@example.com',
         },
       };
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
-      const result = await createCommand.run();
+      const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
       expect(result).to.deep.equal(expected);
     });
   });
@@ -384,9 +375,8 @@ describe('org:create:user', () => {
   describe('exceptions', () => {
     it('throws if org is not a scratchOrg', async () => {
       await prepareStubs({ nonScratch: true }, false);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
       try {
-        await createCommand.run();
+        await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
         expect.fail('should have thrown an error');
       } catch (e) {
         assert(e instanceof Error);
@@ -396,9 +386,8 @@ describe('org:create:user', () => {
 
     it('throws if JWT and hyperforce', async () => {
       await prepareStubs({ isJWT: true, createdOrgInstance: 'USA100S' }, false);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
       try {
-        await createCommand.run();
+        await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
         expect.fail('should have thrown an error');
       } catch (e) {
         assert(e instanceof Error);
@@ -408,9 +397,8 @@ describe('org:create:user', () => {
 
     it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
       await prepareStubs({ license: true }, false);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
       try {
-        await createCommand.run();
+        await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
         expect.fail('should have thrown an error');
       } catch (e) {
         assert(e instanceof Error);
@@ -421,9 +409,8 @@ describe('org:create:user', () => {
 
     it('will handle a failed `createUser` call with a DuplicateUsername error', async () => {
       await prepareStubs({ duplicate: true }, true);
-      const createCommand = new CreateUserCommand(['--json', '--target-org', testOrg.username], {} as Config);
       try {
-        await createCommand.run();
+        await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
         expect.fail('should have thrown an error');
       } catch (e) {
         assert(e instanceof Error);

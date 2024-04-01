@@ -7,7 +7,6 @@
 
 import { Connection, Org } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
-import { Config } from '@oclif/core';
 import { expect } from 'chai';
 import { ListUsersCommand } from '../../src/commands/org/list/users.js';
 
@@ -131,14 +130,12 @@ describe('org:list:users', () => {
   });
 
   it('should display the correct information invoked with an alias', async () => {
-    const listComm = new ListUsersCommand(['--json', '--target-org', 'testAlias'], {} as Config);
-    const result = await listComm.run();
+    const result = await ListUsersCommand.run(['--json', '--target-org', 'testAlias']);
     expect(result).to.deep.equal(expected);
   });
 
   it('should display the correct information invoked by name', async () => {
-    const listComm = new ListUsersCommand(['--json', '--target-org', user1], {} as Config);
-    const result = await listComm.run();
+    const result = await ListUsersCommand.run(['--json', '--target-org', user1]);
     expect(result).to.deep.equal(expected);
   });
 });
