@@ -8,7 +8,6 @@
 import { AuthInfo, Connection, Org } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
-import { Config } from '@oclif/core';
 import { DisplayUserCommand } from '../../src/commands/org/display/user.js';
 
 const username = 'defaultusername@test.com';
@@ -81,8 +80,7 @@ describe('org:display:user', () => {
       profileName: 'profileName',
       username: 'defaultusername@test.com',
     };
-    const displayCommand = new DisplayUserCommand(['--json', '--target-org', defaultOrg.username], {} as Config);
-    const result = await displayCommand.run();
+    const result = await DisplayUserCommand.run(['--json', '--target-org', defaultOrg.username]);
     expect(result).to.deep.equal(expected);
   });
 
@@ -99,11 +97,7 @@ describe('org:display:user', () => {
       profileName: 'QueriedName',
       username: defaultOrg.username,
     };
-    const displayCommand = new DisplayUserCommand(
-      ['--json', '--targetusername', 'defaultusername@test.com'],
-      {} as Config
-    );
-    const result = await displayCommand.run();
+    const result = await DisplayUserCommand.run(['--json', '--targetusername', 'defaultusername@test.com']);
     expect(result).to.deep.equal(expected);
   });
 });

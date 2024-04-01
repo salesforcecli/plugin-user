@@ -6,23 +6,11 @@
  */
 import { Connection } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
-import { Config } from '@oclif/core';
 import { assert, expect } from 'chai';
 import { AssignPermSetLicenseCommand } from '../../../src/commands/org/assign/permsetlicense.js';
-import { PSLResult } from '../../../src/baseCommands/user/permsetlicense/assign.js';
 
 describe('org:assign:permsetlicense', () => {
   const $$ = new TestContext();
-
-  class AssignPermSetLicenseCommandTest extends AssignPermSetLicenseCommand {
-    public constructor(argv: string[], config: Config) {
-      super(argv, config);
-    }
-
-    public async run(): Promise<PSLResult> {
-      return super.run();
-    }
-  }
 
   const testOrg = new MockTestOrgData();
   testOrg.username = 'defaultusername@test.com';
@@ -72,23 +60,22 @@ describe('org:assign:permsetlicense', () => {
         value: goodPSL,
       },
     ];
-    const userPermSetLicenseAssignCommand = new AssignPermSetLicenseCommandTest(
-      ['--json', '--onbehalfof', [username1, username2].join(','), '--name', goodPSL],
-      {} as Config
-    );
-    const result = await userPermSetLicenseAssignCommand.run();
+    const result = await AssignPermSetLicenseCommand.run([
+      '--json',
+      '--onbehalfof',
+      [username1, username2].join(','),
+      '--name',
+      goodPSL,
+    ]);
     expect(result.failures).to.deep.equal([]);
     expect(result.successes).to.deep.equal(expected);
   });
 
   it('should fail with the correct error message when no PSL exists', async () => {
     await prepareStubs();
-    const userPermSetLicenseAssignCommand = new AssignPermSetLicenseCommandTest(
-      ['--json', '--name', badPSL],
-      {} as Config
-    );
+
     try {
-      await userPermSetLicenseAssignCommand.run();
+      await AssignPermSetLicenseCommand.run(['--json', '--name', badPSL]);
     } catch (e) {
       assert(e instanceof Error);
       expect(e.message).to.equal('PermissionSetLicense not found');

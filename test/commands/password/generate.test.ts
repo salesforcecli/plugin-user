@@ -9,7 +9,6 @@ import { Connection, Messages, User } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer.js';
 import { assert, expect } from 'chai';
-import { Config } from '@oclif/core';
 import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -17,16 +16,6 @@ const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.gene
 
 describe('org:generate:password', () => {
   const $$ = new TestContext();
-
-  class GenerateUserPasswordCommandTest extends GenerateUserPasswordCommand {
-    public constructor(argv: string[], config: Config) {
-      super(argv, config);
-    }
-
-    public async run(): Promise<PasswordData | PasswordData[]> {
-      return super.run();
-    }
-  }
 
   const testOrg = new MockTestOrgData();
   let queryStub: sinon.SinonStub;
@@ -65,36 +54,40 @@ describe('org:generate:password', () => {
         password: 'abc',
       },
     ];
-    const passwordGenerate = new GenerateUserPasswordCommandTest(
-      ['--target-org', testOrg.username, '--json', '--on-behalf-of', 'testUser1@test.com', 'testUser2@test.com'],
-      {} as Config
-    );
-    const result = await passwordGenerate.run();
+
+    const result = await GenerateUserPasswordCommand.run([
+      '--target-org',
+      testOrg.username,
+      '--json',
+      '--on-behalf-of',
+      'testUser1@test.com',
+      'testUser2@test.com',
+    ]);
     expect(result).to.deep.equal(expected);
     expect(queryStub.callCount).to.equal(2);
   });
   it('should generate a new password for the default user', async () => {
     await prepareStubs();
     const expected = { username: testOrg.username, password: 'abc' };
-    const passwordGenerate = new GenerateUserPasswordCommandTest(['--json'], {} as Config);
-    const result = await passwordGenerate.run();
+    const result = await GenerateUserPasswordCommand.run(['--json']);
     expect(result).to.deep.equal(expected);
     expect(queryStub.callCount).to.equal(1);
   });
   it('should generate a new passsword of length 12', async () => {
     await prepareStubs(false, false);
-    const passwordGenerate = new GenerateUserPasswordCommandTest(
-      ['--target-org', testOrg.username, '-l', '12', '--json'],
-      {} as Config
-    );
-    const result = (await passwordGenerate.run()) as PasswordData;
+    const result = (await GenerateUserPasswordCommand.run([
+      '--target-org',
+      testOrg.username,
+      '-l',
+      '12',
+      '--json',
+    ])) as PasswordData;
     expect(result.password.length).to.equal(12);
   });
   it('should throw the correct error with warning message', async () => {
     await prepareStubs(true);
-    const passwordGenerate = new GenerateUserPasswordCommandTest(['--json'], {} as Config);
     try {
-      await passwordGenerate.run();
+      await GenerateUserPasswordCommand.run(['--json']);
       expect.fail('should have thrown an error');
     } catch (result) {
       assert(result instanceof Error);
