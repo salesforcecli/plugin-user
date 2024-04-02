@@ -1,3 +1,9 @@
+## [3.4.3](https://github.com/salesforcecli/plugin-user/compare/3.4.2...3.4.3) (2024-04-02)
+
+### Bug Fixes
+
+- remove deprecated sfdx-core aliasAccessor method ([#922](https://github.com/salesforcecli/plugin-user/issues/922)) ([cf42c99](https://github.com/salesforcecli/plugin-user/commit/cf42c9980a5f687ce95628814b59b4d814954d9d))
+
 ## [3.4.2](https://github.com/salesforcecli/plugin-user/compare/3.4.1...3.4.2) (2024-04-02)
 
 ### Bug Fixes
