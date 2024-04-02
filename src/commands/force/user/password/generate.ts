@@ -6,7 +6,7 @@
  */
 
 import { arrayWithDeprecation, Flags, loglevel, orgApiVersionFlagWithDeprecations } from '@salesforce/sf-plugins-core';
-import { Messages } from '@salesforce/core';
+import { Messages } from '@salesforce/core/messages';
 import { ensureArray } from '@salesforce/kit';
 import { GenerateResult, UserPasswordGenerateBaseCommand } from '../../../../baseCommands/user/password/generate.js';
 

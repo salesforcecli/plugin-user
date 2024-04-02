@@ -6,8 +6,7 @@
  */
 
 import { Connection, Messages, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
-import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer.js';
+import { MockTestOrgData, TestContext, SecureBuffer } from '@salesforce/core/testSetup';
 import { assert, expect } from 'chai';
 import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password.js';
 

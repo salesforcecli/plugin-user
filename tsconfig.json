@@ -1,7 +1,6 @@
 {
   "extends": "@salesforce/dev-config/tsconfig-strict-esm",
   "compilerOptions": {
-    "strictNullChecks": true,
     "outDir": "lib",
     "rootDir": "src",
     "skipLibCheck": true

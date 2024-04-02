@@ -6,7 +6,7 @@
  */
 
 import { AuthInfo, Connection, Org } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { expect } from 'chai';
 import { DisplayUserCommand } from '../../src/commands/org/display/user.js';
 
