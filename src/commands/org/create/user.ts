@@ -151,8 +151,7 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     // Set the alias if specified
     if (flags['set-alias']) {
       const stateAggregator = await StateAggregator.getInstance();
-      stateAggregator.aliases.set(flags['set-alias'], fields.username);
-      await stateAggregator.aliases.write();
+      await stateAggregator.aliases.setAndSave(flags['set-alias'], fields.username);
     }
 
     fields.id = ensureString(newUserAuthInfo.getFields().userId);
