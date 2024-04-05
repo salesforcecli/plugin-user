@@ -26,7 +26,7 @@ export type PSLResult = {
   failures: FailureMsg[];
 };
 
-interface PermissionSetLicense {
+type PermissionSetLicense = {
   Id: string;
 }
 
