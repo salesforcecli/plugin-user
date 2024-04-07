@@ -250,7 +250,7 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
 
 export default CreateUserCommand;
 
-export interface CreateUserOutput {
+export type CreateUserOutput = {
   orgId: string;
   permissionSetAssignments: string[];
   fields: Record<string, unknown>;
