@@ -14,7 +14,7 @@
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^5.1.4",
     "@salesforce/cli-plugins-testkit": "^5.1.13",
-    "@salesforce/dev-scripts": "^8.4.4",
+    "@salesforce/dev-scripts": "^8.5.0",
     "@salesforce/plugin-command-reference": "^3.0.74",
     "chai-each": "^0.0.1",
     "eslint-plugin-sf-plugin": "^1.17.5",
