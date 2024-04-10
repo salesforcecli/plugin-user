@@ -9,7 +9,7 @@
 
 import fs from 'node:fs';
 import { AuthInfo, Connection, DefaultUserFields, Logger, Org, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { expect } from 'chai';
 import { assert, JsonMap } from '@salesforce/ts-types';
 import { Config } from '@oclif/core';

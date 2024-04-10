@@ -6,7 +6,7 @@
  */
 
 import { Connection, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { expect } from 'chai';
 import { AssignPermSetCommand } from '../../../src/commands/org/assign/permset.js';
 
