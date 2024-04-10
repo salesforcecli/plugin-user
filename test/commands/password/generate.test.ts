@@ -6,9 +6,10 @@
  */
 
 import { Connection, Messages, User } from '@salesforce/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
-import { SecureBuffer } from '@salesforce/core/lib/crypto/secureBuffer.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { assert, expect } from 'chai';
+// dirty import to stub something we don't want to export from sfdx-core
+import { SecureBuffer } from '../../../node_modules/@salesforce/core/lib/crypto/secureBuffer.js';
 import { PasswordData, GenerateUserPasswordCommand } from '../../../src/commands/org/generate/password.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
