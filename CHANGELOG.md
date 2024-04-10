@@ -1,3 +1,9 @@
+# [3.5.0](https://github.com/salesforcecli/plugin-user/compare/3.4.3...3.5.0) (2024-04-10)
+
+### Features
+
+- core7 + jsforce-node ([618e5c5](https://github.com/salesforcecli/plugin-user/commit/618e5c5ded7679df0a12bea9074244b3114b7839))
+
 ## [3.4.3](https://github.com/salesforcecli/plugin-user/compare/3.4.2...3.4.3) (2024-04-02)
 
 ### Bug Fixes
