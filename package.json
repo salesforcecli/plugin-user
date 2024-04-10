@@ -12,15 +12,15 @@
     "@salesforce/ts-types": "^2.0.9"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.1.2",
+    "@oclif/plugin-command-snapshot": "^5.1.4",
     "@salesforce/cli-plugins-testkit": "^5.2.0",
-    "@salesforce/dev-scripts": "^8.4.2",
+    "@salesforce/dev-scripts": "^8.5.0",
     "@salesforce/plugin-command-reference": "^3.0.74",
     "chai-each": "^0.0.1",
     "eslint-plugin-sf-plugin": "^1.18.0",
-    "oclif": "^4.7.5",
+    "oclif": "^4.7.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.4"
   },
   "config": {},
   "engines": {
