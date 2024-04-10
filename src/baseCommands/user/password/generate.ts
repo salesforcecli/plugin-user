@@ -7,7 +7,8 @@
 import { EOL } from 'node:os';
 
 import { SfCommand } from '@salesforce/sf-plugins-core';
-import { AuthInfo, Connection, Messages, Org, SfError, StateAggregator, User } from '@salesforce/core';
+import { AuthInfo, Connection, Org, SfError, StateAggregator, User } from '@salesforce/core';
+import { Messages } from '@salesforce/core/messages';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
