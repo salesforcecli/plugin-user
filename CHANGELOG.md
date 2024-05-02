@@ -1,3 +1,9 @@
+## [3.5.5](https://github.com/salesforcecli/plugin-user/compare/3.5.4...3.5.5) (2024-05-02)
+
+### Bug Fixes
+
+- **deps:** bump ejs from 3.1.9 to 3.1.10 ([9f21a81](https://github.com/salesforcecli/plugin-user/commit/9f21a812fdf52455cde38ed2f7d67545d3770085))
+
 ## [3.5.4](https://github.com/salesforcecli/plugin-user/compare/3.5.3...3.5.4) (2024-04-28)
 
 ### Bug Fixes
