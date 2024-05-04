@@ -1489,10 +1489,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@jsforce/jsforce-node@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.1.0.tgz#7f1b4ba60c0c84b870af8e43d713907b10ed8152"
-  integrity sha512-xsn6Qj36YyhG7uCL9DOswZhqN/OVIpXm5s8AWD7V9hSJfp5ReebEsjT7a52ztEMmkUAYjWvZC5alBJr7jJCJig==
+"@jsforce/jsforce-node@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.2.0.tgz#4b104613fc9bb74e0e38d2c00936ea2b228ba73a"
+  integrity sha512-3GjWNgWs0HFajVhIhwvBPb0B45o500wTBNEBYxy8XjeeRra+qw8A9xUrfVU7TAGev8kXuKhjJwaTiSzThpEnew==
   dependencies:
     "@sindresorhus/is" "^4"
     "@types/node" "^18.15.3"
@@ -1612,12 +1612,12 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@salesforce/cli-plugins-testkit@^5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.1.tgz#6ff1d6a7d1923e7905a2ddd67905458e8f5bcb6d"
-  integrity sha512-UBTFfG0pxcqMSJjdf7xpRhv5TCC3cf3/CDijjWXzYH/JGryeb0XWZIRKoT8kXzXgEDW2s4O/dNdVvMGnZEN3Aw==
+"@salesforce/cli-plugins-testkit@^5.3.2":
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.2.tgz#39b12513baf230cbfa2a831d1e1ad567512dcb18"
+  integrity sha512-/0ZR9PrRpmbtYzkGee7Sc8b1qzNyojq1Smk0RY7gM439rDKS90Tqq8W3b9hNXtTzHNe98MxQUGq819mCxok+Mw==
   dependencies:
-    "@salesforce/core" "^7.3.1"
+    "@salesforce/core" "^7.3.3"
     "@salesforce/kit" "^3.1.1"
     "@salesforce/ts-types" "^2.0.9"
     "@types/shelljs" "^0.8.15"
@@ -1628,12 +1628,12 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.0"
 
-"@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0", "@salesforce/core@^7.3.1", "@salesforce/core@^7.3.2":
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-7.3.2.tgz#429a859335efdc14d60b041bfa60fcde6c0c5e79"
-  integrity sha512-a5AQFlwZqSz9kqFb+m4ch5HjPapKX1TDoRm9RfdwGyhkBtiCH1lVjnkn6nmHmpOq0X9Sh+broRN3vgl9s5bRRg==
+"@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0", "@salesforce/core@^7.3.2", "@salesforce/core@^7.3.3":
+  version "7.3.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-7.3.3.tgz#4b84aba806264dd13716f4c4774bd5a417259662"
+  integrity sha512-THjYnOrfj0vW+qvlm70NDasH3RHD03cm884yi1+1axA4ugS4FFxXrPDPWAEU5ve5B4vnT7CJfuD/Q56l67ug8w==
   dependencies:
-    "@jsforce/jsforce-node" "^3.1.0"
+    "@jsforce/jsforce-node" "^3.2.0"
     "@salesforce/kit" "^3.1.1"
     "@salesforce/schemas" "^1.7.0"
     "@salesforce/ts-types" "^2.0.9"
