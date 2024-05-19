@@ -137,7 +137,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.8/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.9/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -183,7 +183,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.8/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.9/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -291,7 +291,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.8/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.9/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -330,7 +330,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.8/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.9/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -397,7 +397,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.8/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.9/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -435,6 +435,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.8/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.9/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
