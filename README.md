@@ -101,7 +101,8 @@ Assign a permission set to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sf org assign permset -n <value> -o <value> [--json] [--flags-dir <value>] [-b <value>] [--api-version <value>]
+  $ sf org assign permset -n <value>... -o <value> [--json] [--flags-dir <value>] [-b <value>...] [--api-version
+  <value>]
 
 FLAGS
   -b, --on-behalf-of=<value>...  Username or alias to assign the permission set to.
@@ -137,7 +138,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.11/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.12/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -145,7 +146,7 @@ Assign a permission set license to one or more users of a scratch org.
 
 ```
 USAGE
-  $ sf org assign permsetlicense -n <value> -o <value> [--json] [--flags-dir <value>] [-b <value>] [--api-version
+  $ sf org assign permsetlicense -n <value>... -o <value> [--json] [--flags-dir <value>] [-b <value>...] [--api-version
   <value>]
 
 FLAGS
@@ -183,7 +184,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.11/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.12/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -291,7 +292,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.11/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.12/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -330,7 +331,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.11/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.12/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -338,7 +339,7 @@ Generate a random password for scratch org users.
 
 ```
 USAGE
-  $ sf org generate password -o <value> [--json] [--flags-dir <value>] [-b <value>] [-l <value>] [-c <value>]
+  $ sf org generate password -o <value> [--json] [--flags-dir <value>] [-b <value>...] [-l <value>] [-c <value>]
     [--api-version <value>]
 
 FLAGS
@@ -397,7 +398,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.11/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.12/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -435,6 +436,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.11/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.5.12/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
