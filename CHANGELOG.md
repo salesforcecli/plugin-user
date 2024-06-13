@@ -1,3 +1,9 @@
+## [3.5.14](https://github.com/salesforcecli/plugin-user/compare/3.5.13...3.5.14) (2024-06-13)
+
+### Bug Fixes
+
+- **deps:** bump braces from 3.0.2 to 3.0.3 ([2e2fc68](https://github.com/salesforcecli/plugin-user/commit/2e2fc683df95eedc8d76cd78445ef4c8b1074c56))
+
 ## [3.5.13](https://github.com/salesforcecli/plugin-user/compare/3.5.12...3.5.13) (2024-06-09)
 
 ### Bug Fixes
