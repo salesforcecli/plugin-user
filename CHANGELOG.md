@@ -1,3 +1,9 @@
+## [3.5.16](https://github.com/salesforcecli/plugin-user/compare/3.5.15...3.5.16) (2024-06-20)
+
+### Bug Fixes
+
+- updates from devScripts ([#1011](https://github.com/salesforcecli/plugin-user/issues/1011)) ([66a5e5e](https://github.com/salesforcecli/plugin-user/commit/66a5e5ec76664489430bc5e6a22b81e4dcd35436))
+
 ## [3.5.15](https://github.com/salesforcecli/plugin-user/compare/3.5.14...3.5.15) (2024-06-16)
 
 ### Bug Fixes
