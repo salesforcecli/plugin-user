@@ -1075,15 +1075,7 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@inquirer/confirm@^3.1.11", "@inquirer/confirm@^3.1.9":
-  version "3.1.11"
-  resolved "https://registry.yarnpkg.com/@inquirer/confirm/-/confirm-3.1.11.tgz#7b91d1ec548253780165d6abfce02b0b21cfa5c5"
-  integrity sha512-3wWw10VPxQP279FO4bzWsf8YjIAq7NdwATJ4xS2h1uwsXZu/RmtOVV95rZ7yllS1h/dzu+uLewjMAzNDEj8h2w==
-  dependencies:
-    "@inquirer/core" "^8.2.4"
-    "@inquirer/type" "^1.3.3"
-
-"@inquirer/confirm@^3.1.14":
+"@inquirer/confirm@^3.1.11", "@inquirer/confirm@^3.1.14", "@inquirer/confirm@^3.1.9":
   version "3.1.14"
   resolved "https://registry.yarnpkg.com/@inquirer/confirm/-/confirm-3.1.14.tgz#b50a156f2cc0a6f874f2d2ab1739e988fbf950f4"
   integrity sha512-nbLSX37b2dGPtKWL3rPuR/5hOuD30S+pqJ/MuFiUEgN6GiMs8UMxiurKAMDzKt6C95ltjupa8zH6+3csXNHWpA==
@@ -1106,25 +1098,6 @@
     cli-spinners "^2.9.2"
     cli-width "^4.1.0"
     mute-stream "^1.0.0"
-    signal-exit "^4.1.0"
-    strip-ansi "^6.0.1"
-    wrap-ansi "^6.2.0"
-
-"@inquirer/core@^8.2.4":
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/@inquirer/core/-/core-8.2.4.tgz#300de755849d3166d15127e2341cef6aa4bd031d"
-  integrity sha512-7vsXSfxtrrbwMTirfaKwPcjqJy7pzeuF/bP62yo1NQrRJ5HjmMlrhZml/Ljm9ODc1RnbhJlTeSnCkjtFddKjwA==
-  dependencies:
-    "@inquirer/figures" "^1.0.3"
-    "@inquirer/type" "^1.3.3"
-    "@types/mute-stream" "^0.0.4"
-    "@types/node" "^20.14.9"
-    "@types/wrap-ansi" "^3.0.0"
-    ansi-escapes "^4.3.2"
-    cli-spinners "^2.9.2"
-    cli-width "^4.1.0"
-    mute-stream "^1.0.0"
-    picocolors "^1.0.1"
     signal-exit "^4.1.0"
     strip-ansi "^6.0.1"
     wrap-ansi "^6.2.0"
@@ -1533,10 +1506,10 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.9.0.tgz#ba477a112653a20b4edcf989c61c57bdff9aa3ca"
   integrity sha512-LiN37zG5ODT6z70sL1fxF7BQwtCX9JOWofSU8iliSNIM+WDEeinnoFtVqPInRSNt8I0RiJxIKCrqstsmQRBNvA==
 
-"@salesforce/sf-plugins-core@^11.1.2", "@salesforce/sf-plugins-core@^11.1.6":
-  version "11.1.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-11.1.6.tgz#4e423488af9ba85aba8af5954df6749dd406c0ae"
-  integrity sha512-yfKnyC4oyYPpVzQVWRHMhLq2mrUzayDIc7zajtOajPk+n+C8Lxsl9KKNB9oA5iQIVrAHf/R9cWVogqO2myKWgQ==
+"@salesforce/sf-plugins-core@^11.1.6", "@salesforce/sf-plugins-core@^11.1.7":
+  version "11.1.7"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-11.1.7.tgz#1af298d3ff6ff82e9944d614740de31b891c188e"
+  integrity sha512-Nj44Oh1jD9D0fcnqUzFPkRoorZT5LSZbdB141ONRN1SS1VmtLSfZ3QH3CKgBrE+Bj5W4byz/GYNjpT6cv3pmuA==
   dependencies:
     "@inquirer/confirm" "^3.1.14"
     "@inquirer/password" "^2.1.14"
@@ -1548,7 +1521,7 @@
     cli-progress "^3.12.0"
     natural-orderby "^3.0.2"
     slice-ansi "^7.1.0"
-    string-width "^7.1.0"
+    string-width "^7.2.0"
     terminal-link "^3.0.0"
 
 "@salesforce/ts-types@^2.0.10":
@@ -2484,12 +2457,7 @@ ansicolors@~0.3.2:
   resolved "https://registry.yarnpkg.com/ansicolors/-/ansicolors-0.3.2.tgz#665597de86a9ffe3aa9bfbe6cae5c6ea426b4979"
   integrity sha512-QXu7BPrP29VllRxH8GwB7x5iX5qWKAAMLqKQGWTeLWVlNHNOpVMJ91dsxQAIWXpjuW5wqvxu3Jd/nRjrJ+0pqg==
 
-ansis@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/ansis/-/ansis-3.2.0.tgz#0e050c5be94784f32ffdac4b84fccba064aeae4b"
-  integrity sha512-Yk3BkHH9U7oPyCN3gL5Tc7CpahG/+UFv/6UG03C311Vy9lzRmA5uoxDTpU9CO3rGHL6KzJz/pdDeXZCZ5Mu/Sg==
-
-ansis@^3.2.1:
+ansis@^3.2.0, ansis@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/ansis/-/ansis-3.2.1.tgz#abf2de690eb7a74fa4292edf82c7887bda5ee549"
   integrity sha512-SgzY+k2aa9UqJe3jzrPZhSVzLc2XrE4/h7rk0dMCDwhCq7ipmpPZvyODoxPCms4OpMLTiBTS+Mpl4VZQ6FDitw==
@@ -5910,11 +5878,6 @@ picocolors@^1.0.0:
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
   integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
 
-picocolors@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.1.tgz#a8ad579b571952f0e5d25892de5445bcfe25aaa1"
-  integrity sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==
-
 picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
@@ -6673,10 +6636,10 @@ string-width@^5.0.1, string-width@^5.1.2:
     emoji-regex "^9.2.2"
     strip-ansi "^7.0.1"
 
-string-width@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-7.1.0.tgz#d994252935224729ea3719c49f7206dc9c46550a"
-  integrity sha512-SEIJCWiX7Kg4c129n48aDRwLbFb2LJmXXFrWBG4NGaRtMQ3myKPKbwrD1BKqQn74oCoNMBVrfDEr5M9YxCsrkw==
+string-width@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-7.2.0.tgz#b5bb8e2165ce275d4d43476dd2700ad9091db6dc"
+  integrity sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ==
   dependencies:
     emoji-regex "^10.3.0"
     get-east-asian-width "^1.0.0"
