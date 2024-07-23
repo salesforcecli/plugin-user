@@ -12,6 +12,9 @@ import { ListUsersCommand } from '../../src/commands/org/list/users.js';
 
 const user1 = 'defaultusername@test.com';
 const user2 = 'otherUser@test.com';
+const instanceUrl = 'https://instanceURL.com';
+const loginUrl = 'https://login.test.com';
+
 const expected = [
   {
     defaultMarker: '(A)',
@@ -20,8 +23,8 @@ const expected = [
     profileName: 'System Administrator',
     orgId: 'abc123',
     accessToken: 'accessToken',
-    instanceUrl: 'instanceURL',
-    loginUrl: 'login.test.com',
+    instanceUrl,
+    loginUrl,
     userId: '0052D0000043PbGQAU',
   },
   {
@@ -31,8 +34,8 @@ const expected = [
     profileName: 'System Administrator',
     orgId: 'abc123',
     accessToken: 'accessToken',
-    instanceUrl: 'instanceURL',
-    loginUrl: 'login.test.com',
+    instanceUrl,
+    loginUrl,
     userId: '0052D0000043PcBQAU',
   },
 ];
@@ -45,8 +48,8 @@ describe('org:list:users', () => {
   user1Org.orgId = 'abc123';
   user1Org.aliases = ['testAlias'];
   user1Org.accessToken = 'accessToken';
-  user1Org.instanceUrl = 'instanceURL';
-  user1Org.loginUrl = 'login.test.com';
+  user1Org.instanceUrl = instanceUrl;
+  user1Org.loginUrl = loginUrl;
   user1Org.userId = '0052D0000043PbGQAU';
 
   const user2Org = new MockTestOrgData();
@@ -54,8 +57,8 @@ describe('org:list:users', () => {
   user2Org.orgId = 'abc123';
   user2Org.aliases = [];
   user2Org.accessToken = 'accessToken';
-  user2Org.instanceUrl = 'instanceURL';
-  user2Org.loginUrl = 'login.test.com';
+  user2Org.instanceUrl = instanceUrl;
+  user2Org.loginUrl = loginUrl;
   user2Org.userId = '0052D0000043PcBQAU';
 
   beforeEach(async () => {
@@ -72,8 +75,8 @@ describe('org:list:users', () => {
           username: user1,
           userProfileName: 'profileName',
           userId: '1234567890',
-          instanceUrl: 'instanceURL',
-          loginUrl: 'login.test.com',
+          instanceUrl,
+          loginUrl,
           accessToken: 'accessToken',
         }),
       },
@@ -83,8 +86,8 @@ describe('org:list:users', () => {
           username: user2,
           userProfileName: 'profileName',
           userId: '1234567890',
-          instanceUrl: 'instanceURL',
-          loginUrl: 'login.test.com',
+          instanceUrl,
+          loginUrl,
           accessToken: 'accessToken',
         }),
       },

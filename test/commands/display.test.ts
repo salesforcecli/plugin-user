@@ -11,7 +11,8 @@ import { expect } from 'chai';
 import { DisplayUserCommand } from '../../src/commands/org/display/user.js';
 
 const username = 'defaultusername@test.com';
-
+const instanceUrl = 'https://instance.my.salesforce.com';
+const loginUrl = 'https://test.salesforce.com';
 describe('org:display:user', () => {
   const $$ = new TestContext();
 
@@ -20,8 +21,8 @@ describe('org:display:user', () => {
   defaultOrg.orgId = 'abc123';
   defaultOrg.username = 'defaultusername@test.com';
   defaultOrg.userId = '1234567890';
-  defaultOrg.instanceUrl = 'instanceURL';
-  defaultOrg.loginUrl = 'login.test.com';
+  defaultOrg.instanceUrl = instanceUrl;
+  defaultOrg.loginUrl = loginUrl;
   defaultOrg.password = '-a098u234/1!@#';
 
   async function prepareStubs(queries = false) {
@@ -36,8 +37,8 @@ describe('org:display:user', () => {
             {
               getFields: () => ({
                 username: 'defaultusername@test.com',
-                instanceUrl: 'instanceURL',
-                loginUrl: 'login.test.com',
+                instanceUrl,
+                loginUrl,
               }),
             } as AuthInfo,
           ])
@@ -56,8 +57,8 @@ describe('org:display:user', () => {
                 username: 'defaultusername@test.com',
                 userProfileName: 'profileName',
                 userId: '1234567890',
-                instanceUrl: 'instanceURL',
-                loginUrl: 'login.test.com',
+                instanceUrl,
+                loginUrl,
                 password: '-a098u234/1!@#',
               }),
             } as AuthInfo,
@@ -73,8 +74,8 @@ describe('org:display:user', () => {
       accessToken: defaultOrg.accessToken,
       alias: 'testAlias',
       id: '1234567890',
-      instanceUrl: 'instanceURL',
-      loginUrl: 'login.test.com',
+      instanceUrl,
+      loginUrl,
       orgId: 'abc123',
       password: '-a098u234/1!@#',
       profileName: 'profileName',
@@ -91,8 +92,8 @@ describe('org:display:user', () => {
       accessToken: defaultOrg.accessToken,
       alias: 'testAlias',
       id: 'QueriedId',
-      instanceUrl: 'instanceURL',
-      loginUrl: 'login.test.com',
+      instanceUrl,
+      loginUrl,
       orgId: 'abc123',
       profileName: 'QueriedName',
       username: defaultOrg.username,
