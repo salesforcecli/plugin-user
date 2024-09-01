@@ -7,7 +7,7 @@
   "dependencies": {
     "@salesforce/core": "^8.4.0",
     "@salesforce/kit": "^3.2.1",
-    "@salesforce/sf-plugins-core": "^11.3.3",
+    "@salesforce/sf-plugins-core": "^11.3.6",
     "@salesforce/ts-types": "^2.0.11"
   },
   "devDependencies": {
