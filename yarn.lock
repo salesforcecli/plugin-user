@@ -1646,15 +1646,15 @@
   dependencies:
     "@salesforce/ts-types" "^2.0.12"
 
-"@salesforce/plugin-command-reference@^3.1.18":
-  version "3.1.18"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-3.1.18.tgz#638f9ad4bc08601a07d9f01980a61da8b160bf1b"
-  integrity sha512-Q21gZ6Tg10SVlk4nwqOjUmUtQ+Iom2/73QxSK3nwv1fIQlILF4qcLtvO+LlAYJajtMf+ItJLQSCrjbwneWZnaA==
+"@salesforce/plugin-command-reference@^3.1.20":
+  version "3.1.20"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-3.1.20.tgz#4cfb5a773d63219967ce6016bd8596af3338b867"
+  integrity sha512-SKLWcJR9HbRnrF2+PSrG7yGqBYEVa46I78pS4Nr8oy4yXG5RizTlWcHSPt2U2i5Mvhu70K7RDRNlm6vLWUbtjA==
   dependencies:
     "@oclif/core" "^4"
     "@salesforce/core" "^8.3.0"
     "@salesforce/kit" "^3.2.1"
-    "@salesforce/sf-plugins-core" "^11.3.2"
+    "@salesforce/sf-plugins-core" "^11.3.5"
     "@salesforce/ts-types" "^2.0.11"
     chalk "^5.3.0"
     debug "^4.3.6"
@@ -1670,7 +1670,7 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.9.0.tgz#ba477a112653a20b4edcf989c61c57bdff9aa3ca"
   integrity sha512-LiN37zG5ODT6z70sL1fxF7BQwtCX9JOWofSU8iliSNIM+WDEeinnoFtVqPInRSNt8I0RiJxIKCrqstsmQRBNvA==
 
-"@salesforce/sf-plugins-core@^11.3.2", "@salesforce/sf-plugins-core@^11.3.7":
+"@salesforce/sf-plugins-core@^11.3.5", "@salesforce/sf-plugins-core@^11.3.7":
   version "11.3.7"
   resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-11.3.7.tgz#2cf2d4bfff13d1900ae958bfc613f5d4957f5958"
   integrity sha512-aqOAYex3JGHUE/ECWpQuedEJXq00vJOqNr3VYF0Lp9OBAVn0AZZu10fzv+ww2hLDjA9dH782ZNqw/CiE0XKJlA==
