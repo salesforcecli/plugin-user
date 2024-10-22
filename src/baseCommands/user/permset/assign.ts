@@ -84,14 +84,13 @@ export abstract class UserPermSetAssignBaseCommand extends SfCommand<PermsetAssi
 
   private print(): void {
     if (this.failures.length > 0 && this.successes.length > 0) {
-      this.styledHeader('Permsets Assigned');
-      this.styledHeader('Partial Success');
       this.table({
         data: this.successes,
         columns: [
           { key: 'name', name: 'Username' },
           { key: 'value', name: 'Permission Set Assignment' },
         ],
+        title: 'Partial Success',
       });
       this.log('');
       this.table({
