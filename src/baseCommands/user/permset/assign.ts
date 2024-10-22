@@ -84,8 +84,8 @@ export abstract class UserPermSetAssignBaseCommand extends SfCommand<PermsetAssi
 
   private print(): void {
     if (this.failures.length > 0 && this.successes.length > 0) {
-      this.styledHeader('Partial Success');
       this.styledHeader('Permsets Assigned');
+      this.styledHeader('Partial Success');
       this.table({
         data: this.successes,
         columns: [
@@ -94,31 +94,31 @@ export abstract class UserPermSetAssignBaseCommand extends SfCommand<PermsetAssi
         ],
       });
       this.log('');
-      this.styledHeader('Failures');
       this.table({
         data: this.failures,
         columns: [
           { key: 'name', name: 'Username' },
           { key: 'message', name: 'Error Message' },
         ],
+        title: 'Failures',
       });
     } else if (this.successes.length > 0) {
-      this.styledHeader('Permsets Assigned');
       this.table({
         data: this.successes,
         columns: [
           { key: 'name', name: 'Username' },
           { key: 'value', name: 'Permission Set Assignment' },
         ],
+        title: 'Permsets Assigned',
       });
     } else if (this.failures.length > 0) {
-      this.styledHeader('Failures');
       this.table({
         data: this.failures,
         columns: [
           { key: 'name', name: 'Username' },
           { key: 'message', name: 'Error Message' },
         ],
+        title: 'Failures',
       });
     }
   }

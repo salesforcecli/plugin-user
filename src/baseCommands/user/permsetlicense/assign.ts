@@ -83,13 +83,13 @@ export const print = (results: PSLResult): void => {
     ux.styledHeader('Partial Success');
   }
   if (results.successes.length > 0) {
-    ux.styledHeader('Permset Licenses Assigned');
     ux.table({
       data: results.successes,
       columns: [
         { key: 'name', name: 'Username' },
         { key: 'value', name: 'Permission Set License Assignment' },
       ],
+      title: 'Permset Licenses Assigned',
     });
   }
 
@@ -97,13 +97,13 @@ export const print = (results: PSLResult): void => {
     if (results.successes.length > 0) {
       ux.log('');
     }
-    ux.styledHeader('Failures');
     ux.table({
       data: results.failures,
       columns: [
         { key: 'name', name: 'Username' },
         { key: 'message', name: 'Error Message' },
       ],
+      title: 'Failures',
     });
   }
 };
