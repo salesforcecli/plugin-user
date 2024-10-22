@@ -114,10 +114,8 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
   }
 
   private print(result: DisplayUserResult): void {
-    this.styledHeader('User Description');
-    this.table(
-      // to get proper capitalization and spacing, enter th e rows
-      [
+    this.table({
+      data: [
         { key: 'Username', label: result.username ?? 'unknown' },
         { key: 'Profile Name', label: result.profileName },
         { key: 'Id', label: result.id },
@@ -128,10 +126,7 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
         ...(result.alias ? [{ key: 'Alias', label: result.alias }] : []),
         ...(result.password ? [{ key: 'Password', label: result.password }] : []),
       ] satisfies Array<{ key: string; label: string }>,
-      {
-        key: { header: 'key' },
-        label: { header: 'label' },
-      }
-    );
+      title: 'User Description',
+    });
   }
 }

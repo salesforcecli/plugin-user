@@ -77,18 +77,16 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
         userId: userInfos.get(username)?.Id,
       };
     });
-
-    const columns = {
-      defaultMarker: { header: 'Default' },
-      alias: { header: 'Alias' },
-      username: { header: 'Username' },
-      profileName: { header: 'Profile Name' },
-      userId: { header: 'User Id' },
-    };
-
-    this.styledHeader(`Users in org ${flags['target-org']?.getOrgId()}`);
-    this.table(authList, columns);
-
+    this.table({
+      data: authList.map((authData) => ({
+        Default: authData.defaultMarker,
+        Alias: authData.alias,
+        Username: authData.username,
+        'Profile Name': authData.profileName,
+        'User Id': authData.userId,
+      })),
+      title: `Users in org ${flags['target-org']?.getOrgId()}`,
+    });
     return authList;
   }
 }

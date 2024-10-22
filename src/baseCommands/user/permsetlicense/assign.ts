@@ -28,7 +28,7 @@ export type PSLResult = {
 
 type PermissionSetLicense = {
   Id: string;
-}
+};
 
 export const assignPSL = async ({
   conn,
@@ -84,9 +84,12 @@ export const print = (results: PSLResult): void => {
   }
   if (results.successes.length > 0) {
     ux.styledHeader('Permset Licenses Assigned');
-    ux.table(results.successes, {
-      name: { header: 'Username' },
-      value: { header: 'Permission Set License Assignment' },
+    ux.table({
+      data: results.successes,
+      columns: [
+        { key: 'name', name: 'Username' },
+        { key: 'value', name: 'Permission Set License Assignment' },
+      ],
     });
   }
 
@@ -94,9 +97,14 @@ export const print = (results: PSLResult): void => {
     if (results.successes.length > 0) {
       ux.log('');
     }
-
     ux.styledHeader('Failures');
-    ux.table(results.failures, { name: { header: 'Username' }, message: { header: 'Error Message' } });
+    ux.table({
+      data: results.failures,
+      columns: [
+        { key: 'name', name: 'Username' },
+        { key: 'message', name: 'Error Message' },
+      ],
+    });
   }
 };
 
