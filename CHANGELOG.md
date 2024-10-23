@@ -1,3 +1,9 @@
+# [3.6.0](https://github.com/salesforcecli/plugin-user/compare/3.5.33...3.6.0) (2024-10-23)
+
+### Features
+
+- update table ([#1133](https://github.com/salesforcecli/plugin-user/issues/1133)) ([8e3975d](https://github.com/salesforcecli/plugin-user/commit/8e3975d1c065f39a5961d675c074d7e1908c3212))
+
 ## [3.5.33](https://github.com/salesforcecli/plugin-user/compare/3.5.32...3.5.33) (2024-10-13)
 
 ### Bug Fixes
