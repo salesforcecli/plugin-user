@@ -231,7 +231,13 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
       this.log(userCreatedSuccessMsg);
       this.log('');
       this.styledHeader('Failures');
-      this.table(this.failures, { name: { header: 'Action' }, message: { header: 'Error Message' } });
+      this.table({
+        data: this.failures,
+        columns: [
+          { key: 'name', name: 'Action' },
+          { key: 'message', name: 'Error Message' },
+        ],
+      });
     } else {
       this.log(userCreatedSuccessMsg);
     }
@@ -254,7 +260,7 @@ export type CreateUserOutput = {
   orgId: string;
   permissionSetAssignments: string[];
   fields: Record<string, unknown>;
-}
+};
 
 const lowerFirstLetter = (word: string): string => word[0].toLowerCase() + word.substr(1);
 

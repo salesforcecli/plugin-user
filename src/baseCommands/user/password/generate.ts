@@ -93,11 +93,13 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
       this.log(`${successMsg}${EOL}${viewMsg}`);
     } else {
       this.log(messages.getMessage('successMultiple', [EOL]));
-      const columnData = {
-        username: { header: 'USERNAME' },
-        password: { header: 'PASSWORD' },
-      };
-      this.table(passwordData, columnData);
+      this.table({
+        data: passwordData,
+        columns: [
+          { key: 'username', name: 'USERNAME' },
+          { key: 'password', name: 'PASSWORD' },
+        ],
+      });
     }
   }
 }
