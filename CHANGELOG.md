@@ -1,3 +1,9 @@
+## [3.6.3](https://github.com/salesforcecli/plugin-user/compare/3.6.2...3.6.3) (2024-11-17)
+
+### Bug Fixes
+
+- **deps:** bump cross-spawn from 7.0.3 to 7.0.5 ([f33b33a](https://github.com/salesforcecli/plugin-user/commit/f33b33ae4ce46c1e290883ca8c74523d87c6265c))
+
 ## [3.6.2](https://github.com/salesforcecli/plugin-user/compare/3.6.1...3.6.2) (2024-11-03)
 
 ### Bug Fixes
