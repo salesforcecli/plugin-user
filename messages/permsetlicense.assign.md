@@ -1,6 +1,6 @@
 # summary
 
-Assign a permission set license to one or more users of a scratch org.
+Assign a permission set license to one or more org users.
 
 # description
 
@@ -10,15 +10,15 @@ To assign multiple permission sets, either set multiple --name flags or a single
 
 # examples
 
-- Assign the DreamHouse permission set license to original admin user of your default scratch org:
+- Assign the DreamHouse permission set license to original admin user of your default org:
 
   <%= config.bin %> <%= command.id %> --name DreamHouse
 
-- Assign two permission set licenses to the original admin user of the scratch org with alias "my-scratch":
+- Assign two permission set licenses to the original admin user of the org with alias "my-scratch":
 
   <%= config.bin %> <%= command.id %> --name DreamHouse --name CloudHouse --target-org my-scratch
 
-- Assign the Dreamhouse permission set license to the specified list of users of your default scratch org:
+- Assign the Dreamhouse permission set license to the specified list of users of your default org:
 
   <%= config.bin %> <%= command.id %> --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user3
 
@@ -36,4 +36,4 @@ The user "%s" already has the Permission Set License "%s"
 
 # flags.target-org.summary
 
-Scratch org alias or login user.
+Username or alias of the target org. Not required if the `target-org` configuration variable is already set.
