@@ -1,6 +1,6 @@
 # summary
 
-Assign a permission set to one or more users of a scratch org.
+Assign a permission set to one or more org users.
 
 # description
 
@@ -16,29 +16,29 @@ To assign multiple permission sets, either set multiple --perm-set-name flags or
 
 # examples
 
-- Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
+- Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default org:
 
   <%= config.bin %> <%= command.id %> --name DreamHouse --name CloudHouse
 
-- Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
+- Assign the Dreamhouse permission set to the original admin user of the org with alias "my-scratch":
 
   <%= config.bin %> <%= command.id %> --name DreamHouse --target-org my-scratch
 
-- Assign the Dreamhouse permission set to the specified list of users of your default scratch org:
+- Assign the Dreamhouse permission set to the specified list of users of your default org:
 
   <%= config.bin %> <%= command.id %> --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 
 # examples.force
 
-- Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
+- Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default org:
 
   <%= config.bin %> <%= command.id %> --perm-set-name DreamHouse --perm-set-name CloudHouse
 
-- Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
+- Assign the Dreamhouse permission set to the original admin user of the org with alias "my-scratch":
 
   <%= config.bin %> <%= command.id %> --perm-set-name DreamHouse --target-org my-scratch
 
-- Assign the Dreamhouse permission set to the specified list of users of your default scratch org:
+- Assign the Dreamhouse permission set to the specified list of users of your default org:
 
   <%= config.bin %> <%= command.id %> --perm-set-name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 
@@ -52,4 +52,4 @@ Permission set to assign.
 
 # flags.target-org.summary
 
-Scratch org alias or login user.
+Username or alias of the target org. Not required if the `target-org` configuration variable is already set.
