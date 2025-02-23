@@ -97,7 +97,7 @@ For more NUT options and examples, see <https://github.com/salesforcecli/cli-plu
 
 ## `sf org assign permset`
 
-Assign a permission set to one or more users of a scratch org.
+Assign a permission set to one or more org users.
 
 ```
 USAGE
@@ -107,7 +107,8 @@ USAGE
 FLAGS
   -b, --on-behalf-of=<value>...  Username or alias to assign the permission set to.
   -n, --name=<value>...          (required) Permission set to assign.
-  -o, --target-org=<value>       (required) Scratch org alias or login user.
+  -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
+                                 configuration variable is already set.
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
@@ -115,7 +116,7 @@ GLOBAL FLAGS
   --json               Format output as json.
 
 DESCRIPTION
-  Assign a permission set to one or more users of a scratch org.
+  Assign a permission set to one or more org users.
 
   To specify an alias for the --target-org or --on-behalf-of flags, use the CLI username alias, such as the one you set
   with the "alias set" command. Don't use the value of the Alias field of the User Salesforce object for the org user.
@@ -125,24 +126,24 @@ DESCRIPTION
   --on-behalf-of.
 
 EXAMPLES
-  Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default scratch org:
+  Assign two permission sets called DreamHouse and CloudHouse to original admin user of your default org:
 
     $ sf org assign permset --name DreamHouse --name CloudHouse
 
-  Assign the Dreamhouse permission set to the original admin user of the scratch org with alias "my-scratch":
+  Assign the Dreamhouse permission set to the original admin user of the org with alias "my-scratch":
 
     $ sf org assign permset --name DreamHouse --target-org my-scratch
 
-  Assign the Dreamhouse permission set to the specified list of users of your default scratch org:
+  Assign the Dreamhouse permission set to the specified list of users of your default org:
 
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.9/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.10/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
-Assign a permission set license to one or more users of a scratch org.
+Assign a permission set license to one or more org users.
 
 ```
 USAGE
@@ -152,7 +153,8 @@ USAGE
 FLAGS
   -b, --on-behalf-of=<value>...  Usernames or alias to assign the permission set license to.
   -n, --name=<value>...          (required) Name of the permission set license to assign.
-  -o, --target-org=<value>       (required) Scratch org alias or login user.
+  -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
+                                 configuration variable is already set.
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
@@ -160,7 +162,7 @@ GLOBAL FLAGS
   --json               Format output as json.
 
 DESCRIPTION
-  Assign a permission set license to one or more users of a scratch org.
+  Assign a permission set license to one or more org users.
 
   To specify an alias for the --target-org or --on-behalf-of flags, use the CLI username alias, such as the one you set
   with the "alias set" command. Don't use the value of the Alias field of the User Salesforce object for the org user.
@@ -170,21 +172,21 @@ DESCRIPTION
   --on-behalf-of.
 
 EXAMPLES
-  Assign the DreamHouse permission set license to original admin user of your default scratch org:
+  Assign the DreamHouse permission set license to original admin user of your default org:
 
     $ sf org assign permsetlicense --name DreamHouse
 
-  Assign two permission set licenses to the original admin user of the scratch org with alias "my-scratch":
+  Assign two permission set licenses to the original admin user of the org with alias "my-scratch":
 
     $ sf org assign permsetlicense --name DreamHouse --name CloudHouse --target-org my-scratch
 
-  Assign the Dreamhouse permission set license to the specified list of users of your default scratch org:
+  Assign the Dreamhouse permission set license to the specified list of users of your default org:
 
     $ sf org assign permsetlicense --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of \
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.9/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.10/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -292,7 +294,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.9/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.10/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -331,7 +333,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.9/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.10/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -398,7 +400,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.9/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.10/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -436,6 +438,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.9/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.10/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->

@@ -1,3 +1,9 @@
+## [3.6.10](https://github.com/salesforcecli/plugin-user/compare/3.6.9...3.6.10) (2025-02-23)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.8.2 to 8.8.3 ([8ea0a14](https://github.com/salesforcecli/plugin-user/commit/8ea0a14616d58fba85ed80a279c83ddc89794904))
+
 ## [3.6.9](https://github.com/salesforcecli/plugin-user/compare/3.6.8...3.6.9) (2025-02-09)
 
 ### Bug Fixes
