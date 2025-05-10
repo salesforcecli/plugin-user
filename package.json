@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-user",
   "description": "Commands to interact with Users and Permission Sets",
-  "version": "3.6.20",
+  "version": "3.6.21",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
