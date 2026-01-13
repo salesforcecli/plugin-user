@@ -1,3 +1,9 @@
+## [3.6.45](https://github.com/salesforcecli/plugin-user/compare/3.6.44...3.6.45) (2026-01-13)
+
+### Bug Fixes
+
+- typo and licenses ([1a0016b](https://github.com/salesforcecli/plugin-user/commit/1a0016b65120f2a6c0911bdc9e2d59c57e906b7c))
+
 ## [3.6.44](https://github.com/salesforcecli/plugin-user/compare/3.6.43...3.6.44) (2025-12-07)
 
 ### Bug Fixes

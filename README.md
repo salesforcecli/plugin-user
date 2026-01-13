@@ -139,7 +139,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.44/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.45/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -186,7 +186,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.44/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.45/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -218,7 +218,7 @@ DESCRIPTION
 
   The easiest way to create a user is to let this command assign default or generated characteristics to the new user.
   If you want to customize your new user, create a definition file and specify it with the --definition-file flag. In
-  the file, you can include all the User sObject (SSalesforce object) fields and Salesforce DX-specific options, as
+  the file, you can include all the User sObject (Salesforce object) fields and Salesforce DX-specific options, as
   described in "User Definition File for Customizing a Scratch Org User"
   (https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm).
   You can also specify these options on the command line.
@@ -294,7 +294,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.44/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.45/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -333,7 +333,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.44/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.45/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -400,7 +400,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.44/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.45/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -438,6 +438,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.44/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.45/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
