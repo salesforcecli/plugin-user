@@ -25,9 +25,9 @@ To see a password that was previously generated, run "org display user".
 
   <%= config.bin %> <%= command.id %>
 
-- Generate a password that contains 12 characters for the original admin user of the scratch org with alias "my-scratch":
+- Generate a password that contains 25 characters for the original admin user of the scratch org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --length 12 --target-org my-scratch
+  <%= config.bin %> <%= command.id %> --length 25 --target-org my-scratch
 
 - Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
 
@@ -43,7 +43,7 @@ Comma-separated list of usernames or aliases to assign the password to; must hav
 
 # flags.length.summary
 
-Number of characters in the generated password; valid values are between 8 and 100.
+Number of characters in the generated password; valid values are between 20 and 100. Default value is 20.
 
 # flags.complexity.summary
 
@@ -65,6 +65,10 @@ version 51.0 of the Metadata API.
   add EnableSetPasswordInApi as a feature. For example:
 - "features": ["EnableSetPasswordInApi"]
 - Then try creating the scratch org again.
+
+# defaultingToLength20Password
+
+Starting in Summer '26, passwords of length below 20 will be explicitly rejected. For now, generating a password of length 20 instead of the requested length.
 
 # scratchFeaturesUrl
 

@@ -43,7 +43,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
       summary: messages.getMessage('flags.length.summary'),
       min: 8,
       max: 1000,
-      default: 13,
+      default: 20,
     }),
     // the higher the value, the stronger the password
     complexity: Flags.integer({
