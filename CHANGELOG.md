@@ -1,3 +1,9 @@
+## [3.6.51](https://github.com/salesforcecli/plugin-user/compare/3.6.50...3.6.51) (2026-02-17)
+
+### Bug Fixes
+
+- enable PDP events via o11y for PFT ([4352266](https://github.com/salesforcecli/plugin-user/commit/4352266383221a8e5315be20da0b39b7f344c146))
+
 ## [3.6.50](https://github.com/salesforcecli/plugin-user/compare/3.6.49...3.6.50) (2026-02-15)
 
 ### Bug Fixes
