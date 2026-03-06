@@ -132,7 +132,7 @@ describe('verifies all commands run successfully ', () => {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // testing default length
-    expect(output?.password?.length).to.equal(13);
+    expect(output?.password?.length).to.equal(20);
     const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[\\]_-])');
     // testing default complexity
     expect(complexity5Regex.test(output?.password ?? '')).to.be.true;
@@ -142,7 +142,8 @@ describe('verifies all commands run successfully ', () => {
     const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 11 -c 3', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
-    expect(output?.password.length).to.equal(11);
+    // Password length gets overridden to 20
+    expect(output?.password.length).to.equal(20);
     const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
     expect(complexity3Regex.test(output?.password ?? ''));
   });
@@ -157,7 +158,8 @@ describe('verifies all commands run successfully ', () => {
       ensureExitCode: 0,
     }).jsonOutput?.result;
 
-    expect(output?.password.length).to.equal(12);
+    // Password length overridden to 20
+    expect(output?.password.length).to.equal(20);
     const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[\\]_-])');
     // testing the default complexity
     expect(complexity5Regex.test(output?.password ?? ''));
@@ -168,7 +170,7 @@ describe('verifies all commands run successfully ', () => {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // testing default length
-    expect(output?.password.length).to.equal(13);
+    expect(output?.password.length).to.equal(20);
     const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
     expect(complexity3Regex.test(output?.password ?? ''));
   });

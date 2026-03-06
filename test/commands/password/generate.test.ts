@@ -16,6 +16,7 @@
 
 import { Connection, Messages, User } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
+import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import { assert, expect } from 'chai';
 // dirty import to stub something we don't want to export from sfdx-core
 import { SecureBuffer } from '../../../node_modules/@salesforce/core/lib/crypto/secureBuffer.js';
@@ -83,16 +84,44 @@ describe('org:generate:password', () => {
     expect(result).to.deep.equal(expected);
     expect(queryStub.callCount).to.equal(1);
   });
-  it('should generate a new passsword of length 12', async () => {
-    await prepareStubs(false, false);
-    const result = (await GenerateUserPasswordCommand.run([
-      '--target-org',
-      testOrg.username,
-      '-l',
-      '12',
-      '--json',
-    ])) as PasswordData;
-    expect(result.password.length).to.equal(12);
+
+  describe('--length handling', () => {
+    it('when no length is specified, password should default to length 20', async () => {
+      await prepareStubs(false, false);
+      const result = (await GenerateUserPasswordCommand.run([
+        '--target-org',
+        testOrg.username,
+        '--json',
+      ])) as PasswordData;
+
+      expect(result.password.length).to.equal(20);
+    });
+
+    it('when length <20 is specified, logs info-level message and defaults to 20', async () => {
+      await prepareStubs(false, false);
+      const uxStubs = stubSfCommandUx($$.SANDBOX);
+      const result = (await GenerateUserPasswordCommand.run([
+        '--target-org',
+        testOrg.username,
+        '--length',
+        '12',
+        '--json',
+      ])) as PasswordData;
+      expect(result.password.length).to.equal(20);
+      expect(uxStubs.info.args.flat()).to.include(messages.getMessage('defaultingToLength20Password'));
+    });
+
+    it('when length >20 is specified, length is used as-is', async () => {
+      await prepareStubs(false, false);
+      const result = (await GenerateUserPasswordCommand.run([
+        '--target-org',
+        testOrg.username,
+        '--length',
+        '50',
+        '--json',
+      ])) as PasswordData;
+      expect(result.password.length).to.equal(50);
+    });
   });
   it('should throw the correct error with warning message', async () => {
     await prepareStubs(true);
