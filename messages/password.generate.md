@@ -68,7 +68,7 @@ version 51.0 of the Metadata API.
 
 # defaultingToLength20Password
 
-Starting in Summer '26, passwords of length below 20 will be explicitly rejected. For now, generating a password of length 20 instead of the requested length.
+Starting in Summer '26, this command will fail if you specify a password length below 20. For now, the command is generating a password of length 20 instead of the requested length.
 
 # scratchFeaturesUrl
 
