@@ -135,7 +135,7 @@ describe('verifies legacy force commands run successfully ', () => {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // testing default length
-    expect(output?.password?.length).to.equal(13);
+    expect(output?.password?.length).to.equal(20);
     const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[\\]_-])');
     // testing default complexity
     expect(complexity5Regex.test(output?.password ?? '')).to.be.true;
@@ -177,7 +177,7 @@ describe('verifies legacy force commands run successfully ', () => {
       }
     ).jsonOutput?.result;
     // testing default length
-    expect(output?.password.length).to.equal(13);
+    expect(output?.password.length).to.equal(20);
     const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
     expect(complexity3Regex.test(output?.password ?? ''));
   });
