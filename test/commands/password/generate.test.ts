@@ -108,7 +108,7 @@ describe('org:generate:password', () => {
         '--json',
       ])) as PasswordData;
       expect(result.password.length).to.equal(20);
-      expect(uxStubs.info.args.flat()).to.include(messages.getMessage('defaultingToLength20Password'));
+      expect(uxStubs.warn.args.flat()).to.include(messages.getMessage('defaultingToLength20Password'));
     });
 
     it('when length >20 is specified, length is used as-is', async () => {

@@ -68,7 +68,7 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
     const { flags } = await this.parse(GenerateUserPasswordCommand);
     let length: number = flags.length;
     if (length < 20) {
-      this.info(messages.getMessage('defaultingToLength20Password'));
+      this.warn(messages.getMessage('defaultingToLength20Password'));
       length = 20;
     }
     return this.generate({
