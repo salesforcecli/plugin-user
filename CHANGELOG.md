@@ -1,3 +1,15 @@
+# [3.7.0](https://github.com/salesforcecli/plugin-user/compare/3.6.53...3.7.0) (2026-03-11)
+
+### Bug Fixes
+
+- implementing feedback @W-21055697@ ([f0a1bb7](https://github.com/salesforcecli/plugin-user/commit/f0a1bb7c740be612005d3a3aa4d5c5db2ddb03a6))
+
+### Features
+
+- adjusted message per feedback @W-21055697@ ([f47005d](https://github.com/salesforcecli/plugin-user/commit/f47005d1e98b442a4d5fb12e1e6851309fb863f7))
+- fixing broken NUTs @W-21055697@ ([1bb1937](https://github.com/salesforcecli/plugin-user/commit/1bb193753da15c60db15f5eee0b001d652485772))
+- generated passwords default to 20 if unspecified or a lower value is provided @W-21055697@ ([ab1fc71](https://github.com/salesforcecli/plugin-user/commit/ab1fc71b795ed576750eebf3a293dabec659a170))
+
 ## [3.6.53](https://github.com/salesforcecli/plugin-user/compare/3.6.52...3.6.53) (2026-03-01)
 
 ### Bug Fixes

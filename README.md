@@ -139,7 +139,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.53/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.7.0/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -186,7 +186,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.53/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.7.0/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -294,7 +294,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.53/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.7.0/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -333,7 +333,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.53/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.7.0/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -349,8 +349,8 @@ FLAGS
                                  created locally with the "org create user" command.
   -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
                                  stronger the password.
-  -l, --length=<value>           [default: 13] Number of characters in the generated password; valid values are between
-                                 8 and 100.
+  -l, --length=<value>           [default: 20] Number of characters in the generated password; valid values are between
+                                 20 and 100. Default value is 20.
   -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
                                  configuration variable is already set.
       --api-version=<value>      Override the api version used for api requests made by this command
@@ -385,10 +385,10 @@ EXAMPLES
 
     $ sf org generate password
 
-  Generate a password that contains 12 characters for the original admin user of the scratch org with alias
+  Generate a password that contains 25 characters for the original admin user of the scratch org with alias
   "my-scratch":
 
-    $ sf org generate password --length 12 --target-org my-scratch
+    $ sf org generate password --length 25 --target-org my-scratch
 
   Generate a password for your default scratch org admin user that uses lower and upper case letters and numbers only:
 
@@ -400,7 +400,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.53/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.7.0/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -438,6 +438,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.6.53/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.7.0/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
