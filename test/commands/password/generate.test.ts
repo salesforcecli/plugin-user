@@ -85,6 +85,105 @@ describe('org:generate:password', () => {
     expect(queryStub.callCount).to.equal(1);
   });
 
+  describe('--complexity handling', () => {
+    const digitArray: string[] = '0123456789'.split('');
+    const upperArray: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const lowerArray: string[] = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const symbolArray: string[] = '!@#$|%^&*()[]_-'.split('');
+
+    it('when no complexity is specified, password should default to complexity 5', async () => {
+      await prepareStubs(false, false);
+      const result = (await GenerateUserPasswordCommand.run([
+        '--target-org',
+        testOrg.username,
+        '--json',
+      ])) as PasswordData;
+
+      const passwordAsCharArray: string[] = result.password.split('');
+
+      expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+        true,
+        'complexity 5 passwords have digits'
+      );
+      expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+        true,
+        'complexity 5 passwords have uppercase chars'
+      );
+      expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+        true,
+        'complexity 5 passwords have lowercase chars'
+      );
+      expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+        true,
+        'complexity 5 passwords have symbols'
+      );
+    });
+
+    it('when complexity <3 is specified, logs warn-level message and defaults to 3', async () => {
+      await prepareStubs(false, false);
+      const uxStubs = stubSfCommandUx($$.SANDBOX);
+      const result = (await GenerateUserPasswordCommand.run([
+        '--target-org',
+        testOrg.username,
+        '--complexity',
+        '2',
+        '--json',
+      ])) as PasswordData;
+
+      const passwordAsCharArray: string[] = result.password.split('');
+
+      expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+        true,
+        'complexity 3 passwords have digits'
+      );
+      expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+        true,
+        'complexity 3 passwords have uppercase chars'
+      );
+      expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+        true,
+        'complexity 3 passwords have lowercase chars'
+      );
+      expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+        false,
+        'complexity 3 passwords do not have symbols'
+      );
+      expect(uxStubs.warn.args.flat()).to.include(messages.getMessage('defaultingToComplexity3Password'));
+    });
+
+    it('when complexity >=3 is specified, complexity is used as-is', async () => {
+      await prepareStubs(false, false);
+      const uxStubs = stubSfCommandUx($$.SANDBOX);
+      const result = (await GenerateUserPasswordCommand.run([
+        '--target-org',
+        testOrg.username,
+        '--complexity',
+        '4',
+        '--json',
+      ])) as PasswordData;
+
+      const passwordAsCharArray: string[] = result.password.split('');
+
+      expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+        false,
+        'complexity 4 passwords do not have digits'
+      );
+      expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+        true,
+        'complexity 4 passwords have uppercase chars'
+      );
+      expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+        true,
+        'complexity 4 passwords have lowercase chars'
+      );
+      expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+        true,
+        'complexity 4 passwords have symbols'
+      );
+      expect(uxStubs.warn.args.flat()).to.have.length(0, 'no warnings expected');
+    });
+  });
+
   describe('--length handling', () => {
     it('when no length is specified, password should default to length 20', async () => {
       await prepareStubs(false, false);
@@ -97,7 +196,7 @@ describe('org:generate:password', () => {
       expect(result.password.length).to.equal(20);
     });
 
-    it('when length <20 is specified, logs info-level message and defaults to 20', async () => {
+    it('when length <20 is specified, logs warn-level message and defaults to 20', async () => {
       await prepareStubs(false, false);
       const uxStubs = stubSfCommandUx($$.SANDBOX);
       const result = (await GenerateUserPasswordCommand.run([
