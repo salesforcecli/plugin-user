@@ -70,6 +70,10 @@ version 51.0 of the Metadata API.
 
 Starting in Summer '26, this command will fail if you specify a password length below 20. For now, the command is generating a password of length 20 instead of the requested length.
 
+# defaultingToComplexity3Password
+
+Starting in Summer '26, this command will fail if you specify a password complexity below 3. For now, the command is generating a password of complexity 3 instead of the requested complexity.
+
 # scratchFeaturesUrl
 
 see https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_def_file_config_values.htm
