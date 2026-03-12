@@ -71,10 +71,15 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
       this.warn(messages.getMessage('defaultingToLength20Password'));
       length = 20;
     }
+    let complexity: number = flags.complexity;
+    if (complexity < 3) {
+      this.warn(messages.getMessage('defaultingToComplexity3Password'));
+      complexity = 3;
+    }
     return this.generate({
       usernames: ensureArray(flags['on-behalf-of'] ?? flags['target-org'].getUsername()),
       length,
-      complexity: flags.complexity,
+      complexity,
       conn: flags['target-org'].getConnection(flags['api-version']),
     });
   }
