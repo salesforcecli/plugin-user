@@ -1,3 +1,14 @@
+# [3.8.0](https://github.com/salesforcecli/plugin-user/compare/3.7.1...3.8.0) (2026-03-19)
+
+### Bug Fixes
+
+- fixed broken NUT @W-21055675@ ([4e9e275](https://github.com/salesforcecli/plugin-user/commit/4e9e275c066737f9710dfb7e0ddc07d5e20a1021))
+
+### Features
+
+- generated passwords default to complexity 3 if a lower value is provided @W-21055675@ ([d60a92b](https://github.com/salesforcecli/plugin-user/commit/d60a92b34f3c385f3e283a1f6dce44b49cf3abc6))
+- updated dependency on salesforce/core @W-21055675@ ([adbd8fb](https://github.com/salesforcecli/plugin-user/commit/adbd8fb1b692bf87cb0834a0b765d368f395daf4))
+
 ## [3.7.1](https://github.com/salesforcecli/plugin-user/compare/3.7.0...3.7.1) (2026-03-15)
 
 ### Bug Fixes
