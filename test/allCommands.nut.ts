@@ -159,7 +159,7 @@ describe('verifies all commands run successfully ', () => {
   });
 
   it('generates new passwords for main user testing length 11 and complexity 5', () => {
-    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 11 -c 3', {
+    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 11 -c 5', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // Password length gets overridden to 20
