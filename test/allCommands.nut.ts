@@ -30,6 +30,11 @@ let session: TestSession;
 
 let mainUserId: string | undefined;
 
+const digitArray: string[] = '0123456789'.split('');
+const upperArray: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const lowerArray: string[] = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const symbolArray: string[] = '!@#$|%^&*()[]_-'.split('');
+
 describe('verifies all commands run successfully ', () => {
   before(async () => {
     session = await TestSession.create({
@@ -133,19 +138,49 @@ describe('verifies all commands run successfully ', () => {
     }).jsonOutput?.result;
     // testing default length
     expect(output?.password?.length).to.equal(20);
-    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[\\]_-])');
     // testing default complexity
-    expect(complexity5Regex.test(output?.password ?? '')).to.be.true;
+    const passwordAsCharArray = (output?.password ?? '').split('');
+    expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have digits'
+    );
+    expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have uppercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have lowercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have symbols'
+    );
   });
 
   it('generates new passwords for main user testing length 11 and complexity 5', () => {
-    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 11 -c 3', {
+    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 11 -c 5', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // Password length gets overridden to 20
     expect(output?.password.length).to.equal(20);
-    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
-    expect(complexity3Regex.test(output?.password ?? ''));
+    const passwordAsCharArray = (output?.password ?? '').split('');
+    expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have digits'
+    );
+    expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have uppercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have lowercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have symbols'
+    );
   });
 
   it('generates new password for secondary user (onbehalfof)', () => {
@@ -160,9 +195,24 @@ describe('verifies all commands run successfully ', () => {
 
     // Password length overridden to 20
     expect(output?.password.length).to.equal(20);
-    const complexity5Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$|%^&*()[\\]_-])');
     // testing the default complexity
-    expect(complexity5Regex.test(output?.password ?? ''));
+    const passwordAsCharArray = (output?.password ?? '').split('');
+    expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have digits'
+    );
+    expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have uppercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have lowercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+      true,
+      'complexity 5 passwords have symbols'
+    );
   });
 
   it('generates new password for secondary user (onbehalfof) with complexity 3', () => {
@@ -171,8 +221,23 @@ describe('verifies all commands run successfully ', () => {
     }).jsonOutput?.result;
     // testing default length
     expect(output?.password.length).to.equal(20);
-    const complexity3Regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
-    expect(complexity3Regex.test(output?.password ?? ''));
+    const passwordAsCharArray = (output?.password ?? '').split('');
+    expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
+      true,
+      'complexity 3 passwords have digits'
+    );
+    expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
+      true,
+      'complexity 3 passwords have uppercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
+      true,
+      'complexity 3 passwords have lowercase chars'
+    );
+    expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
+      false,
+      'complexity 3 passwords do not have symbols'
+    );
   });
 
   it('generates new password for secondary user (onbehalfof) with complexity 7 should thrown an error', () => {
