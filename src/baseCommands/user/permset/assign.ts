@@ -27,6 +27,13 @@ type SuccessMsg = {
 type FailureMsg = {
   name: string;
   message: string;
+  details?: ErrorDetail[];
+};
+
+type ErrorDetail = {
+  message: string;
+  errorCode?: string;
+  fields: string[];
 };
 
 export type PermsetAssignResult = {
@@ -67,9 +74,50 @@ export abstract class UserPermSetAssignBaseCommand extends SfCommand<PermsetAssi
             });
           } catch (e) {
             const err = e as SfError;
+            let errorMessage = err.message;
+            let errorDetails: FailureMsg['details'];
+
+            // Check if there are multiple errors in the data property.
+            if (Array.isArray(err.data)) {
+              // Extract structured error details from each error object
+              errorDetails = err.data
+                .map((d: unknown): ErrorDetail | undefined => {
+                  if (typeof d !== 'object' || d === null) {
+                    return undefined;
+                  }
+                  const details = d as {
+                    message?: unknown;
+                    errorCode?: unknown;
+                    fields?: unknown;
+                  };
+                  const msgDetails = details.message;
+                  if (typeof msgDetails !== 'string') {
+                    return undefined;
+                  }
+                  const errorCodeDetails = details.errorCode;
+                  const fieldsDetails = details.fields;
+                  const fields = Array.isArray(fieldsDetails)
+                    ? fieldsDetails.filter((field): field is string => typeof field === 'string')
+                    : [];
+                  return {
+                    message: msgDetails,
+                    errorCode: typeof errorCodeDetails === 'string' ? errorCodeDetails : undefined,
+                    fields,
+                  };
+                })
+                .filter((detail): detail is ErrorDetail => Boolean(detail));
+
+              if (errorDetails.length > 1) {
+                // Keep table output concise and expose structured details in JSON output.
+                errorMessage = 'Multiple errors occurred. See JSON output for details.';
+              } else if (errorDetails.length === 1) {
+                errorMessage = errorDetails[0].message;
+              }
+            }
             this.failures.push({
               name: aliasOrUsername,
-              message: err.message,
+              message: errorMessage,
+              ...(errorDetails?.length ? { details: errorDetails } : {}),
             });
           }
         }
