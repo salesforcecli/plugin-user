@@ -1,3 +1,9 @@
+## [3.8.2](https://github.com/salesforcecli/plugin-user/compare/3.8.1...3.8.2) (2026-03-27)
+
+### Bug Fixes
+
+- improve json output with multiple errors ([b7d7bb6](https://github.com/salesforcecli/plugin-user/commit/b7d7bb6cab7c0d5c4e2042fc023892c5aa219060))
+
 ## [3.8.1](https://github.com/salesforcecli/plugin-user/compare/3.8.0...3.8.1) (2026-03-27)
 
 ### Bug Fixes
