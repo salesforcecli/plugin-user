@@ -1,3 +1,9 @@
+## [3.8.3](https://github.com/salesforcecli/plugin-user/compare/3.8.2...3.8.3) (2026-04-05)
+
+### Bug Fixes
+
+- **deps:** bump lodash from 4.17.23 to 4.18.1 ([ef1c82f](https://github.com/salesforcecli/plugin-user/commit/ef1c82f68531586f526ba049bcdcaa98c86935c2))
+
 ## [3.8.2](https://github.com/salesforcecli/plugin-user/compare/3.8.1...3.8.2) (2026-03-27)
 
 ### Bug Fixes
