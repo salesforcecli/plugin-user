@@ -197,6 +197,9 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
         } else if (key.toLowerCase() === 'profilename') {
           // @ts-expect-error standardize profileName casing
           defaultFields['profileName'] = this.varargs[key];
+        } else if (key.toLowerCase() === 'roledevelopername') {
+          // @ts-expect-error standardize roleDeveloperName casing
+          defaultFields['roleDeveloperName'] = this.varargs[key];
         } else {
           // @ts-expect-error all other varargs are left "as is"
           defaultFields[lowerFirstLetter(key)] = this.varargs[key];
@@ -218,6 +221,18 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
         .getConnection(this.flags['api-version'])
         .singleRecordQuery<{ Id: string }>(`SELECT id FROM profile WHERE name='${name}'`);
       defaultFields.profileId = profile.Id;
+    }
+
+    // @ts-expect-error check if "roleDeveloperName" was passed, this needs to become a userRoleId before calling User.create
+    if (defaultFields['roleDeveloperName']) {
+      // @ts-expect-error roleDeveloperName is not a valid field on UserFields
+      const devName = defaultFields['roleDeveloperName'] as string;
+      logger.debug(`Querying org for user role name [${devName}]`);
+      const userRole = await this.flags['target-org']
+        .getConnection(this.flags['api-version'])
+        .singleRecordQuery<{ Id: string }>(`SELECT id FROM userrole WHERE developername='${devName}'`);
+      // @ts-expect-error userRoleId is an optional field therefore not defined on UserFields
+      defaultFields['userRoleId'] = userRole.Id;
     }
 
     return defaultFields;
@@ -280,7 +295,7 @@ const lowerFirstLetter = (word: string): string => word[0].toLowerCase() + word.
  * @private
  */
 const stripInvalidAPIFields = (fields: UserFields & Dictionary<string>): UserFields =>
-  omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName']);
+  omit(fields, ['permsets', 'generatepassword', 'generatePassword', 'profileName', 'roleDeveloperName']);
 
 const getNewUserAuthInfo = async (
   targetOrgUser: User,

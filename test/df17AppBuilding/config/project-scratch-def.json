@@ -4,6 +4,7 @@
   "edition": "Developer",
   "description": "nuts for plugin-user",
   "features": ["EnableSetPasswordInApi", "AnalyticsAppEmbedded", "DataMaskUser"],
+  "language": "en_US",
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true

@@ -157,7 +157,9 @@ describe('org:create:user', () => {
     }
 
     if (readsFile) {
-      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery').resolves({ Id: '12345678' });
+      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery')
+      .withArgs('SELECT id FROM profile WHERE name=\'profileFromArgs\'').resolves({ Id: '12345678' })
+      .withArgs('SELECT id FROM userrole WHERE developername=\'roleFromArgs\'').resolves({ Id: '87654321' })
       $$.SANDBOX.stub(Logger.prototype, 'debug');
       if (typeof readsFile !== 'boolean') {
         const fsStub = $$.SANDBOX.stub(fs.promises, 'readFile');
