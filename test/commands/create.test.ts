@@ -157,7 +157,9 @@ describe('org:create:user', () => {
     }
 
     if (readsFile) {
-      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery').resolves({ Id: '12345678' });
+      $$.SANDBOXES.CONNECTION.stub(Connection.prototype, 'singleRecordQuery')
+      .withArgs('SELECT id FROM profile WHERE name=\'profileFromArgs\'').resolves({ Id: '12345678' })
+      .withArgs('SELECT id FROM userrole WHERE developername=\'roleFromArgs\'').resolves({ Id: '87654321' })
       $$.SANDBOX.stub(Logger.prototype, 'debug');
       if (typeof readsFile !== 'boolean') {
         const fsStub = $$.SANDBOX.stub(fs.promises, 'readFile');
@@ -426,6 +428,20 @@ describe('org:create:user', () => {
         expect(e.name).to.equal('duplicateUsername');
         expect(e.message).to.equal(
           'The username "1605130295132_test-j6asqt5qoprs@example.com" already exists in this or another Salesforce org. Usernames must be unique across all Salesforce orgs. Try using the --set-unique-username flag to force a unique username by appending the org ID.'
+        );
+      }
+    });
+    
+    it('will handle a failed `createUser` call with a InvalidRoleDeveloperName error', async () => {
+      await prepareStubs({}, true);
+      try {
+        await CreateUserCommand.run(['--json', '--target-org', testOrg.username,'roleDeveloperName=_Invalid_Role']);
+        expect.fail('should have thrown an error');
+      } catch (e) {
+        assert(e instanceof Error);
+        expect(e.name).to.equal('InvalidRoleDeveloperNameError');
+        expect(e.message).to.equal(
+          'Invalid roleDeveloperName: "_Invalid_Role". Must start with a letter and contain only alphanumeric characters or single underscores, with no double or final underscores.'
         );
       }
     });

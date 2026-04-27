@@ -47,3 +47,7 @@ node_modules
 # os specific files
 .DS_Store
 .idea
+
+# exclude sfdx and sf config files
+.sf 
+.sfdx
