@@ -1,3 +1,13 @@
+# [3.9.0](https://github.com/salesforcecli/plugin-user/compare/3.8.4...3.9.0) (2026-04-27)
+
+### Bug Fixes
+
+- avoid possible sql injection in userrole query ([d567bb3](https://github.com/salesforcecli/plugin-user/commit/d567bb3e603f928cb0f963f1876928b86277196e))
+
+### Features
+
+- allow assigning developer role during user creation ([ea3adf2](https://github.com/salesforcecli/plugin-user/commit/ea3adf290390e681319ca4cfaff8d01a05da31cf))
+
 ## [3.8.4](https://github.com/salesforcecli/plugin-user/compare/3.8.3...3.8.4) (2026-04-26)
 
 ### Bug Fixes
