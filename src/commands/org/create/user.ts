@@ -227,6 +227,9 @@ export class CreateUserCommand extends SfCommand<CreateUserOutput> {
     if (defaultFields['roleDeveloperName']) {
       // @ts-expect-error roleDeveloperName is not a valid field on UserFields
       const devName = defaultFields['roleDeveloperName'] as string;
+      if (!/^[a-z](?!.*__)(?!.*_$)\w*$/i.test(devName)) {
+        throw messages.createError('error.invalidRoleDeveloperName', [devName]);                                    
+      }  
       logger.debug(`Querying org for user role name [${devName}]`);
       const userRole = await this.flags['target-org']
         .getConnection(this.flags['api-version'])

@@ -431,5 +431,19 @@ describe('org:create:user', () => {
         );
       }
     });
+    
+    it('will handle a failed `createUser` call with a InvalidRoleDeveloperName error', async () => {
+      await prepareStubs({}, true);
+      try {
+        await CreateUserCommand.run(['--json', '--target-org', testOrg.username,'roleDeveloperName=_Invalid_Role']);
+        expect.fail('should have thrown an error');
+      } catch (e) {
+        assert(e instanceof Error);
+        expect(e.name).to.equal('InvalidRoleDeveloperNameError');
+        expect(e.message).to.equal(
+          'Invalid roleDeveloperName: "_Invalid_Role". Must start with a letter and contain only alphanumeric characters or single underscores, with no double or final underscores.'
+        );
+      }
+    });
   });
 });
