@@ -78,36 +78,47 @@ describe('org:display:user', () => {
 
   it('should display the correct information from the default user', async () => {
     await prepareStubs();
-    // testUser1@test.com is aliased to testUser
-    const expected = {
-      accessToken: defaultOrg.accessToken,
-      alias: 'testAlias',
-      id: '1234567890',
-      instanceUrl,
-      loginUrl,
-      orgId: 'abc123',
-      password: '-a098u234/1!@#',
-      profileName: 'profileName',
-      username: 'defaultusername@test.com',
-    };
     const result = await DisplayUserCommand.run(['--json', '--target-org', defaultOrg.username]);
-    expect(result).to.deep.equal(expected);
+    expect(result.accessToken).to.include('[REDACTED]');
+    expect(result.password).to.include('[REDACTED]');
+    expect(result.alias).to.equal('testAlias');
+    expect(result.id).to.equal('1234567890');
+    expect(result.instanceUrl).to.equal(instanceUrl);
+    expect(result.loginUrl).to.equal(loginUrl);
+    expect(result.orgId).to.equal('abc123');
+    expect(result.profileName).to.equal('profileName');
+    expect(result.username).to.equal('defaultusername@test.com');
   });
 
   it('should make queries to the server to get userId and profileName', async () => {
     await prepareStubs(true);
-    // testUser1@test.com is aliased to testUser
-    const expected = {
-      accessToken: defaultOrg.accessToken,
-      alias: 'testAlias',
-      id: 'QueriedId',
-      instanceUrl,
-      loginUrl,
-      orgId: 'abc123',
-      profileName: 'QueriedName',
-      username: defaultOrg.username,
-    };
     const result = await DisplayUserCommand.run(['--json', '--targetusername', 'defaultusername@test.com']);
-    expect(result).to.deep.equal(expected);
+    expect(result.accessToken).to.include('[REDACTED]');
+    expect(result.alias).to.equal('testAlias');
+    expect(result.id).to.equal('QueriedId');
+    expect(result.instanceUrl).to.equal(instanceUrl);
+    expect(result.loginUrl).to.equal(loginUrl);
+    expect(result.orgId).to.equal('abc123');
+    expect(result.profileName).to.equal('QueriedName');
+    expect(result.username).to.equal(defaultOrg.username);
+  });
+
+  describe('secret redaction WITH env var (SF_TEMP_SHOW_SECRETS)', () => {
+    const SHOW_TOKENS_ENV = 'SF_TEMP_SHOW_SECRETS';
+
+    beforeEach(() => {
+      process.env[SHOW_TOKENS_ENV] = 'true';
+    });
+
+    afterEach(() => {
+      delete process.env[SHOW_TOKENS_ENV];
+    });
+
+    it('shows the real access token and password', async () => {
+      await prepareStubs();
+      const result = await DisplayUserCommand.run(['--json', '--target-org', defaultOrg.username]);
+      expect(result.accessToken).to.equal(defaultOrg.accessToken);
+      expect(result.password).to.equal('-a098u234/1!@#');
+    });
   });
 });

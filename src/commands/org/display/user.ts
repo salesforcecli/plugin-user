@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
+import { AuthFields, Connection, envVars, Logger, Messages, StateAggregator } from '@salesforce/core';
 import { ensureString } from '@salesforce/ts-types';
 import {
   loglevel,
@@ -25,6 +25,7 @@ import {
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'display');
+const secretsMessages = Messages.loadMessages('@salesforce/plugin-user', 'secrets-redacted');
 
 export type DisplayUserResult = {
   username: string;
@@ -95,8 +96,13 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
       );
     }
 
+    // TODO: Remove env var workaround
+    const showSecretsEnvVarIsSet = envVars.getBoolean('SF_TEMP_SHOW_SECRETS', false);
+    const accessTokenRedacted = secretsMessages.getMessage('redacted.accessToken');
+    const passwordRedacted = secretsMessages.getMessage('redacted.userPassword');
+
     const result: DisplayUserResult = {
-      accessToken: conn.accessToken as string,
+      accessToken: showSecretsEnvVarIsSet ? (conn.accessToken as string) : accessTokenRedacted,
       id: userId,
       instanceUrl: userAuthData?.instanceUrl,
       loginUrl: userAuthData?.loginUrl,
@@ -112,10 +118,16 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
     }
 
     if (userAuthData?.password) {
-      result.password = userAuthData.password;
+      result.password = showSecretsEnvVarIsSet ? userAuthData.password : passwordRedacted;
     }
 
-    this.warn(messages.getMessage('securityWarning'));
+    if (showSecretsEnvVarIsSet) {
+      this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org display user']));
+      this.warn(messages.getMessage('securityWarning'));
+    } else {
+      this.warn(secretsMessages.getMessage('temp.envVarWorkaround', ['sf org display user']));
+    }
+
     this.log('');
     this.print(result);
 
