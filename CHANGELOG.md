@@ -1,3 +1,9 @@
+# [3.10.0](https://github.com/salesforcecli/plugin-user/compare/3.9.6...3.10.0) (2026-05-19)
+
+### Features
+
+- remove sensitive output ([5d40391](https://github.com/salesforcecli/plugin-user/commit/5d403916214fd8cb8f08b45de08e1a934b97cd3a))
+
 ## [3.9.6](https://github.com/salesforcecli/plugin-user/compare/3.9.5...3.9.6) (2026-05-17)
 
 ### Bug Fixes

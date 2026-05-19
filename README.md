@@ -139,7 +139,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.9.6/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/3.10.0/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -186,7 +186,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.9.6/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/3.10.0/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -294,7 +294,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.9.6/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.10.0/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -316,9 +316,8 @@ GLOBAL FLAGS
 DESCRIPTION
   Display information about a Salesforce user.
 
-  Output includes the profile name, org ID, access token, instance URL, login URL, and alias if applicable. The
-  displayed alias is local and different from the Alias field of the User sObject record of the new user, which you set
-  in the Setup UI.
+  Output includes the profile name, org ID, instance URL, login URL, and alias if applicable. The displayed alias is
+  local and different from the Alias field of the User sObject record of the new user, which you set in the Setup UI.
 
 ALIASES
   $ sf force user display
@@ -333,7 +332,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.9.6/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/3.10.0/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -378,7 +377,7 @@ DESCRIPTION
   4 - lower and upper case letters and symbols only
   5 - lower and upper case letters and numbers and symbols only
 
-  To see a password that was previously generated, run "org display user".
+  To see a password that was previously generated, run "org auth show-user-password".
 
 EXAMPLES
   Generate a password for the original admin user of your default scratch org:
@@ -400,7 +399,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.9.6/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/3.10.0/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -438,6 +437,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.9.6/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/3.10.0/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->
