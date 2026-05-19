@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Connection, Messages, StateAggregator } from '@salesforce/core';
+import { Connection, envVars, Messages, StateAggregator } from '@salesforce/core';
 import {
   loglevel,
   orgApiVersionFlagWithDeprecations,
@@ -24,6 +24,7 @@ import {
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'list');
+const secretsMessages = Messages.loadMessages('@salesforce/plugin-user', 'secrets-redacted');
 
 export type AuthList = Partial<{
   defaultMarker: string;
@@ -68,6 +69,10 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
       (await StateAggregator.getInstance()).aliases,
     ]);
 
+    // TODO: Remove env var workaround
+    const showSecretsEnvVarIsSet = envVars.getBoolean('SF_TEMP_SHOW_SECRETS', false);
+    const accessTokenRedacted = secretsMessages.getMessage('redacted.accessToken');
+
     const authList: ListUsers = userAuthData.map((authData) => {
       const username = authData.getUsername();
       // if they passed in an alias see if it maps to an Alias.
@@ -80,7 +85,7 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
         username,
         profileName,
         orgId: flags['target-org']?.getOrgId(),
-        accessToken: authData.getFields().accessToken,
+        accessToken: showSecretsEnvVarIsSet ? authData.getFields().accessToken : accessTokenRedacted,
         instanceUrl: authData.getFields().instanceUrl,
         loginUrl: authData.getFields().loginUrl,
         userId: userInfos.get(username)?.Id,
@@ -96,6 +101,16 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
       })),
       title: `Users in org ${flags['target-org']?.getOrgId()}`,
     });
+
+    // TODO: Remove after env var workaround is removed
+    if (this.jsonEnabled()) {
+      if (showSecretsEnvVarIsSet) {
+        this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org list users']));
+      } else {
+        this.warn(secretsMessages.getMessage('temp.envVarWorkaround', ['sf org list users']));
+      }
+    }
+
     return authList;
   }
 }

@@ -180,7 +180,9 @@ describe('org:generate:password', () => {
         true,
         'complexity 4 passwords have symbols'
       );
-      expect(uxStubs.warn.args.flat()).to.have.length(0, 'no warnings expected');
+      const warnCalls = uxStubs.warn.args.flat();
+      expect(warnCalls).to.have.length(1, 'only the password security warning expected');
+      expect(warnCalls[0]).to.include('password');
     });
   });
 
@@ -232,5 +234,11 @@ describe('org:generate:password', () => {
       expect(result.message).to.equal(messages.getMessage('noSelfSetError'));
       expect(result.name).to.equal('NoSelfSetError');
     }
+  });
+
+  it('viewWithCommand message references org auth show-user-password', () => {
+    const viewMsg = messages.getMessage('viewWithCommand', ['sf', 'testuser@example.com']);
+    expect(viewMsg).to.include('org auth show-user-password');
+    expect(viewMsg).to.not.include('org display user');
   });
 });

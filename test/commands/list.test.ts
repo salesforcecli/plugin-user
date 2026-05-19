@@ -31,7 +31,7 @@ const expected = [
     username: user1,
     profileName: 'System Administrator',
     orgId: 'abc123',
-    accessToken: 'accessToken',
+    accessToken: "[REDACTED] Use 'sf org auth show-access-token' to view",
     instanceUrl,
     loginUrl,
     userId: '0052D0000043PbGQAU',
@@ -42,7 +42,7 @@ const expected = [
     username: user2,
     profileName: 'System Administrator',
     orgId: 'abc123',
-    accessToken: 'accessToken',
+    accessToken: "[REDACTED] Use 'sf org auth show-access-token' to view",
     instanceUrl,
     loginUrl,
     userId: '0052D0000043PcBQAU',
@@ -149,5 +149,23 @@ describe('org:list:users', () => {
   it('should display the correct information invoked by name', async () => {
     const result = await ListUsersCommand.run(['--json', '--target-org', user1]);
     expect(result).to.deep.equal(expected);
+  });
+
+  describe('secret redaction WITH env var (SF_TEMP_SHOW_SECRETS)', () => {
+    const SHOW_TOKENS_ENV = 'SF_TEMP_SHOW_SECRETS';
+
+    beforeEach(() => {
+      process.env[SHOW_TOKENS_ENV] = 'true';
+    });
+
+    afterEach(() => {
+      delete process.env[SHOW_TOKENS_ENV];
+    });
+
+    it('shows real access tokens when env var is set', async () => {
+      const result = await ListUsersCommand.run(['--json', '--target-org', user1]);
+      expect(result[0].accessToken).to.equal('accessToken');
+      expect(result[1].accessToken).to.equal('accessToken');
+    });
   });
 });

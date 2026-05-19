@@ -20,6 +20,7 @@ import { AuthInfo, Connection, Messages, Org, SfError, StateAggregator, User } f
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-user', 'password.generate');
+const secretsMessages = Messages.loadMessages('@salesforce/plugin-user', 'secrets-redacted');
 
 export type PasswordData = {
   username?: string;
@@ -90,6 +91,7 @@ export abstract class UserPasswordGenerateBaseCommand extends SfCommand<Generate
     }
     /* eslint-enable no-await-in-loop */
 
+    this.warn(secretsMessages.getMessage('warning.passwordGenerated'));
     this.print(passwordData);
 
     return passwordData.length === 1 ? passwordData[0] : passwordData;

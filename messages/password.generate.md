@@ -17,7 +17,7 @@ To change the password strength, set the --complexity flag to a value between 0 
 4 - lower and upper case letters and symbols only
 5 - lower and upper case letters and numbers and symbols only
 
-To see a password that was previously generated, run "org display user".
+To see a password that was previously generated, run "org auth show-user-password".
 
 # examples
 
@@ -88,7 +88,7 @@ Successfully set passwords:%s
 
 # viewWithCommand
 
-You can see the password again by running "%s org display user -o %s".
+You can see the password again by running "%s org auth show-user-password -o %s".
 
 # flags.target-org.summary
 
