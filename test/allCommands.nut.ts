@@ -68,7 +68,7 @@ describe('verifies all commands run successfully ', () => {
 
     expect(output?.result.orgId).to.have.length(18);
     expect(output?.result.id).to.have.length(18);
-    expect(output?.result?.accessToken?.startsWith(output?.result.orgId.substr(0, 15))).to.be.true;
+    expect(output?.result?.accessToken).to.include('[REDACTED]');
     mainUserId = output?.result.id;
   });
 
