@@ -1,3 +1,9 @@
+## [3.10.1](https://github.com/salesforcecli/plugin-user/compare/3.10.0...3.10.1) (2026-05-24)
+
+### Bug Fixes
+
+- **deps:** bump ws from 8.19.0 to 8.21.0 ([dd27bf2](https://github.com/salesforcecli/plugin-user/commit/dd27bf2d9b998ea3499f7cf16e4ecb3271505215))
+
 # [3.10.0](https://github.com/salesforcecli/plugin-user/compare/3.9.6...3.10.0) (2026-05-19)
 
 ### Features
