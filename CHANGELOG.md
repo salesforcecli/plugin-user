@@ -1,3 +1,9 @@
+## [3.10.5](https://github.com/salesforcecli/plugin-user/compare/3.10.4...3.10.5) (2026-07-14)
+
+### Bug Fixes
+
+- working to fix HyperForce compatibility (W-23389352) ([8050751](https://github.com/salesforcecli/plugin-user/commit/8050751c7c5ecfcbb71bf08d4021d640e7f6e84d))
+
 ## [3.10.4](https://github.com/salesforcecli/plugin-user/compare/3.10.3...3.10.4) (2026-06-18)
 
 ### Bug Fixes
