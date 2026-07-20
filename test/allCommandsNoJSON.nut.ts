@@ -27,7 +27,7 @@ describe('verifies all commands run successfully (no json)', () => {
         // destinationDir: projectPath,
         sourceDir: join('test', 'df17AppBuilding'),
       },
-      devhubAuthStrategy: 'AUTO',
+      devhubAuthStrategy: 'AUTH_URL',
       scratchOrgs: [
         {
           setDefault: true,

@@ -41,7 +41,7 @@ describe('verifies legacy force commands run successfully ', () => {
       project: {
         sourceDir: join('test', 'df17AppBuilding'),
       },
-      devhubAuthStrategy: 'AUTO',
+      devhubAuthStrategy: 'AUTH_URL',
       scratchOrgs: [
         {
           setDefault: true,
