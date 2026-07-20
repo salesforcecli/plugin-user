@@ -1,3 +1,9 @@
+## [3.10.7](https://github.com/salesforcecli/plugin-user/compare/3.10.6...3.10.7) (2026-07-20)
+
+### Bug Fixes
+
+- forcing NUTs to use sfdx-auth-url ([e1d510a](https://github.com/salesforcecli/plugin-user/commit/e1d510a5d46c2a4c3aea68e4c3a55052c15f7312))
+
 ## [3.10.6](https://github.com/salesforcecli/plugin-user/compare/3.10.5...3.10.6) (2026-07-16)
 
 ### Bug Fixes
