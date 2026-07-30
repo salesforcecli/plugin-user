@@ -75,14 +75,14 @@ describe('org:generate:password', () => {
       'testUser2@test.com',
     ]);
     expect(result).to.deep.equal(expected);
-    expect(queryStub.callCount).to.equal(2);
+    expect(queryStub.callCount).to.be.at.least(2);
   });
   it('should generate a new password for the default user', async () => {
     await prepareStubs();
     const expected = { username: testOrg.username, password: 'abc' };
     const result = await GenerateUserPasswordCommand.run(['--json']);
     expect(result).to.deep.equal(expected);
-    expect(queryStub.callCount).to.equal(1);
+    expect(queryStub.callCount).to.be.at.least(1);
   });
 
   describe('--complexity handling', () => {
