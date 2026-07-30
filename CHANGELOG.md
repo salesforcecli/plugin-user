@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/salesforcecli/plugin-user/compare/3.10.9...4.0.0) (2026-07-30)
+
+### Bug Fixes
+
+- relax query callCount assertions for core 9 compatibility ([bf73d58](https://github.com/salesforcecli/plugin-user/commit/bf73d58723931049003430d22574f0ef75c4de90))
+
+- feat!: require Node >=22, drop EOL Node versions @W-23480655@ ([f5d7198](https://github.com/salesforcecli/plugin-user/commit/f5d71984e99ce7049de0bab8fd1ca404c48786b1))
+
+### BREAKING CHANGES
+
+- engines.node raised to >=22.0.0, dropping support for Node 18 and 20
+
 ## [3.10.9](https://github.com/salesforcecli/plugin-user/compare/3.10.8...3.10.9) (2026-07-25)
 
 ### Bug Fixes
