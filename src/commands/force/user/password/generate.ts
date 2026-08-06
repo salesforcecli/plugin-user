@@ -49,7 +49,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
     complexity: Flags.integer({
       char: 'c',
       summary: messages.getMessage('flags.complexity.summary'),
-      min: 0,
+      min: 3,
       max: 5,
       default: 5,
     }),

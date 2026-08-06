@@ -119,36 +119,15 @@ describe('org:generate:password', () => {
       );
     });
 
-    it('when complexity <3 is specified, logs warn-level message and defaults to 3', async () => {
+    it('when complexity <3 is specified, throws a validation error', async () => {
       await prepareStubs(false, false);
-      const uxStubs = stubSfCommandUx($$.SANDBOX);
-      const result = (await GenerateUserPasswordCommand.run([
-        '--target-org',
-        testOrg.username,
-        '--complexity',
-        '2',
-        '--json',
-      ])) as PasswordData;
-
-      const passwordAsCharArray: string[] = result.password.split('');
-
-      expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
-        true,
-        'complexity 3 passwords have digits'
-      );
-      expect(passwordAsCharArray.some((c) => upperArray.includes(c))).to.equal(
-        true,
-        'complexity 3 passwords have uppercase chars'
-      );
-      expect(passwordAsCharArray.some((c) => lowerArray.includes(c))).to.equal(
-        true,
-        'complexity 3 passwords have lowercase chars'
-      );
-      expect(passwordAsCharArray.some((c) => symbolArray.includes(c))).to.equal(
-        false,
-        'complexity 3 passwords do not have symbols'
-      );
-      expect(uxStubs.warn.args.flat()).to.include(messages.getMessage('defaultingToComplexity3Password'));
+      try {
+        await GenerateUserPasswordCommand.run(['--target-org', testOrg.username, '--complexity', '2', '--json']);
+        expect.fail('should have thrown an error');
+      } catch (result) {
+        assert(result instanceof Error);
+        expect(result.message).to.include('Expected an integer greater than or equal to 3');
+      }
     });
 
     it('when complexity >=3 is specified, complexity is used as-is', async () => {
