@@ -41,7 +41,7 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
     length: Flags.integer({
       char: 'l',
       summary: messages.getMessage('flags.length.summary'),
-      min: 8,
+      min: 20,
       max: 1000,
       default: 20,
     }),

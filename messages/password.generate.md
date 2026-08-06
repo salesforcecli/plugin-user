@@ -43,7 +43,7 @@ Comma-separated list of usernames or aliases to assign the password to; must hav
 
 # flags.length.summary
 
-Number of characters in the generated password; valid values are between 20 and 100. Default value is 20.
+Number of characters in the generated password; valid values are between 20 and 1000. Default value is 20.
 
 # flags.complexity.summary
 
@@ -65,10 +65,6 @@ version 51.0 of the Metadata API.
   add EnableSetPasswordInApi as a feature. For example:
 - "features": ["EnableSetPasswordInApi"]
 - Then try creating the scratch org again.
-
-# defaultingToLength20Password
-
-Starting in Summer '26, this command will fail if you specify a password length below 20. For now, the command is generating a password of length 20 instead of the requested length.
 
 # defaultingToComplexity3Password
 

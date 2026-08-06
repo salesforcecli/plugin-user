@@ -48,7 +48,7 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
     length: Flags.integer({
       char: 'l',
       summary: messages.getMessage('flags.length.summary'),
-      min: 8,
+      min: 20,
       max: 1000,
       default: 20,
     }),
@@ -66,11 +66,7 @@ export class GenerateUserPasswordCommand extends UserPasswordGenerateBaseCommand
 
   public async run(): Promise<GenerateResult> {
     const { flags } = await this.parse(GenerateUserPasswordCommand);
-    let length: number = flags.length;
-    if (length < 20) {
-      this.warn(messages.getMessage('defaultingToLength20Password'));
-      length = 20;
-    }
+    const length: number = flags.length;
     let complexity: number = flags.complexity;
     if (complexity < 3) {
       this.warn(messages.getMessage('defaultingToComplexity3Password'));

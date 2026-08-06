@@ -198,18 +198,15 @@ describe('org:generate:password', () => {
       expect(result.password.length).to.equal(20);
     });
 
-    it('when length <20 is specified, logs warn-level message and defaults to 20', async () => {
+    it('when length <20 is specified, throws a validation error', async () => {
       await prepareStubs(false, false);
-      const uxStubs = stubSfCommandUx($$.SANDBOX);
-      const result = (await GenerateUserPasswordCommand.run([
-        '--target-org',
-        testOrg.username,
-        '--length',
-        '12',
-        '--json',
-      ])) as PasswordData;
-      expect(result.password.length).to.equal(20);
-      expect(uxStubs.warn.args.flat()).to.include(messages.getMessage('defaultingToLength20Password'));
+      try {
+        await GenerateUserPasswordCommand.run(['--target-org', testOrg.username, '--length', '12', '--json']);
+        expect.fail('should have thrown an error');
+      } catch (result) {
+        assert(result instanceof Error);
+        expect(result.message).to.include('Expected an integer greater than or equal to 20');
+      }
     });
 
     it('when length >20 is specified, length is used as-is', async () => {
