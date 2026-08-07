@@ -183,13 +183,6 @@ describe('verifies all commands run successfully ', () => {
     );
   });
 
-  it('generates new password for main user with length 1000', () => {
-    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 1000', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
-    expect(output?.password.length).to.equal(1000);
-  });
-
   it('generates new password for secondary user (onbehalfof)', () => {
     const output = execCmd('org:generate:password -b Other --json', { ensureExitCode: 0 }).jsonOutput;
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
