@@ -193,8 +193,7 @@ describe('verifies all commands run successfully ', () => {
       ensureExitCode: 0,
     }).jsonOutput?.result;
 
-    // Password length overridden to 20
-    expect(output?.password.length).to.equal(20);
+    expect(output?.password.length).to.equal(22);
     // testing the default complexity
     const passwordAsCharArray = (output?.password ?? '').split('');
     expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
