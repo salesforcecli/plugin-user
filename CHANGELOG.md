@@ -1,3 +1,9 @@
+## [4.0.3](https://github.com/salesforcecli/plugin-user/compare/4.0.2...4.0.3) (2026-08-09)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/ts-types from 3.0.0 to 3.0.1 ([e2e66ab](https://github.com/salesforcecli/plugin-user/commit/e2e66abb70b9b9187de3e73399f53d6892d3e274))
+
 ## [4.0.2](https://github.com/salesforcecli/plugin-user/compare/4.0.1...4.0.2) (2026-08-09)
 
 ### Bug Fixes
