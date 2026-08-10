@@ -1,3 +1,15 @@
+## [4.0.3](https://github.com/salesforcecli/plugin-user/compare/4.0.2...4.0.3) (2026-08-09)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/ts-types from 3.0.0 to 3.0.1 ([e2e66ab](https://github.com/salesforcecli/plugin-user/commit/e2e66abb70b9b9187de3e73399f53d6892d3e274))
+
+## [4.0.2](https://github.com/salesforcecli/plugin-user/compare/4.0.1...4.0.2) (2026-08-09)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 9.0.0 to 9.1.0 ([92e789e](https://github.com/salesforcecli/plugin-user/commit/92e789e7b1c1a62b463d892dcc675996a902e4df))
+
 ## [4.0.1](https://github.com/salesforcecli/plugin-user/compare/4.0.0...4.0.1) (2026-08-06)
 
 ### Bug Fixes
