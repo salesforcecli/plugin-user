@@ -158,8 +158,8 @@ describe('verifies all commands run successfully ', () => {
     );
   });
 
-  it('generates new passwords for main user testing length 11 and complexity 5', () => {
-    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 11 -c 5', {
+  it('generates new passwords for main user testing length 20 and complexity 5', () => {
+    const output = execCmd<{ username: string; password: string }>('org:generate:password --json -l 20 -c 5', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     // Password length gets overridden to 20
@@ -188,13 +188,12 @@ describe('verifies all commands run successfully ', () => {
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
-  it('generates new password for secondary user (onbehalfof) with length 12', () => {
-    const output = execCmd<{ username: string; password: string }>('org:generate:password -b Other --json -l 12', {
+  it('generates new password for secondary user (onbehalfof) with length 22', () => {
+    const output = execCmd<{ username: string; password: string }>('org:generate:password -b Other --json -l 22', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
 
-    // Password length overridden to 20
-    expect(output?.password.length).to.equal(20);
+    expect(output?.password.length).to.equal(22);
     // testing the default complexity
     const passwordAsCharArray = (output?.password ?? '').split('');
     expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
@@ -246,7 +245,7 @@ describe('verifies all commands run successfully ', () => {
   });
   it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
     const output = execCmd('org:generate:password -b Other --json -l 7', { ensureExitCode: 'nonZero' }).jsonOutput;
-    expect(output?.message).to.include('Expected an integer greater than or equal to 8 but received: 7');
+    expect(output?.message).to.include('Expected an integer greater than or equal to 20 but received: 7');
   });
   it('assigns 2 permsets to the main user', () => {
     const output = execCmd<PermsetAssignResult>('org:assign:permset -n PS2 -n PS3 --json', {

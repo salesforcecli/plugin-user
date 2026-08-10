@@ -8,11 +8,8 @@ By default, new scratch orgs contain one admin user with no password. Use this c
 
 You can also use the --on-behalf-of flag to generate a password for a scratch org user that you've created locally with the "org create user" command. This command doesn't work for users you created in the scratch org using Setup.
 
-To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types of characters used in the generated password:
+To change the password strength, set the --complexity flag to a value between 3 and 5. Each value specifies the types of characters used in the generated password:
 
-0 - lower case letters only
-1 - lower case letters and numbers only
-2 - lower case letters and symbols only
 3 - lower and upper case letters and numbers only
 4 - lower and upper case letters and symbols only
 5 - lower and upper case letters and numbers and symbols only
@@ -43,7 +40,7 @@ Comma-separated list of usernames or aliases to assign the password to; must hav
 
 # flags.length.summary
 
-Number of characters in the generated password; valid values are between 20 and 100. Default value is 20.
+Number of characters in the generated password; valid values are between 20 and 1000. Default value is 20.
 
 # flags.complexity.summary
 
@@ -65,14 +62,6 @@ version 51.0 of the Metadata API.
   add EnableSetPasswordInApi as a feature. For example:
 - "features": ["EnableSetPasswordInApi"]
 - Then try creating the scratch org again.
-
-# defaultingToLength20Password
-
-Starting in Summer '26, this command will fail if you specify a password length below 20. For now, the command is generating a password of length 20 instead of the requested length.
-
-# defaultingToComplexity3Password
-
-Starting in Summer '26, this command will fail if you specify a password complexity below 3. For now, the command is generating a password of complexity 3 instead of the requested complexity.
 
 # scratchFeaturesUrl
 

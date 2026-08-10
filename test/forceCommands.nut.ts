@@ -161,11 +161,11 @@ describe('verifies legacy force commands run successfully ', () => {
     );
   });
 
-  it('generates new password for main user testing length 11 and complexity 3', () => {
-    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json -l 11 -c 3', {
+  it('generates new password for main user testing length 20 and complexity 3', () => {
+    const output = execCmd<{ username: string; password: string }>('force:user:password:generate --json -l 20 -c 3', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
-    expect(output?.password.length).to.equal(11);
+    expect(output?.password.length).to.equal(20);
     const passwordAsCharArray = (output?.password ?? '').split('');
     expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
       true,
@@ -190,15 +190,15 @@ describe('verifies legacy force commands run successfully ', () => {
     expect(output).to.have.property('result').includes.keys(['username', 'password']);
   });
 
-  it('generates new password for secondary user (onbehalfof) with length 12', () => {
+  it('generates new password for secondary user (onbehalfof) with length 30', () => {
     const output = execCmd<{ username: string; password: string }>(
-      'force:user:password:generate -o Other --json -l 12',
+      'force:user:password:generate -o Other --json -l 30',
       {
         ensureExitCode: 0,
       }
     ).jsonOutput?.result;
 
-    expect(output?.password.length).to.equal(12);
+    expect(output?.password.length).to.equal(30);
     // testing the default complexity
     const passwordAsCharArray = (output?.password ?? '').split('');
     expect(passwordAsCharArray.some((c) => digitArray.includes(c))).to.equal(
@@ -253,11 +253,17 @@ describe('verifies legacy force commands run successfully ', () => {
     }).jsonOutput;
     expect(output?.message).to.include('Expected an integer less than or equal to 5 but received: 7');
   });
+  it('generates new password for secondary user (onbehalfof) with complexity 2 should thrown an error', () => {
+    const output = execCmd('force:user:password:generate -o Other --json -c 2', {
+      ensureExitCode: 'nonZero',
+    }).jsonOutput;
+    expect(output?.message).to.include('Expected an integer greater than or equal to 3 but received: 2');
+  });
   it('generates new password for secondary user (onbehalfof) with length 7 should thrown an error', () => {
     const output = execCmd('force:user:password:generate -o Other --json -l 7', {
       ensureExitCode: 'nonZero',
     }).jsonOutput;
-    expect(output?.message).to.include('Expected an integer greater than or equal to 8 but received: 7');
+    expect(output?.message).to.include('Expected an integer greater than or equal to 20 but received: 7');
   });
   it('assigns 2 permsets to the main user', () => {
     const output = execCmd<PermsetAssignResult>('force:user:permset:assign -n PS2,PS3 --json', {
