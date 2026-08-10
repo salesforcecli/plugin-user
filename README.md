@@ -139,7 +139,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/4.0.3/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.0/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -186,7 +186,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/4.0.3/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.0/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -294,7 +294,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/4.0.3/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.0/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -332,7 +332,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/4.0.3/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.0/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -349,7 +349,7 @@ FLAGS
   -c, --complexity=<value>       [default: 5] Level of password complexity or strength; the higher the value, the
                                  stronger the password.
   -l, --length=<value>           [default: 20] Number of characters in the generated password; valid values are between
-                                 20 and 100. Default value is 20.
+                                 20 and 1000. Default value is 20.
   -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
                                  configuration variable is already set.
       --api-version=<value>      Override the api version used for api requests made by this command
@@ -367,12 +367,9 @@ DESCRIPTION
   You can also use the --on-behalf-of flag to generate a password for a scratch org user that you've created locally
   with the "org create user" command. This command doesn't work for users you created in the scratch org using Setup.
 
-  To change the password strength, set the --complexity flag to a value between 0 and 5. Each value specifies the types
+  To change the password strength, set the --complexity flag to a value between 3 and 5. Each value specifies the types
   of characters used in the generated password:
 
-  0 - lower case letters only
-  1 - lower case letters and numbers only
-  2 - lower case letters and symbols only
   3 - lower and upper case letters and numbers only
   4 - lower and upper case letters and symbols only
   5 - lower and upper case letters and numbers and symbols only
@@ -399,7 +396,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/4.0.3/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.0/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -437,6 +434,6 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/4.0.3/src/commands/org/list/users.ts)_
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.0/src/commands/org/list/users.ts)_
 
 <!-- commandsstop -->

@@ -1,3 +1,19 @@
+# [5.0.0](https://github.com/salesforcecli/plugin-user/compare/4.0.3...5.0.0) (2026-08-10)
+
+- feat!: enforce minimum password complexity of 3 ([17162b3](https://github.com/salesforcecli/plugin-user/commit/17162b35ec2748b04f0bd70fab0a9a2d9e622ba7))
+- feat!: enforce minimum password length of 20 ([30a97ff](https://github.com/salesforcecli/plugin-user/commit/30a97ff3d5ff84fcce6aea3cfe7325858592ebd3))
+
+### Reverts
+
+- Revert "test: add nut test to generate pw with 1000 length" ([d5ce41a](https://github.com/salesforcecli/plugin-user/commit/d5ce41a4e3add8ee67c883b3982588bf5867a04d))
+
+### BREAKING CHANGES
+
+- `--complexity` values below 3 now error instead
+  of being silently raised to 3.
+- `--length` values below 20 now error instead
+  of being silently raised to 20.
+
 ## [4.0.3](https://github.com/salesforcecli/plugin-user/compare/4.0.2...4.0.3) (2026-08-09)
 
 ### Bug Fixes
