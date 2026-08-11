@@ -182,7 +182,7 @@ const queryPsl = async ({
         `select Id from PermissionSetLicense where DeveloperName = '${pslName}' or MasterLabel = '${pslName}'`
       )
     ).Id;
-  } catch (e) {
+  } catch {
     return aggregate(
       usernamesOrAliases.map((name) => toResult({ name, message: `PermissionSetLicense not found: ${pslName}` }))
     );
