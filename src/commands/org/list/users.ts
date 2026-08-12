@@ -66,7 +66,7 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
       buildUserInfos(conn),
       buildProfileInfos(conn),
       org.readUserAuthFiles(),
-      (await StateAggregator.getInstance()).aliases,
+      StateAggregator.getInstance().then((sa) => sa.aliases),
     ]);
 
     // TODO: Remove env var workaround
