@@ -1,3 +1,9 @@
+## [5.0.1](https://github.com/salesforcecli/plugin-user/compare/5.0.0...5.0.1) (2026-08-16)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 9.1.0 to 9.1.2 ([45bfe57](https://github.com/salesforcecli/plugin-user/commit/45bfe57b5555e6c889605639cfe7925c916a3bec))
+
 # [5.0.0](https://github.com/salesforcecli/plugin-user/compare/4.0.3...5.0.0) (2026-08-10)
 
 - feat!: enforce minimum password complexity of 3 ([17162b3](https://github.com/salesforcecli/plugin-user/commit/17162b35ec2748b04f0bd70fab0a9a2d9e622ba7))
