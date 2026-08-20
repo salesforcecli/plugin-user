@@ -1,3 +1,9 @@
+## [5.0.2](https://github.com/salesforcecli/plugin-user/compare/5.0.1...5.0.2) (2026-08-20)
+
+### Bug Fixes
+
+- rejiggered eslint.config.mjs (W-23828423) ([#1504](https://github.com/salesforcecli/plugin-user/issues/1504)) ([fc9f9a6](https://github.com/salesforcecli/plugin-user/commit/fc9f9a68b2dc567dca8a304ce19c9b7f5ad34dc6))
+
 ## [5.0.1](https://github.com/salesforcecli/plugin-user/compare/5.0.0...5.0.1) (2026-08-16)
 
 ### Bug Fixes
