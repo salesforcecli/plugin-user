@@ -301,7 +301,6 @@ describe('org:create:user', () => {
     expect(result).to.deep.equal(expected);
   });
 
-
   describe('exceptions', () => {
     it('throws if org is not a scratchOrg', async () => {
       await prepareStubs({ nonScratch: true }, false);
@@ -313,7 +312,6 @@ describe('org:create:user', () => {
         expect(e.name).to.equal('NonScratchOrgError');
       }
     });
-
 
     it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
       await prepareStubs({ license: true }, false);

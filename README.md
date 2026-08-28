@@ -87,13 +87,190 @@ For more NUT options and examples, see <https://github.com/salesforcecli/cli-plu
 ## Commands
 
 <!-- commands -->
+* [`sf force user create`](#sf-force-user-create)
+* [`sf force user display`](#sf-force-user-display)
+* [`sf force user list`](#sf-force-user-list)
+* [`sf org assign permset`](#sf-org-assign-permset)
+* [`sf org assign permsetlicense`](#sf-org-assign-permsetlicense)
+* [`sf org create user`](#sf-org-create-user)
+* [`sf org display user`](#sf-org-display-user)
+* [`sf org generate password`](#sf-org-generate-password)
+* [`sf org list users`](#sf-org-list-users)
 
-- [`sf org assign permset`](#sf-org-assign-permset)
-- [`sf org assign permsetlicense`](#sf-org-assign-permsetlicense)
-- [`sf org create user`](#sf-org-create-user)
-- [`sf org display user`](#sf-org-display-user)
-- [`sf org generate password`](#sf-org-generate-password)
-- [`sf org list users`](#sf-org-list-users)
+## `sf force user create`
+
+Create a user for a scratch org.
+
+```
+USAGE
+  $ sf force user create -o <value> [--json] [--flags-dir <value>] [-a <value>] [-f <value>] [-s] [--api-version
+    <value>]
+
+FLAGS
+  -a, --set-alias=<value>        Set an alias for the created username to reference in other CLI commands.
+  -f, --definition-file=<value>  File path to a user definition file for customizing the new user.
+  -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
+                                 configuration variable is already set.
+  -s, --set-unique-username      Force the username, if specified in the definition file or at the command line, to be
+                                 unique by appending the org ID.
+      --api-version=<value>      Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
+
+DESCRIPTION
+  Create a user for a scratch org.
+
+  A scratch org includes one administrator user by default. For testing purposes, however, you sometimes need to create
+  additional users.
+
+  The easiest way to create a user is to let this command assign default or generated characteristics to the new user.
+  If you want to customize your new user, create a definition file and specify it with the --definition-file flag. In
+  the file, you can include all the User sObject (Salesforce object) fields and Salesforce DX-specific options, as
+  described in "User Definition File for Customizing a Scratch Org User"
+  (https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm).
+  You can also specify these options on the command line.
+
+  If you don't customize your new user, this command creates a user with the following default characteristics:
+
+  * The username is the existing administrator’s username prepended with a timestamp, such as
+  1505759162830_test-wvkpnfm5z113@example.com.
+  * The user’s profile is Standard User.
+  * The values of the required fields of the User sObject are the corresponding values of the administrator user.
+  * The user has no password.
+
+  Use the --set-alias flag to assign a simple name to the user that you can reference in later CLI commands. This alias
+  is local and different from the Alias field of the User sObject record of the new user, which you set in the Setup UI.
+
+  When this command completes, it displays the new username and user ID. Run the "org display user" command to get more
+  information about the new user.
+
+  After the new user has been created, Salesforce CLI automatically authenticates it to the scratch org so the new user
+  can immediately start using the scratch org. The CLI uses the same authentication method that was used on the
+  associated Dev Hub org.
+
+  For more information about user limits, defaults, and other considerations when creating a new scratch org user, see
+  https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
+
+ALIASES
+  $ sf force user create
+
+EXAMPLES
+  Create a user for your default scratch org and let this command generate a username, user ID, and other
+  characteristics:
+
+    $ sf force user create
+
+  Create a user with alias "testuser1" using a user definition file. Set the "profileName" option to "Chatter Free
+  User", which overrides the value in the defintion file if it also exists there. Create the user for the scratch org
+  with alias "my-scratch":
+
+    $ sf force user create --set-alias testuser1 --definition-file config/project-user-def.json profileName='Chatter \
+      Free User' --target-org my-scratch
+
+  Create a user by specifying the username, email, and perm set assignment at the command line; command fails if the
+  username already exists in Salesforce:
+
+    $ sf force user create username=testuser1@my.org email=me@my.org permsets=DreamHouse
+
+  Create a user with a definition file, set the email value as specified (overriding any value in the definition
+  file), and generate a password for the user. If the username in the definition file isn't unique, the command
+  appends the org ID to make it unique:
+
+    $ sf force user create --definition-file config/project-user-def.json email=me@my.org generatepassword=true \
+      --set-unique-username
+
+FLAG DESCRIPTIONS
+  -f, --definition-file=<value>  File path to a user definition file for customizing the new user.
+
+    The user definition file uses JSON format and can include any Salesforce User sObject field and Salesforce
+    DX-specific options. See
+    https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users_def_file.htm
+    for more information.
+
+  -s, --set-unique-username
+
+    Force the username, if specified in the definition file or at the command line, to be unique by appending the org
+    ID.
+
+    The new user’s username must be unique across all Salesforce orgs and in the form of an email address. If you let
+    this command generate a username for you, it's guaranteed to be unique. If you specify an existing username in a
+    definition file, the command fails. Set this flag to force the username to be unique; as a result, the username
+    might be different than what you specify in the definition file.
+```
+
+## `sf force user display`
+
+Display information about a Salesforce user.
+
+```
+USAGE
+  $ sf force user display -o <value> [--json] [--flags-dir <value>] [--api-version <value>]
+
+FLAGS
+  -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
+                             configuration variable is already set.
+      --api-version=<value>  Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
+
+DESCRIPTION
+  Display information about a Salesforce user.
+
+  Output includes the profile name, org ID, instance URL, login URL, and alias if applicable. The displayed alias is
+  local and different from the Alias field of the User sObject record of the new user, which you set in the Setup UI.
+
+ALIASES
+  $ sf force user display
+
+EXAMPLES
+  Display information about the admin user of your default scratch org:
+
+    $ sf force user display
+
+  Display information about the specified user and output in JSON format:
+
+    $ sf force user display --target-org me@my.org --json
+```
+
+## `sf force user list`
+
+List all locally-authenticated users of an org.
+
+```
+USAGE
+  $ sf force user list -o <value> [--json] [--flags-dir <value>] [--api-version <value>]
+
+FLAGS
+  -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
+                             configuration variable is already set.
+      --api-version=<value>  Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
+
+DESCRIPTION
+  List all locally-authenticated users of an org.
+
+  For scratch orgs, the list includes any users you've created with the "org create user" command; the original scratch
+  org admin user is marked with "(A)". For other orgs, the list includes the users you used to authenticate to the org.
+
+ALIASES
+  $ sf force user list
+
+EXAMPLES
+  List the locally-authenticated users of your default org:
+
+    $ sf force user list
+
+  List the locally-authenticated users of the specified org:
+
+    $ sf force user list --target-org me@my.org
+```
 
 ## `sf org assign permset`
 
@@ -139,7 +316,7 @@ EXAMPLES
     $ sf org assign permset --name DreamHouse --on-behalf-of user1@my.org --on-behalf-of user2 --on-behalf-of user
 ```
 
-_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.2/src/commands/org/assign/permset.ts)_
+_See code: [src/commands/org/assign/permset.ts](https://github.com/salesforcecli/plugin-user/blob/v5.0.2/src/commands/org/assign/permset.ts)_
 
 ## `sf org assign permsetlicense`
 
@@ -186,7 +363,7 @@ EXAMPLES
       user3
 ```
 
-_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.2/src/commands/org/assign/permsetlicense.ts)_
+_See code: [src/commands/org/assign/permsetlicense.ts](https://github.com/salesforcecli/plugin-user/blob/v5.0.2/src/commands/org/assign/permsetlicense.ts)_
 
 ## `sf org create user`
 
@@ -239,10 +416,7 @@ DESCRIPTION
 
   After the new user has been created, Salesforce CLI automatically authenticates it to the scratch org so the new user
   can immediately start using the scratch org. The CLI uses the same authentication method that was used on the
-  associated Dev Hub org. Due to Hyperforce limitations, the scratch org user creation fails if the Dev Hub
-  authentication used the JWT flow and the scratch org is on Hyperforce. For this reason, if you plan to create scratch
-  org users, authenticate to the Dev Hub org with either the "org login web" or "org login sfdx-url" command, and not
-  "org login jwt".
+  associated Dev Hub org.
 
   For more information about user limits, defaults, and other considerations when creating a new scratch org user, see
   https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_users.htm.
@@ -294,7 +468,7 @@ FLAG DESCRIPTIONS
     might be different than what you specify in the definition file.
 ```
 
-_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.2/src/commands/org/create/user.ts)_
+_See code: [src/commands/org/create/user.ts](https://github.com/salesforcecli/plugin-user/blob/v5.0.2/src/commands/org/create/user.ts)_
 
 ## `sf org display user`
 
@@ -332,7 +506,7 @@ EXAMPLES
     $ sf org display user --target-org me@my.org --json
 ```
 
-_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.2/src/commands/org/display/user.ts)_
+_See code: [src/commands/org/display/user.ts](https://github.com/salesforcecli/plugin-user/blob/v5.0.2/src/commands/org/display/user.ts)_
 
 ## `sf org generate password`
 
@@ -396,7 +570,7 @@ EXAMPLES
     $ sf org generate password --on-behalf-of user1@my.org --on-behalf-of user2@my.org --on-behalf-of user3@my.org
 ```
 
-_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.2/src/commands/org/generate/password.ts)_
+_See code: [src/commands/org/generate/password.ts](https://github.com/salesforcecli/plugin-user/blob/v5.0.2/src/commands/org/generate/password.ts)_
 
 ## `sf org list users`
 
@@ -434,6 +608,5 @@ EXAMPLES
     $ sf org list users --target-org me@my.org
 ```
 
-_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/5.0.2/src/commands/org/list/users.ts)_
-
+_See code: [src/commands/org/list/users.ts](https://github.com/salesforcecli/plugin-user/blob/v5.0.2/src/commands/org/list/users.ts)_
 <!-- commandsstop -->
