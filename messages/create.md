@@ -78,14 +78,6 @@ See more details about this user by running "%s org user display -o %s".
 
 This command works with only scratch orgs.
 
-# error.jwtHyperforce
-
-This command doesn't work when authorizing an org using the JWT flow if the org is on Hyperforce.
-
 # error.invalidRoleDeveloperName
 
 Invalid roleDeveloperName: "%s". Must start with a letter and contain only alphanumeric characters or single underscores, with no double or final underscores.
-
-# error.jwtHyperforce.actions
-
-- Authorize your Dev Hub with either the `org login web` or `org login sfdx-url` command. You can then successfully use the `org create user` command on scratch orgs that you create with your Dev Hub.

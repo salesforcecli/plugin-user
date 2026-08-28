@@ -336,20 +336,11 @@ const catchCreateUser = async (respBody: Error, fields: UserFields, conn: Connec
   }
 };
 
-/** the org must be a scratch org AND not use JWT with hyperforce */
 const getValidatedConnection = async (targetOrg: Org, apiVersion?: string): Promise<Connection> => {
   if (!(await targetOrg.determineIfScratch())) {
     throw messages.createError('error.nonScratchOrg');
   }
-  const conn = targetOrg.getConnection(apiVersion);
-  if (
-    conn.getAuthInfo().isJwt() &&
-    // hyperforce sandbox instances end in S like USA254S
-    targetOrg.getField<string>(Org.Fields.CREATED_ORG_INSTANCE)?.endsWith('S')
-  ) {
-    throw messages.createError('error.jwtHyperforce');
-  }
-  return conn;
+  return targetOrg.getConnection(apiVersion);
 };
 
 const permsetsStringToArray = (fieldsPermsets: string | string[] | undefined): string[] => {

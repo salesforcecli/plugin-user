@@ -28,8 +28,6 @@ const username = 'defaultusername@test.com';
 const originalUserId = '0052D0000043PawWWR';
 const newUserId = '0052D0000044PawWWR';
 
-const createdOrgInstanceMissing = 'MISSING';
-
 describe('org:create:user', () => {
   const $$ = new TestContext();
 
@@ -94,8 +92,6 @@ describe('org:create:user', () => {
       license?: boolean;
       duplicate?: boolean;
       nonScratch?: boolean;
-      isJWT?: boolean;
-      createdOrgInstance?: string;
     } = {},
     readsFile?: JsonMap | boolean
   ) {
@@ -129,14 +125,7 @@ describe('org:create:user', () => {
       username: '1605130295132_test-j6asqt5qoprs@example.com',
       alias: 'testAlias',
     });
-    $$.SANDBOX.stub(AuthInfo.prototype, 'isJwt').returns(throws.isJWT ? true : false);
-
     $$.SANDBOX.stub(Org.prototype, 'getOrgId').returns(testOrg.orgId);
-    $$.SANDBOX.stub(Org.prototype, 'getField')
-      .withArgs(Org.Fields.CREATED_ORG_INSTANCE)
-      .returns(
-        throws.createdOrgInstance === createdOrgInstanceMissing ? undefined : throws.createdOrgInstance ?? testOrg.orgId
-      );
     $$.SANDBOX.stub(Org.prototype, 'determineIfScratch').resolves(throws.nonScratch ? false : true);
 
     if (throws.license) {
@@ -312,76 +301,6 @@ describe('org:create:user', () => {
     expect(result).to.deep.equal(expected);
   });
 
-  describe('valid hyperforce/jwt combos', () => {
-    it('works on hyperforce if non-JWT', async () => {
-      await prepareStubs({ createdOrgInstance: 'USA100S' }, true);
-      const expected = {
-        orgId: testOrg.orgId,
-        permissionSetAssignments: [],
-        fields: {
-          alias: 'testAlias',
-          email: username,
-          emailencodingkey: 'UTF-8',
-          id: newUserId,
-          languagelocalekey: 'en_US',
-          lastname: 'User',
-          localesidkey: 'en_US',
-          profileid: '12345678',
-          profilename: 'profileFromArgs',
-          timezonesidkey: 'America/Los_Angeles',
-          username: '1605130295132_test-j6asqt5qoprs@example.com',
-        },
-      };
-      const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
-      expect(result).to.deep.equal(expected);
-    });
-
-    it('works if JWT but not hyperforce', async () => {
-      await prepareStubs({ isJWT: true }, true);
-      const expected = {
-        orgId: testOrg.orgId,
-        permissionSetAssignments: [],
-        fields: {
-          alias: 'testAlias',
-          email: username,
-          emailencodingkey: 'UTF-8',
-          id: newUserId,
-          languagelocalekey: 'en_US',
-          lastname: 'User',
-          localesidkey: 'en_US',
-          profileid: '12345678',
-          profilename: 'profileFromArgs',
-          timezonesidkey: 'America/Los_Angeles',
-          username: '1605130295132_test-j6asqt5qoprs@example.com',
-        },
-      };
-      const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
-      expect(result).to.deep.equal(expected);
-    });
-
-    it('works if JWT but missing createdOrgInstance auth field', async () => {
-      await prepareStubs({ isJWT: true, createdOrgInstance: createdOrgInstanceMissing }, true);
-      const expected = {
-        orgId: testOrg.orgId,
-        permissionSetAssignments: [],
-        fields: {
-          alias: 'testAlias',
-          email: username,
-          emailencodingkey: 'UTF-8',
-          id: newUserId,
-          languagelocalekey: 'en_US',
-          lastname: 'User',
-          localesidkey: 'en_US',
-          profileid: '12345678',
-          profilename: 'profileFromArgs',
-          timezonesidkey: 'America/Los_Angeles',
-          username: '1605130295132_test-j6asqt5qoprs@example.com',
-        },
-      };
-      const result = await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
-      expect(result).to.deep.equal(expected);
-    });
-  });
 
   describe('exceptions', () => {
     it('throws if org is not a scratchOrg', async () => {
@@ -395,16 +314,6 @@ describe('org:create:user', () => {
       }
     });
 
-    it('throws if JWT and hyperforce', async () => {
-      await prepareStubs({ isJWT: true, createdOrgInstance: 'USA100S' }, false);
-      try {
-        await CreateUserCommand.run(['--json', '--target-org', testOrg.username]);
-        expect.fail('should have thrown an error');
-      } catch (e) {
-        assert(e instanceof Error);
-        expect(e.name).to.equal('JwtHyperforceError');
-      }
-    });
 
     it('will handle a failed `createUser` call with a licenseLimitExceeded error', async () => {
       await prepareStubs({ license: true }, false);
