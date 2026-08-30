@@ -16,7 +16,7 @@
     "@oclif/core": "^4.13.3",
     "@oclif/plugin-command-snapshot": "^5.3.35",
     "@salesforce/cli-plugins-testkit": "^5.3.66",
-    "@salesforce/dev-scripts": "^13.0.2",
+    "@salesforce/dev-scripts": "^14.0.0",
     "@salesforce/plugin-command-reference": "^3.1.132",
     "@types/chai": "^4.3.17",
     "@types/mocha": "^10.0.10",
@@ -28,7 +28,7 @@
     "eslint-plugin-sf-plugin": "^3.0.0",
     "oclif": "^4.23.30",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.0"
   },
   "config": {},
   "engines": {
