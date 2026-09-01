@@ -1,3 +1,9 @@
+## [5.0.3](https://github.com/salesforcecli/plugin-user/compare/5.0.2...5.0.3) (2026-09-01)
+
+### Bug Fixes
+
+- upgrade @oclif/core to v5 @W-23512455@ ([#1517](https://github.com/salesforcecli/plugin-user/issues/1517)) ([396bd0e](https://github.com/salesforcecli/plugin-user/commit/396bd0e86eb45b9332774ea988333838cfcb248f))
+
 ## [5.0.2](https://github.com/salesforcecli/plugin-user/compare/5.0.1...5.0.2) (2026-08-20)
 
 ### Bug Fixes
