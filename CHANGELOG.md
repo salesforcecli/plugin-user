@@ -1,3 +1,9 @@
+## [5.0.4](https://github.com/salesforcecli/plugin-user/compare/5.0.3...5.0.4) (2026-09-03)
+
+### Bug Fixes
+
+- remove Hyperforce/JWT gate from `org create user` @W-24022936@ ([e50d51c](https://github.com/salesforcecli/plugin-user/commit/e50d51c3d6b5e0d5b1ad21ccb177c002a36eca48))
+
 ## [5.0.3](https://github.com/salesforcecli/plugin-user/compare/5.0.2...5.0.3) (2026-09-01)
 
 ### Bug Fixes
