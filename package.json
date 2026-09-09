@@ -16,7 +16,7 @@
     "@oclif/core": "^5.0.0",
     "@oclif/plugin-command-snapshot": "^6.0.0",
     "@salesforce/cli-plugins-testkit": "^5.3.66",
-    "@salesforce/dev-scripts": "^13.0.2",
+    "@salesforce/dev-scripts": "^14.0.0",
     "@salesforce/plugin-command-reference": "^3.1.132",
     "@types/chai": "^4.3.17",
     "@types/mocha": "^10.0.10",
@@ -24,11 +24,11 @@
     "@types/sinon": "^10.0.20",
     "chai-each": "^0.0.1",
     "eslint": "^10.4.0",
-    "eslint-config-salesforce-typescript": "^6.0.0",
+    "eslint-config-salesforce-typescript": "^7.0.0",
     "eslint-plugin-sf-plugin": "^3.0.0",
     "oclif": "^5.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.0"
   },
   "config": {},
   "engines": {
