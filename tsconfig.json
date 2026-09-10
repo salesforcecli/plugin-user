@@ -4,7 +4,8 @@
     "strictNullChecks": true,
     "outDir": "lib",
     "rootDir": "src",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node", "mocha"]
   },
   "include": ["./src/**/*.ts"]
 }
