@@ -103,12 +103,8 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
     });
 
     // TODO: Remove after env var workaround is removed
-    if (this.jsonEnabled()) {
-      if (showSecretsEnvVarIsSet) {
-        this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org list users']));
-      } else {
-        this.warn(secretsMessages.getMessage('temp.envVarWorkaround', ['sf org list users']));
-      }
+    if (this.jsonEnabled() && showSecretsEnvVarIsSet) {
+      this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org list users']));
     }
 
     return authList;
