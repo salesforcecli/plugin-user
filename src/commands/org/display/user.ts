@@ -124,8 +124,6 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
     if (showSecretsEnvVarIsSet) {
       this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org display user']));
       this.warn(messages.getMessage('securityWarning'));
-    } else {
-      this.warn(secretsMessages.getMessage('temp.envVarWorkaround', ['sf org display user']));
     }
 
     this.log('');
