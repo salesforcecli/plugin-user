@@ -1,3 +1,9 @@
+## [5.0.6](https://github.com/salesforcecli/plugin-user/compare/5.0.5...5.0.6) (2026-09-28)
+
+### Bug Fixes
+
+- eol date ([#1528](https://github.com/salesforcecli/plugin-user/issues/1528)) ([2946e28](https://github.com/salesforcecli/plugin-user/commit/2946e289f12afb1bf2758b2d4b0a43eee0324162))
+
 ## [5.0.5](https://github.com/salesforcecli/plugin-user/compare/5.0.4...5.0.5) (2026-09-25)
 
 ### Bug Fixes
