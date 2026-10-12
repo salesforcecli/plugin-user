@@ -1,3 +1,9 @@
+## [5.0.11](https://github.com/salesforcecli/plugin-user/compare/5.0.10...5.0.11) (2026-10-12)
+
+### Bug Fixes
+
+- **deps:** bump fast-copy from 3.0.2 to 3.1.0 ([e70764a](https://github.com/salesforcecli/plugin-user/commit/e70764a192b3e50fbee5f57014fa01c9011fdcc8))
+
 ## [5.0.10](https://github.com/salesforcecli/plugin-user/compare/5.0.9...5.0.10) (2026-10-11)
 
 ### Bug Fixes
