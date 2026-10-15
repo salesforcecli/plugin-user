@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AuthFields, Connection, envVars, Logger, Messages, StateAggregator } from '@salesforce/core';
+import { AuthFields, Connection, Logger, Messages, StateAggregator } from '@salesforce/core';
 import { ensureString } from '@salesforce/ts-types';
 import {
   loglevel,
@@ -96,13 +96,11 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
       );
     }
 
-    // TODO: Remove env var workaround
-    const showSecretsEnvVarIsSet = envVars.getBoolean('SF_TEMP_SHOW_SECRETS', false);
     const accessTokenRedacted = secretsMessages.getMessage('redacted.accessToken');
     const passwordRedacted = secretsMessages.getMessage('redacted.userPassword');
 
     const result: DisplayUserResult = {
-      accessToken: showSecretsEnvVarIsSet ? (conn.accessToken as string) : accessTokenRedacted,
+      accessToken: accessTokenRedacted,
       id: userId,
       instanceUrl: userAuthData?.instanceUrl,
       loginUrl: userAuthData?.loginUrl,
@@ -118,12 +116,7 @@ export class DisplayUserCommand extends SfCommand<DisplayUserResult> {
     }
 
     if (userAuthData?.password) {
-      result.password = showSecretsEnvVarIsSet ? userAuthData.password : passwordRedacted;
-    }
-
-    if (showSecretsEnvVarIsSet) {
-      this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org display user']));
-      this.warn(messages.getMessage('securityWarning'));
+      result.password = passwordRedacted;
     }
 
     this.log('');

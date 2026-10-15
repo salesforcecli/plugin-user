@@ -16,6 +16,7 @@
 
 import { Connection, Org } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
+import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import { expect } from 'chai';
 import { ListUsersCommand } from '../../src/commands/org/list/users.js';
 
@@ -151,7 +152,7 @@ describe('org:list:users', () => {
     expect(result).to.deep.equal(expected);
   });
 
-  describe('secret redaction WITH env var (SF_TEMP_SHOW_SECRETS)', () => {
+  describe('SF_TEMP_SHOW_SECRETS env var has no effect', () => {
     const SHOW_TOKENS_ENV = 'SF_TEMP_SHOW_SECRETS';
 
     beforeEach(() => {
@@ -162,10 +163,12 @@ describe('org:list:users', () => {
       delete process.env[SHOW_TOKENS_ENV];
     });
 
-    it('shows real access tokens when env var is set', async () => {
+    it('still redacts access tokens and emits no warnings', async () => {
+      const uxStubs = stubSfCommandUx($$.SANDBOX);
       const result = await ListUsersCommand.run(['--json', '--target-org', user1]);
-      expect(result[0].accessToken).to.equal('accessToken');
-      expect(result[1].accessToken).to.equal('accessToken');
+      expect(result[0].accessToken).to.include('[REDACTED]');
+      expect(result[1].accessToken).to.include('[REDACTED]');
+      expect(uxStubs.warn.args.flat()).to.have.length(0);
     });
   });
 });
