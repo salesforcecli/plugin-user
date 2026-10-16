@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Connection, envVars, Messages, StateAggregator } from '@salesforce/core';
+import { Connection, Messages, StateAggregator } from '@salesforce/core';
 import {
   loglevel,
   orgApiVersionFlagWithDeprecations,
@@ -69,8 +69,6 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
       StateAggregator.getInstance().then((sa) => sa.aliases),
     ]);
 
-    // TODO: Remove env var workaround
-    const showSecretsEnvVarIsSet = envVars.getBoolean('SF_TEMP_SHOW_SECRETS', false);
     const accessTokenRedacted = secretsMessages.getMessage('redacted.accessToken');
 
     const authList: ListUsers = userAuthData.map((authData) => {
@@ -85,7 +83,7 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
         username,
         profileName,
         orgId: flags['target-org']?.getOrgId(),
-        accessToken: showSecretsEnvVarIsSet ? authData.getFields().accessToken : accessTokenRedacted,
+        accessToken: accessTokenRedacted,
         instanceUrl: authData.getFields().instanceUrl,
         loginUrl: authData.getFields().loginUrl,
         userId: userInfos.get(username)?.Id,
@@ -101,11 +99,6 @@ export class ListUsersCommand extends SfCommand<ListUsers> {
       })),
       title: `Users in org ${flags['target-org']?.getOrgId()}`,
     });
-
-    // TODO: Remove after env var workaround is removed
-    if (this.jsonEnabled() && showSecretsEnvVarIsSet) {
-      this.warn(secretsMessages.getMessage('temp.envVarIsSet', ['sf org list users']));
-    }
 
     return authList;
   }

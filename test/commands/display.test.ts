@@ -16,6 +16,7 @@
 
 import { AuthInfo, Connection, Org } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
+import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import { expect } from 'chai';
 import { DisplayUserCommand } from '../../src/commands/org/display/user.js';
 
@@ -103,7 +104,7 @@ describe('org:display:user', () => {
     expect(result.username).to.equal(defaultOrg.username);
   });
 
-  describe('secret redaction WITH env var (SF_TEMP_SHOW_SECRETS)', () => {
+  describe('SF_TEMP_SHOW_SECRETS env var has no effect', () => {
     const SHOW_TOKENS_ENV = 'SF_TEMP_SHOW_SECRETS';
 
     beforeEach(() => {
@@ -114,11 +115,13 @@ describe('org:display:user', () => {
       delete process.env[SHOW_TOKENS_ENV];
     });
 
-    it('shows the real access token and password', async () => {
+    it('still redacts the access token and password, and emits no warnings', async () => {
+      const uxStubs = stubSfCommandUx($$.SANDBOX);
       await prepareStubs();
       const result = await DisplayUserCommand.run(['--json', '--target-org', defaultOrg.username]);
-      expect(result.accessToken).to.equal(defaultOrg.accessToken);
-      expect(result.password).to.equal('-a098u234/1!@#');
+      expect(result.accessToken).to.include('[REDACTED]');
+      expect(result.password).to.include('[REDACTED]');
+      expect(uxStubs.warn.args.flat()).to.have.length(0);
     });
   });
 });
