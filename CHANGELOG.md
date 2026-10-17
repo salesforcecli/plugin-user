@@ -1,3 +1,9 @@
+## [6.0.1](https://github.com/salesforcecli/plugin-user/compare/6.0.0...6.0.1) (2026-10-17)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/ts-types from 3.0.1 to 3.2.2 ([5835934](https://github.com/salesforcecli/plugin-user/commit/5835934c9bce92400c0eb495cda3e7e786f83c33))
+
 # [6.0.0](https://github.com/salesforcecli/plugin-user/compare/5.0.11...6.0.0) (2026-10-16)
 
 - feat!: removes SF_TEMP_SHOW_SECRETS workaround (#1543) ([3fedd2f](https://github.com/salesforcecli/plugin-user/commit/3fedd2f5efab042b08438b872a3ba110667799d6)), closes [#1543](https://github.com/salesforcecli/plugin-user/issues/1543)
