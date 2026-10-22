@@ -1,3 +1,9 @@
+## [6.0.4](https://github.com/salesforcecli/plugin-user/compare/6.0.3...6.0.4) (2026-10-22)
+
+### Bug Fixes
+
+- **deps:** bump markdown-it from 14.3.1 to 14.3.3 ([5ff6886](https://github.com/salesforcecli/plugin-user/commit/5ff688686a0ef65ef1565cf8cb422333e839bc93))
+
 ## [6.0.3](https://github.com/salesforcecli/plugin-user/compare/6.0.2...6.0.3) (2026-10-18)
 
 ### Bug Fixes
