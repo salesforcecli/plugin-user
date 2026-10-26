@@ -1,3 +1,9 @@
+## [6.0.6](https://github.com/salesforcecli/plugin-user/compare/6.0.5...6.0.6) (2026-10-26)
+
+### Bug Fixes
+
+- **deps:** bump zod from 4.3.6 to 4.6.7 ([fda23f7](https://github.com/salesforcecli/plugin-user/commit/fda23f70422543cd5aeed045d2a2cc9e614cd6df))
+
 ## [6.0.5](https://github.com/salesforcecli/plugin-user/compare/6.0.4...6.0.5) (2026-10-25)
 
 ### Bug Fixes
