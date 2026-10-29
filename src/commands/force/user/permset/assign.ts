@@ -29,7 +29,8 @@ export class ForceUserPermSetAssignCommand extends UserPermSetAssignBaseCommand 
   public static readonly examples = messages.getMessages('examples.force');
   public static readonly state = 'deprecated';
   public static readonly deprecationOptions = {
-    to: 'org assign permset',
+    message:
+      'The "force user permset assign" command is deprecated and will be removed on March 1st, 2027. Use "org assign permset" instead.',
   };
   public static readonly flags = {
     'perm-set-name': arrayWithDeprecation({
