@@ -1,3 +1,9 @@
+## [6.0.7](https://github.com/salesforcecli/plugin-user/compare/6.0.6...6.0.7) (2026-10-29)
+
+### Bug Fixes
+
+- dep-warning on force user commands ([#1557](https://github.com/salesforcecli/plugin-user/issues/1557)) ([dc3d896](https://github.com/salesforcecli/plugin-user/commit/dc3d896ab51eea1fc2937359662e394af81e5774))
+
 ## [6.0.6](https://github.com/salesforcecli/plugin-user/compare/6.0.5...6.0.6) (2026-10-26)
 
 ### Bug Fixes
