@@ -35,7 +35,8 @@ export class ForceUserPermSetLicenseAssignCommand extends SfCommand<PSLResult> {
   public static readonly examples = messages.getMessages('examples');
   public static readonly state = 'deprecated';
   public static readonly deprecationOptions = {
-    to: 'org assign permsetlicense',
+    message:
+      'The "force user permsetlicense assign" command is deprecated and will be removed on March 1st, 2027. Use "org assign permsetlicense" instead.',
   };
   public static readonly flags = {
     name: Flags.string({

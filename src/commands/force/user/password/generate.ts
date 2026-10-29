@@ -28,7 +28,8 @@ export class ForceUserPasswordGenerateCommand extends UserPasswordGenerateBaseCo
   public static readonly examples = messages.getMessages('examples');
   public static readonly state = 'deprecated';
   public static readonly deprecationOptions = {
-    to: 'org generate password',
+    message:
+      'The "force user password generate" command is deprecated and will be removed on March 1st, 2027. Use "org generate password" instead.',
   };
   public static readonly hidden = true;
   public static readonly flags = {
