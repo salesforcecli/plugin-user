@@ -1,3 +1,9 @@
+## [6.0.8](https://github.com/salesforcecli/plugin-user/compare/6.0.7...6.0.8) (2026-11-01)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/kit from 4.0.1 to 4.0.8 ([6c2102c](https://github.com/salesforcecli/plugin-user/commit/6c2102cb3b7ed081542d4fba87bad2a137e7c14e))
+
 ## [6.0.7](https://github.com/salesforcecli/plugin-user/compare/6.0.6...6.0.7) (2026-10-29)
 
 ### Bug Fixes
