@@ -1,3 +1,9 @@
+## [6.0.11](https://github.com/salesforcecli/plugin-user/compare/6.0.10...6.0.11) (2026-11-02)
+
+### Bug Fixes
+
+- **deps:** bump js-yaml from 3.14.2 to 3.15.2 ([0390cca](https://github.com/salesforcecli/plugin-user/commit/0390cca1c956fcae751d4c10d02f67bf3bad6bd8))
+
 ## [6.0.10](https://github.com/salesforcecli/plugin-user/compare/6.0.9...6.0.10) (2026-11-02)
 
 ### Bug Fixes
