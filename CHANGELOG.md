@@ -1,3 +1,9 @@
+## [6.0.12](https://github.com/salesforcecli/plugin-user/compare/6.0.11...6.0.12) (2026-11-08)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 9.4.3 to 9.4.4 ([c3a11c5](https://github.com/salesforcecli/plugin-user/commit/c3a11c53f51f8be298910a817ef5898b15ff6dba))
+
 ## [6.0.11](https://github.com/salesforcecli/plugin-user/compare/6.0.10...6.0.11) (2026-11-02)
 
 ### Bug Fixes
