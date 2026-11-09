@@ -1,3 +1,9 @@
+## [6.0.13](https://github.com/salesforcecli/plugin-user/compare/6.0.12...6.0.13) (2026-11-09)
+
+### Bug Fixes
+
+- **deps:** bump picomatch from 2.3.1 to 2.3.2 ([5da9ddf](https://github.com/salesforcecli/plugin-user/commit/5da9ddff26641c96abba565bb412a50eb2b8aefb))
+
 ## [6.0.12](https://github.com/salesforcecli/plugin-user/compare/6.0.11...6.0.12) (2026-11-08)
 
 ### Bug Fixes
